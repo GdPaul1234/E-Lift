@@ -5,7 +5,7 @@
       <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-16-javadoc" />
+      <root url="https://openjfx.io/javadoc/16/" />
     </JAVADOC>
     <SOURCES>
       <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" />

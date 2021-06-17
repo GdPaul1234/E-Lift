@@ -1,15 +1,27 @@
 use `e-lift`;
 
 #------------------------------------------------------------
-# Table: Gestionnaire
+# Table: Personne
 #------------------------------------------------------------
 
-CREATE TABLE Gestionnaire(
+CREATE TABLE Personne(
         login     Varchar (50) NOT NULL ,
         nom       Varchar (50) NOT NULL ,
         prenom    Varchar (50) NOT NULL ,
         telephone Varchar (50) NOT NULL
+	,CONSTRAINT Personne_PK PRIMARY KEY (login)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Gestionnaire
+#------------------------------------------------------------
+
+CREATE TABLE Gestionnaire(
+        login     Varchar (50) NOT NULL
 	,CONSTRAINT Gestionnaire_PK PRIMARY KEY (login)
+
+	,CONSTRAINT Gestionnaire_Personne_FK FOREIGN KEY (login) REFERENCES Personne(login)
 )ENGINE=InnoDB;
 
 
@@ -19,12 +31,10 @@ CREATE TABLE Gestionnaire(
 
 CREATE TABLE Ascensoriste(
         login        Varchar (50) NOT NULL ,
-        localisation Varchar (50) NOT NULL ,
-        occupation   Varchar (50) NOT NULL ,
-        nom          Varchar (50) NOT NULL ,
-        prenom       Varchar (50) NOT NULL ,
-        telephone    Varchar (50) NOT NULL
+        localisation Varchar (50)  NULL
 	,CONSTRAINT Ascensoriste_PK PRIMARY KEY (login)
+
+	,CONSTRAINT Ascensoriste_Personne_FK FOREIGN KEY (login) REFERENCES Personne(login)
 )ENGINE=InnoDB;
 
 
@@ -96,7 +106,8 @@ CREATE TABLE reparation(
         login          Varchar (50) NOT NULL ,
         dateReparation Datetime NOT NULL ,
         commentaire    Text NOT NULL ,
-        typeReparation Varchar (50) NOT NULL
+        typeReparation Varchar (50) NOT NULL ,
+        avancement     Varchar (50) NOT NULL
 	,CONSTRAINT reparation_PK PRIMARY KEY (idAscenseur,login,dateReparation)
 
 	,CONSTRAINT reparation_Ascenseur_FK FOREIGN KEY (idAscenseur) REFERENCES Ascenseur(idAscenseur)
@@ -104,3 +115,5 @@ CREATE TABLE reparation(
 	,CONSTRAINT reparation_DateReparation1_FK FOREIGN KEY (dateReparation) REFERENCES DateReparation(dateReparation)
 )ENGINE=InnoDB;
 
+CREATE ROLE 'e-lift_employe', 'e-lift_gestionnaire';
+GRANT INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
