@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane fx:id="user" layoutX="-2.0" layoutY="91.0" prefHeight="676.0" prefWidth="1107.0" style="-fx-background-color: #3D4956;" />
+      <AnchorPane fx:id="stats" layoutX="-9.0" layoutY="90.0" prefHeight="653.0" prefWidth="1114.0" style="-fx-background-color: #3D4956;" />
+      <AnchorPane fx:id="award" layoutX="1.0" layoutY="89.0" prefHeight="664.0" prefWidth="1104.0" style="-fx-background-color: #3D4956;" />
+      <AnchorPane fx:id="topbar" prefHeight="73.0" prefWidth="1107.0" style="-fx-background-color: #3D4956;">
+         <children>
+            <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="241.0" layoutY="16.0">
+               <image>
+                  <Image url="@../resource/silhouette-d'utilisateurs-multiples.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="448.0" layoutY="16.0">
+               <image>
+                  <Image url="@../resource/imeuble.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="668.0" layoutY="16.0">
+               <image>
+                  <Image url="@../resource/ascenseur-d'urgence.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="891.0" layoutY="16.0">
+               <image>
+                  <Image url="@../resource/employe.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="80.0" fitWidth="152.0" layoutX="14.0" layoutY="1.0">
+               <image>
+                  <Image url="@../resource/E-lift1.png" />
+               </image>
+            </ImageView>
+            <MenuButton layoutX="209.0" layoutY="41.0" mnemonicParsing="false" style="-fx-background-color: #3D4956;" text="Gestion clients" textFill="WHITE">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Ajouter client">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@../resource/ajouter-le-fichier.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                <MenuItem mnemonicParsing="false" text="Modifier client">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0">
+                           <image>
+                              <Image url="@../resource/updated.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+              </items>
+            </MenuButton>
+            <MenuButton layoutX="410.0" layoutY="41.0" mnemonicParsing="false" style="-fx-background-color: #3D4956;" text="Gestion immeuble" textFill="WHITE">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Ajouter immeuble">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@../resource/ajouter-le-fichier.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Modifier immeuble">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0">
+                           <image>
+                              <Image url="@../resource/updated.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+               </items>
+            </MenuButton>
+            <MenuButton layoutX="622.0" layoutY="41.0" mnemonicParsing="false" style="-fx-background-color: #3D4956;" text="Gestion acsenseur" textFill="WHITE">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Ajouter ascenseur">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@../resource/ajouter-le-fichier.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Modifier ascenseur">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0">
+                           <image>
+                              <Image url="@../resource/updated.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+               </items>
+            </MenuButton>
+            <MenuButton layoutX="848.0" layoutY="41.0" mnemonicParsing="false" style="-fx-background-color: #3D4956;" text="Gestion employés" textFill="WHITE">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Ajouter employé">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@../resource/ajouter-le-fichier.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Modifier employé">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0">
+                           <image>
+                              <Image url="@../resource/updated.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+               </items>
+            </MenuButton>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="main" layoutY="89.0" prefHeight="676.0" prefWidth="1107.0" style="-fx-background-color: #3D4956;">
+         <children>
+            <Label layoutX="33.0" layoutY="21.0" prefHeight="73.0" prefWidth="433.0" text="Gestion des pannes" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Black" size="39.0" />
+               </font>
+            </Label>
+            <Label layoutX="33.0" layoutY="93.0" text="En temps réel" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
