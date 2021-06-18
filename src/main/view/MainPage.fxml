@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainController">
    <stylesheets>
       <URL value="@style.css" />
    </stylesheets>
@@ -24,22 +18,22 @@
                 <Image url="@../resource/E-lift1.png" />
              </ImageView>
 
-             <MenuButton mnemonicParsing="false" text="Gestion clients" textOverrun="CLIP">
+             <MenuButton text="Gestion clients" textOverrun="CLIP">
                 <graphic>
-                   <ImageView fitHeight="25.0" fitWidth="30.0">
+                   <ImageView fitHeight="30.0" fitWidth="30.0">
                       <Image url="@../resource/silhouette-d'utilisateurs-multiples.png" />
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem mnemonicParsing="false" text="Ajouter client">
+                   <MenuItem onAction="#handleAddAscensoriste" text="Ajouter client">
                       <graphic>
-                         <ImageView fitHeight="20.0" fitWidth="20.0">
+                         <ImageView fitHeight="30.0" fitWidth="30.0">
                             <Image url="@../resource/ajouter-le-fichier.png" />
                          </ImageView>
                       </graphic>
                    </MenuItem>
 
-                   <MenuItem mnemonicParsing="false" text="Modifier client">
+                   <MenuItem text="Modifier client">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../resource/updated.png" />
@@ -48,21 +42,21 @@
                    </MenuItem>
                 </items>
              </MenuButton>
-             <MenuButton mnemonicParsing="false" text="Gestion immeubles" textOverrun="CLIP">
+             <MenuButton text="Gestion immeubles" textOverrun="CLIP">
                 <graphic>
                    <ImageView fitHeight="25.0" fitWidth="30.0">
                       <Image url="@../resource/imeuble.png" />
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem mnemonicParsing="false" text="Ajouter immeuble">
+                   <MenuItem text="Ajouter immeuble">
                       <graphic>
                          <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../resource/ajouter-le-fichier.png" />
                          </ImageView>
                       </graphic>
                    </MenuItem>
-                   <MenuItem mnemonicParsing="false" text="Modifier immeuble">
+                   <MenuItem text="Modifier immeuble">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../resource/updated.png" />
@@ -72,21 +66,21 @@
                 </items>
              </MenuButton>
 
-             <MenuButton mnemonicParsing="false" text="Gestion acsenseurs" textOverrun="CLIP">
+             <MenuButton text="Gestion acsenseurs" textOverrun="CLIP">
                 <graphic>
                    <ImageView fitHeight="25.0" fitWidth="30.0">
                       <Image url="@../resource/ascenseur-d'urgence.png" />
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem mnemonicParsing="false" text="Ajouter ascenseur">
+                   <MenuItem text="Ajouter ascenseur">
                       <graphic>
                          <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../resource/ajouter-le-fichier.png" />
                          </ImageView>
                       </graphic>
                    </MenuItem>
-                   <MenuItem mnemonicParsing="false" text="Modifier ascenseur">
+                   <MenuItem text="Modifier ascenseur">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../resource/updated.png" />
@@ -95,21 +89,21 @@
                    </MenuItem>
                 </items>
              </MenuButton>
-             <MenuButton mnemonicParsing="false" text="Gestion employés" textOverrun="CLIP">
+             <MenuButton text="Gestion employés" textOverrun="CLIP">
                 <graphic>
-                   <ImageView fitHeight="25.0" fitWidth="30.0">
+                   <ImageView fitHeight="30.0" fitWidth="35.0">
                       <Image url="@../resource/employe.png" />
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem mnemonicParsing="false" text="Ajouter employé">
+                   <MenuItem text="Ajouter employé">
                       <graphic>
                          <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../resource/ajouter-le-fichier.png" />
                          </ImageView>
                       </graphic>
                    </MenuItem>
-                   <MenuItem mnemonicParsing="false" text="Modifier employé">
+                   <MenuItem text="Modifier employé">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../resource/updated.png" />
@@ -142,8 +136,8 @@
    <center>
       <AnchorPane fx:id="main" layoutY="89.0">
          <children>
-            <Label layoutX="33.0" layoutY="16.0" style="-fx-font-size: 2.75em;" text="Gestion des pannes" />
-            <Label layoutX="33.0" layoutY="60.0" style="-fx-font-size:  1.25em" text="En temps réel" />
+            <Label layoutX="33.0" layoutY="14.0" style="-fx-font-size: 2em;" text="Gestion des pannes" />
+            <Label layoutX="33.0" layoutY="48.0" style="-fx-font-size:  1.25em" text="En temps réel" />
          </children>
       </AnchorPane>
    </center>

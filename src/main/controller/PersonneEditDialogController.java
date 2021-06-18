@@ -1,7 +1,10 @@
 package main.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.util.Pair;
 import main.model.Personne;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +47,8 @@ public class PersonneEditDialogController {
                 buttonType -> {
                     if (Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
                         return new Pair<>(
-                            new Personne(nomTextField.getText(), prenomTextField.getText(), telephoneTextField.getText()),
-                            passwordTextField.getText()
+                                new Personne(nomTextField.getText(), prenomTextField.getText(), telephoneTextField.getText()),
+                                passwordTextField.getText()
                         );
                     }
                     return null;

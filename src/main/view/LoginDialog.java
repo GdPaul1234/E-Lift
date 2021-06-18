@@ -22,7 +22,7 @@ public class LoginDialog extends Dialog<Pair<String, String>> {
         // Import login components
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("loginDialog.fxml"));
+            loader.setLocation(getClass().getResource("LoginDialog.fxml"));
             loader.setController(this);
 
             DialogPane dialogPane = loader.load();

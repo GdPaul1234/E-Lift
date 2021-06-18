@@ -10,22 +10,42 @@
 
     -fx-color: -fx-base;
 }
+
+/***************************************************
+ *                    Header                       *
+ ***************************************************/
+
+.hero-header {
+    -fx-background-color: linear-gradient(to bottom, #fdfbfb, #ebedee);
+}
+
+.hero-header > .label {
+    -fx-font-size: 1.75em;
+    -fx-font-weight: bold;
+    -fx-text-fill: derive(darkgray, -50%);
+}
+
 /***************************************************
  *                   Controls                      *
  ***************************************************/
-.text-input {
+.text-input, .combo-box {
     -fx-border-width: 0 0 2 0;
     -fx-border-radius: 0.25em;
     -fx-border-color: -fx-accent;
-    -fx-background-color: -fx-background;
+    -fx-background-color: derive(-fx-background, 20%);
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-10%);
 }
 
-.text-input:focused {
+.text-input:focused, .combo-box:focused {
     -fx-border-width: 0 0 2 0;
     -fx-border-color: orange;
-    -fx-background-color: derive(-fx-background, 20%);
+    -fx-background-color: derive(-fx-background, 40%);
 }
 
 .menu-button {
     -fx-background-color: -fx-background;
+}
+
+.menu-button:focused {
+    -fx-background-color: derive(-fx-background, 20%);
 }

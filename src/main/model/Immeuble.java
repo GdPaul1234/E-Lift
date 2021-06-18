@@ -1,5 +1,7 @@
 package main.model;
 
+import javafx.beans.property.IntegerProperty;
+
 import java.util.Set;
 
 public class Immeuble {
