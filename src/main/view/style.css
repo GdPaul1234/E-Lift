@@ -1,0 +1,31 @@
+/* E-Lift custom theme */
+
+.root {
+    /*  base color for objects */
+    -fx-base: #3D4956;
+    -fx-background : -fx-base;
+
+    -fx-text-inner-color: lightgray;
+    -fx-text-background-color: lightgray;
+
+    -fx-color: -fx-base;
+}
+/***************************************************
+ *                   Controls                      *
+ ***************************************************/
+.text-input {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-radius: 0.25em;
+    -fx-border-color: -fx-accent;
+    -fx-background-color: -fx-background;
+}
+
+.text-input:focused {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: orange;
+    -fx-background-color: derive(-fx-background, 20%);
+}
+
+.menu-button {
+    -fx-background-color: -fx-background;
+}

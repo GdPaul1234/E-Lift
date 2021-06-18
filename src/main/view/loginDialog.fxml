@@ -4,26 +4,35 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<DialogPane style="-fx-background-color: #636363 #515151;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <content>
+<?import java.net.URL?>
+
+<DialogPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+
+    <content>
       <GridPane hgap="10.0" vgap="10.0">
           <columnConstraints>
               <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
           </columnConstraints>
-          <padding>
-              <Insets bottom="10.0" left="25.0" right="25.0" top="25.0" />
-          </padding>
-      
-          <Label style="-fx-text-fill: white; -fx-font-size: 12.0" text="Login" />
-          <Label style="-fx-text-fill: white; -fx-font-size: 12.0" text="Password" GridPane.rowIndex="1" />
-      
-          <TextField fx:id="loginTextField" promptText="Login" style="-fx-border-width: 0 0 1 0; -fx-border-color: #4395CC; -fx-background-color: #636363; -fx-text-fill: white;" GridPane.columnIndex="1" />
-          <PasswordField fx:id="passwordTextField" promptText="Password" style="-fx-border-width: 0 0 1 0; -fx-border-color: #4395CC; -fx-background-color: #636363; -fx-text-fill: white;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
           <rowConstraints>
               <RowConstraints />
               <RowConstraints />
           </rowConstraints>
+
+          <padding>
+              <Insets bottom="10.0" left="25.0" right="25.0" top="25.0" />
+          </padding>
+      
+          <Label text="Login" />
+          <Label text="Password" GridPane.rowIndex="1" />
+      
+          <TextField fx:id="loginTextField" promptText="Login" GridPane.columnIndex="1" />
+          <PasswordField fx:id="passwordTextField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
       </GridPane>
    </content>
    <buttonTypes>

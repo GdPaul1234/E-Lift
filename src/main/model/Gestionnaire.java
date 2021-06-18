@@ -9,13 +9,13 @@ import java.util.Set;
  */
 public class Gestionnaire extends Personne implements Observer {
 
-    private Set<Gestionnaire> gestionnaires;
     private Set<Immeuble> immeubles;
     private Set<PanneObserver> panneObservers;
 
     public Gestionnaire(String nom, String prenom, String telephone) {
         super(nom, prenom, telephone);
     }
+
 
     /**
      * @param ascenseur
