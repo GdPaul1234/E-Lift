@@ -39,6 +39,27 @@ CREATE TABLE Ascensoriste(
 
 
 #------------------------------------------------------------
+# Table: DateReparation
+#------------------------------------------------------------
+
+CREATE TABLE DateReparation(
+        dateReparation Datetime NOT NULL ,
+        duree          Int NOT NULL COMMENT "duree en min" 
+	,CONSTRAINT DateReparation_PK PRIMARY KEY (dateReparation)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
+# Table: Adresse
+#------------------------------------------------------------
+
+CREATE TABLE Adresse(
+        rue   Varchar (100) NOT NULL ,
+        ville Varchar (50) NOT NULL ,
+        CP    Char (5) NOT NULL
+	,CONSTRAINT Adresse_PK PRIMARY KEY (rue,ville)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
 # Table: Immeuble
 #------------------------------------------------------------
 
@@ -46,10 +67,13 @@ CREATE TABLE Immeuble(
         IdImmeuble Int  Auto_increment  NOT NULL ,
         nom        Varchar (50) NOT NULL ,
         nbEtage    Int NOT NULL ,
-        login      Varchar (50) NOT NULL
+        login      Varchar (50) NOT NULL ,
+        rue        Varchar (100) NOT NULL ,
+        ville      Varchar (50) NOT NULL
 	,CONSTRAINT Immeuble_PK PRIMARY KEY (IdImmeuble)
 
 	,CONSTRAINT Immeuble_Gestionnaire_FK FOREIGN KEY (login) REFERENCES Gestionnaire(login)
+	,CONSTRAINT Immeuble_Adresse0_FK FOREIGN KEY (rue,ville) REFERENCES Adresse(rue,ville)
 )ENGINE=InnoDB;
 
 
@@ -70,7 +94,6 @@ CREATE TABLE Ascenseur(
 	,CONSTRAINT Ascenseur_Immeuble_FK FOREIGN KEY (IdImmeuble) REFERENCES Immeuble(IdImmeuble)
 )ENGINE=InnoDB;
 
-
 #------------------------------------------------------------
 # Table: ContratMaintenance
 #------------------------------------------------------------
@@ -84,18 +107,6 @@ CREATE TABLE ContratMaintenance(
 
 	,CONSTRAINT ContratMaintenance_Immeuble_FK FOREIGN KEY (IdImmeuble) REFERENCES Immeuble(IdImmeuble)
 )ENGINE=InnoDB;
-
-
-#------------------------------------------------------------
-# Table: DateReparation
-#------------------------------------------------------------
-
-CREATE TABLE DateReparation(
-        dateReparation Datetime NOT NULL ,
-        duree          Int NOT NULL COMMENT "duree en min" 
-	,CONSTRAINT DateReparation_PK PRIMARY KEY (dateReparation)
-)ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: reparation
