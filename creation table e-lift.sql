@@ -44,7 +44,7 @@ CREATE TABLE Ascensoriste(
 
 CREATE TABLE DateReparation(
         dateReparation Datetime NOT NULL ,
-        duree          Int NOT NULL COMMENT "duree en min" 
+        duree          Int NOT NULL COMMENT 'duree en min'
 	,CONSTRAINT DateReparation_PK PRIMARY KEY (dateReparation)
 )ENGINE=InnoDB;
 
@@ -55,7 +55,9 @@ CREATE TABLE DateReparation(
 CREATE TABLE Adresse(
         rue   Varchar (100) NOT NULL ,
         ville Varchar (50) NOT NULL ,
-        CP    Char (5) NOT NULL
+        CP    Char (5) NOT NULL,
+        longitude Float NOT NULL ,
+        lattitude Float NOT NULL
 	,CONSTRAINT Adresse_PK PRIMARY KEY (rue,ville)
 )ENGINE=InnoDB;
 
@@ -106,6 +108,17 @@ CREATE TABLE ContratMaintenance(
 	,CONSTRAINT ContratMaintenance_PK PRIMARY KEY (idContrat)
 
 	,CONSTRAINT ContratMaintenance_Immeuble_FK FOREIGN KEY (IdImmeuble) REFERENCES Immeuble(IdImmeuble)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
+# Table: TrajetAller
+#------------------------------------------------------------
+
+CREATE TABLE TrajetAller(
+        idTrajet    Int  Auto_increment  NOT NULL ,
+        dateTrajet  Datetime NOT NULL ,
+        dureeTrajet Int NOT NULL
+	,CONSTRAINT TrajetAller_PK PRIMARY KEY (idTrajet)
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
