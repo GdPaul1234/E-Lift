@@ -12,7 +12,7 @@ public class Main extends Application {
     boolean loginSucess = false;
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         boolean reaskLogin = true;
 
         do {
@@ -40,7 +40,6 @@ public class Main extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
             primaryStage.setTitle("E-Lift - Maintenance des ascenseurs");
             primaryStage.setScene(new Scene(root, 850, 480));
-            primaryStage.sizeToScene();
             primaryStage.show();
         }
 

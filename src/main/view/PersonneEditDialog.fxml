@@ -63,8 +63,6 @@
 
                 <Label text="Mot de passe" GridPane.rowIndex="4" />
                 <PasswordField fx:id="passwordTextField" promptText="Si nouveau utilisateur" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-
             </children>
 
         </GridPane>

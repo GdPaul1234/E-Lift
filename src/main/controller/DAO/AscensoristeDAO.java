@@ -23,7 +23,8 @@ public class AscensoristeDAO {
         ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
             Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                    rs.getString("telephone"), rs.getString("localisation"));
+                    rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("lattitude"));
+            ascensoriste.setLogin(rs.getString("login"));
             result.add(ascensoriste);
         }
 
@@ -90,6 +91,13 @@ public class AscensoristeDAO {
         stmt.setString(3, ascensoriste.getTelephone());
         stmt.setString(4, login);
 
+        stmt.executeUpdate();
+        stmt.close();
+    }
+
+    public void deleteAscensoriste(String login) throws SQLException {
+        PreparedStatement stmt = instance.getConnection().prepareStatement("delete from Ascensoriste where login=?;");
+        stmt.setString(1, login);
         stmt.executeUpdate();
         stmt.close();
     }

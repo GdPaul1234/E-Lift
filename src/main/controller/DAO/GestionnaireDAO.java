@@ -16,7 +16,7 @@ public class GestionnaireDAO {
         instance = DataAccess.getInstance();
     }
 
-    public List<Gestionnaire> getAllAscensoristes() throws SQLException {
+    public List<Gestionnaire> getAllGestionnaires() throws SQLException {
         Statement stmt = instance.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select * from Personne natural join Gestionnaire order by nom, prenom;");
 
@@ -24,6 +24,7 @@ public class GestionnaireDAO {
         while (rs.next()) {
             Gestionnaire gestionnaire = new Gestionnaire(rs.getString("nom"), rs.getString("prenom"),
                     rs.getString("telephone"));
+            gestionnaire.setLogin(rs.getString("login"));
             result.add(gestionnaire);
         }
 
@@ -95,6 +96,15 @@ public class GestionnaireDAO {
         stmt.setString(4, login);
 
         stmt.executeUpdate();
+        stmt.close();
+    }
+
+    public void deleteGestionnaire(String login) throws SQLException {
+        PreparedStatement stmt = instance.getConnection().prepareStatement("delete from Gestionnaire where login=?;");
+        stmt.setString(1, login);
+        stmt.executeUpdate();
+
+
         stmt.close();
     }
 }

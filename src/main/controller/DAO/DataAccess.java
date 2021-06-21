@@ -65,9 +65,14 @@ public class DataAccess {
             // Lancer le dialogue dans le thread JavaFX
             // https://stackoverflow.com/a/35960176
             try {
-                FutureTask<Void> showDialogTask = new FutureTask<>(showDialog, null);
-                Platform.runLater(showDialogTask);
-                showDialogTask.get();
+                if (Platform.isFxApplicationThread()) {
+                    showDialog.run();
+                } else {
+                    FutureTask<Void> showDialogTask = new FutureTask<>(showDialog, null);
+                    Platform.runLater(showDialogTask);
+                    showDialogTask.get();
+                }
+
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

@@ -31,7 +31,8 @@ CREATE TABLE Gestionnaire(
 
 CREATE TABLE Ascensoriste(
         login        Varchar (50) NOT NULL ,
-        localisation Varchar (50)  NULL
+        longitude    float NULL,
+        lattitude    float NULL
 	,CONSTRAINT Ascensoriste_PK PRIMARY KEY (login)
 
 	,CONSTRAINT Ascensoriste_Personne_FK FOREIGN KEY (login) REFERENCES Personne(login)

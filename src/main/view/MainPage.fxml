@@ -25,7 +25,7 @@
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem onAction="#handleAddAscensoriste" text="Ajouter client">
+                   <MenuItem text="Ajouter client">
                       <graphic>
                          <ImageView fitHeight="30.0" fitWidth="30.0">
                             <Image url="@../resource/ajouter-le-fichier.png" />
@@ -96,14 +96,14 @@
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem text="Ajouter employé">
+                   <MenuItem onAction="#handleAddAscensoriste" text="Ajouter employé">
                       <graphic>
                          <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../resource/ajouter-le-fichier.png" />
                          </ImageView>
                       </graphic>
                    </MenuItem>
-                   <MenuItem text="Modifier employé">
+                   <MenuItem  onAction="#handleEditAscensoriste" text="Modifier employé">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../resource/updated.png" />

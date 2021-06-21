@@ -6,16 +6,29 @@ import java.util.Set;
 
 public class Ascensoriste extends Personne {
 
-    private String localisation;
+    private float longitude, lattidude;
     public Set<Reparation> planning;
 
-    public Ascensoriste(String nom, String prenom, String telephone, String localisation) {
+    public Ascensoriste(String nom, String prenom, String telephone, float longitude, float lattidude) {
         super(nom, prenom, telephone);
-        this.localisation = localisation;
+        this.longitude = longitude;
+        this.lattidude = lattidude;
+    }
+
+    public Ascensoriste() {
+
     }
 
     public Ascensoriste(Personne personne) {
         super(personne);
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public float getLattidude() {
+        return lattidude;
     }
 
     /**

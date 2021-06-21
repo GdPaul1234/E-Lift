@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+
+    <top>
+        <HBox alignment="CENTER" spacing="10.0" styleClass="hero-header">
+            <ImageView fitHeight="25.0" fitWidth="30.0">
+                <Image url="@../resource/silhouette-d'utilisateurs-multiples.png" />
+            </ImageView>
+
+            <Label text="Gestion personne" />
+
+            <padding>
+                <Insets bottom="10.0" top="10.0" />
+            </padding>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.55">
+            <TableView fx:id="personneTable" prefHeight="200.0" prefWidth="200.0">
+                <columns>
+                    <TableColumn fx:id="nomColumn" prefWidth="150.0" text="nom" />
+                    <TableColumn fx:id="prenomColumn" prefWidth="125.0" text="prénom" />
+                </columns>
+            </TableView>
+         <BorderPane>
+            <center>
+      
+                  <GridPane hgap="5.0" vgap="10.0">
+                      <padding>
+                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      </padding>
+      
+                      <columnConstraints>
+                          <ColumnConstraints />
+                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          <ColumnConstraints />
+                      </columnConstraints>
+                      <rowConstraints>
+                          <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                          <RowConstraints />
+                          <RowConstraints />
+                          <RowConstraints />
+                      </rowConstraints>
+      
+                      <Label styleClass="title" text="Détails personne :" GridPane.columnSpan="2147483647" />
+
+                      <Label text="Login" GridPane.rowIndex="1" />
+                      <TextField fx:id="loginTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      
+                      <Label text="Nom" GridPane.rowIndex="3" />
+                      <TextField fx:id="nomTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      
+                      <Label text="Prenom" GridPane.rowIndex="4" />
+                      <TextField fx:id="prenomTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      
+                      <Label text="Telephone" GridPane.rowIndex="6" />
+                      <TextField fx:id="telephoneTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+
+                  </GridPane>
+            </center>
+
+             <bottom>
+                 <ButtonBar>
+                     <buttons>
+                         <Button fx:id="editButton" text="Editer" ButtonBar.buttonData="RIGHT" />
+                         <Button fx:id="delButton" text="Supprimer" ButtonBar.buttonData="RIGHT" />
+                     </buttons>
+                  <padding>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  </padding>
+                 </ButtonBar>
+             </bottom>
+         </BorderPane>
+
+
+        </SplitPane>
+    </center>
+</BorderPane>
