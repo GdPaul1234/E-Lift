@@ -1,7 +1,5 @@
 package main.model;
 
-import javafx.beans.property.IntegerProperty;
-
 import java.util.Set;
 
 public class Immeuble {
@@ -13,11 +11,10 @@ public class Immeuble {
     private Adresse adresse;
     private Set<Ascenseur> ascenseurs;
 
-    public Immeuble(int idImmeuble, String nom, int nbEtage, Adresse adresse) {
-        this.idImmeuble = idImmeuble;
+    public Immeuble(String nom,int idImmeuble, int nbEtage) {
         this.nom = nom;
+        this.idImmeuble = idImmeuble;
         this.nbEtage = nbEtage;
-        this.adresse = adresse;
     }
 
     public int getIdImmeuble() {
@@ -42,5 +39,9 @@ public class Immeuble {
 
     public Set<Ascenseur> getAscenseurs() {
         return ascenseurs;
+    }
+
+    public void setIdImmeuble(int idImmeuble) {
+        this.idImmeuble = idImmeuble;
     }
 }

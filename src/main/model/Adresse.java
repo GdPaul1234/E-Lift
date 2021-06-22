@@ -17,6 +17,9 @@ public class Adresse {
         this.geolocalisation = geolocalisation;
     }
 
+    public Adresse(String rue, String ville, String cp, float longitude, float lattitude) {
+    }
+
     public String getRue() {
         return rue;
     }
