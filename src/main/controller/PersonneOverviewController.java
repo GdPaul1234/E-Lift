@@ -1,6 +1,5 @@
 package main.controller;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,7 +14,6 @@ import main.model.Ascensoriste;
 import main.model.Gestionnaire;
 import main.model.Personne;
 import main.view.PersonneEditDialog;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 
@@ -43,9 +41,9 @@ public class PersonneOverviewController<T extends Personne> {
      */
     @FXML
     private void initialize() throws Exception {
-        getData();
+        fetchData();
 
-        // add edit button listener
+        // add button listener
         editButton.setOnAction(e -> handleEditPersonne());
         delButton.setOnAction(e -> handleDeletePersonne());
 
@@ -53,7 +51,7 @@ public class PersonneOverviewController<T extends Personne> {
         nomColumn.setCellValueFactory(cellData -> cellData.getValue().nomProperty());
         prenomColumn.setCellValueFactory(cellData -> cellData.getValue().prenomProperty());
 
-        // Remplir la table avec les données récupérer
+        // Remplir la table avec les données récupérees
         personneTable.setItems((ObservableList<T>) personnes);
 
         // Listen for selection changes and show the person details when changed.
@@ -75,7 +73,7 @@ public class PersonneOverviewController<T extends Personne> {
         }
     }
 
-    private void getData() throws SQLException {
+    private void fetchData() throws SQLException {
         // Get personnes
         if (role instanceof Ascensoriste) {
             personnes = FXCollections.observableArrayList(new AscensoristeDAO().getAllAscensoristes());
@@ -87,20 +85,20 @@ public class PersonneOverviewController<T extends Personne> {
     }
 
     private void updateDate() throws SQLException {
-        getData();
+        fetchData();
         personneTable.setItems((ObservableList<T>) personnes);
     }
 
-    private  void handleDeletePersonne() {
+    private void handleDeletePersonne() {
         T selectedItem = personneTable.getSelectionModel().getSelectedItem();
 
-        if(selectedItem != null) {
+        if (selectedItem != null) {
             try {
                 String login = selectedItem.getLogin();
 
-                if(role instanceof Ascensoriste) {
+                if (role instanceof Ascensoriste) {
                     new AscensoristeDAO().deleteAscensoriste(login);
-                } else if(role instanceof Gestionnaire) {
+                } else if (role instanceof Gestionnaire) {
                     new GestionnaireDAO().deleteGestionnaire(login);
                 } else {
                     throw new IllegalArgumentException("Unexpected value: " + role);
@@ -108,7 +106,7 @@ public class PersonneOverviewController<T extends Personne> {
 
                 updateDate();
             } catch (SQLException e) {
-                e.printStackTrace();
+                MainController.showError(e);
             }
 
         }
@@ -116,43 +114,40 @@ public class PersonneOverviewController<T extends Personne> {
 
     private void handleEditPersonne() {
         T selectedItem = personneTable.getSelectionModel().getSelectedItem();
-        String login = selectedItem.getLogin();
 
-        if(selectedItem != null) {
-            Platform.runLater(() -> {
-                boolean reaskAdd = false;
-                do {
-                    // Ask user input
-                    Pair<Personne,String> userInput = new PersonneEditDialog(null).showPersonEditDialog(selectedItem);
+        if (selectedItem != null) {
+            String login = selectedItem.getLogin();
+            boolean reaskAdd = false;
 
-                    if(userInput != null) {
-                        System.out.println(login);
+            do {
+                // Ask user input
+                Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonEditDialog(selectedItem);
 
-                        try {
-                            // Verify is all field are not empty
-                            if(userInput.getKey().isValid()) {
-                                if (role instanceof Ascensoriste) {
-                                    new AscensoristeDAO().editAscensoriste(login, new Ascensoriste(userInput.getKey()));
-                                    updateDate();
-                                } else if (role instanceof Gestionnaire) {
-                                    new GestionnaireDAO().editGestionnaire(login, new Gestionnaire(userInput.getKey()));
-                                    updateDate();
-                                }
-                                else {
-                                    throw new IllegalArgumentException("Unexpected value: " + role);
-                                }
+                if (userInput != null) {
+                    System.out.println(login);
 
-                                reaskAdd = false;
-                            } else reaskAdd = true;
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                    } else {
-                        reaskAdd = false;
+                    try {
+                        // Verify is all field are not empty
+                        if (userInput.getKey().isValid()) {
+                            if (role instanceof Ascensoriste) {
+                                new AscensoristeDAO().editAscensoriste(login, new Ascensoriste(userInput.getKey()));
+                                updateDate();
+                            } else if (role instanceof Gestionnaire) {
+                                new GestionnaireDAO().editGestionnaire(login, new Gestionnaire(userInput.getKey()));
+                                updateDate();
+                            } else {
+                                throw new IllegalArgumentException("Unexpected value: " + role);
+                            }
+
+                            reaskAdd = false;
+                        } else reaskAdd = true;
+                    } catch (SQLException e) {
+                        MainController.showError(e);
                     }
-                } while (reaskAdd);
-
-            });
+                } else {
+                    reaskAdd = false;
+                }
+            } while (reaskAdd);
         }
 
     }

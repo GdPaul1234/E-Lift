@@ -14,11 +14,7 @@ import java.util.Objects;
 public class PersonneEditDialogController {
 
     @FXML
-    private TextField nomTextField;
-    @FXML
-    private TextField prenomTextField;
-    @FXML
-    private TextField telephoneTextField;
+    private TextField nomTextField,prenomTextField,telephoneTextField;
     @FXML
     private PasswordField passwordTextField;
 

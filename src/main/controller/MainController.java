@@ -12,10 +12,7 @@ import main.model.Ascensoriste;
 import main.model.Gestionnaire;
 import main.model.Immeuble;
 import main.model.Personne;
-import main.view.AscensoristeOverview;
-import main.view.GestionnaireOverview;
-import main.view.ImmeubleEditDialog;
-import main.view.PersonneEditDialog;
+import main.view.*;
 
 import java.sql.SQLException;
 
@@ -34,7 +31,6 @@ public class MainController {
      *                Gestion Personne               *
      * ********************************************* */
     private <T extends Personne> void handleAddPersonne(T role) {
-        Platform.runLater(() -> {
             boolean reaskAdd = false;
             do {
                 // Ask user input
@@ -44,9 +40,9 @@ public class MainController {
                     try {
                         // Verify is all field are not empty
                         if (userInput.getKey().isValid() && !userInput.getValue().isEmpty()) {
-                            if(role instanceof Ascensoriste) {
+                            if (role instanceof Ascensoriste) {
                                 new AscensoristeDAO().addAscensoriste(new Ascensoriste(userInput.getKey()), userInput.getValue());
-                            } else if(role instanceof Gestionnaire) {
+                            } else if (role instanceof Gestionnaire) {
                                 new GestionnaireDAO().addGestionnaire(new Gestionnaire(userInput.getKey()), userInput.getValue());
                             } else {
                                 throw new IllegalArgumentException("Unexpected value: " + role);
@@ -60,7 +56,6 @@ public class MainController {
                     reaskAdd = false;
                 }
             } while (reaskAdd);
-        });
     }
 
     @FXML
@@ -86,8 +81,8 @@ public class MainController {
     /* ********************************************* *
      *                Gestion Immeuble               *
      * ********************************************* */
-    @FXML private void handleAddImmeuble() {
-        Platform.runLater(() -> {
+    @FXML
+    void handleAddImmeuble() {
             boolean reaskAdd = false;
             do {
                 // Ask user input
@@ -107,6 +102,9 @@ public class MainController {
                     reaskAdd = false;
                 }
             } while (reaskAdd);
-        });
+    }
+
+    @FXML private void handleEditImmeuble() throws Exception {
+        new ImmeubleOverview().start(new Stage());
     }
 }

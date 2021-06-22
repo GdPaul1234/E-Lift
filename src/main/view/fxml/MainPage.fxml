@@ -56,7 +56,7 @@
                          </ImageView>
                       </graphic>
                    </MenuItem>
-                   <MenuItem text="Modifier immeuble">
+                   <MenuItem text="Modifier immeuble" onAction="#handleEditImmeuble">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../../resource/updated.png" />
@@ -80,7 +80,7 @@
                          </ImageView>
                       </graphic>
                    </MenuItem>
-                   <MenuItem text="Modifier ascenseur">
+                   <MenuItem text="Modifier ascenseur" onAction="#handleEditImmeuble">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../../resource/updated.png" />

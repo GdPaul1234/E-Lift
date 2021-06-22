@@ -16,7 +16,7 @@ public class Adresse {
     private FloatProperty longitude = new SimpleFloatProperty(null, "longitude");
     private FloatProperty latitude = new SimpleFloatProperty(null, "latitude");
 
-    public Adresse(String rue, String ville, String codePostal, float longitude, float latitude) {
+    public Adresse(String rue, String ville, String codePostal, float latitude, float longitude) {
         this.rue.set(rue);
         this.ville.set(ville);
         this.codePostal.set(codePostal);

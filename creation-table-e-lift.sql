@@ -145,6 +145,12 @@ CREATE TABLE reparation(
 CREATE ROLE 'e-lift_employe', 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
 
+GRANT INSERT ON `e-lift`.adresse TO 'e-lift_gestionnaire';
+GRANT INSERT, DELETE ON `e-lift`.ascenseur TO 'e-lift_gestionnaire';
+GRANT INSERT, UPDATE, DELETE ON `e-lift`.contratmaintenance TO 'e-lift_gestionnaire';
+GRANT INSERT, UPDATE, DELETE ON `e-lift`.immeuble TO 'e-lift_gestionnaire';
+GRANT SELECT ON `e-lift`.* TO 'e-lift_gestionnaire';
+
 
 USE `e-lift`;
 DROP function IF EXISTS `distance`;
