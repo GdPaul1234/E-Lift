@@ -100,11 +100,13 @@ public class GestionnaireDAO {
     }
 
     public void deleteGestionnaire(String login) throws SQLException {
-        PreparedStatement stmt = instance.getConnection().prepareStatement("delete from Gestionnaire where login=?;");
-        stmt.setString(1, login);
-        stmt.executeUpdate();
+        String[] queries = { "delete from Gestionnaire where login=?;", "drop user if exists ?;" };
 
-
-        stmt.close();
+        for (String query : queries) {
+            PreparedStatement stmt = instance.getConnection().prepareStatement(query);
+            stmt.setString(1, login);
+            stmt.executeUpdate();
+            stmt.close();
+        }
     }
 }

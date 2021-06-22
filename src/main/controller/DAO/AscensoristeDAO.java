@@ -1,6 +1,7 @@
 package main.controller.DAO;
 
 import main.model.Ascensoriste;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,6 +35,15 @@ public class AscensoristeDAO {
         return result;
     }
 
+    public StringBuilder getLoginBuilder(String nom, String prenom) {
+        StringBuilder newLogin = new StringBuilder();
+        newLogin.append(prenom.toLowerCase());
+        newLogin.append('.');
+        newLogin.append(nom.toLowerCase());
+        newLogin.append("@e-lift.fr");
+        return newLogin;
+    }
+
     public void addAscensoriste(Ascensoriste ascensoriste, String password) throws SQLException {
         instance.getConnection().setAutoCommit(false);
 
@@ -47,11 +57,7 @@ public class AscensoristeDAO {
         stmt.setString(2, prenom);
         stmt.setString(3, ascensoriste.getTelephone());
 
-        StringBuilder newLogin = new StringBuilder();
-        newLogin.append(prenom.toLowerCase());
-        newLogin.append('.');
-        newLogin.append(nom.toLowerCase());
-        newLogin.append("@e-lift.fr");
+        StringBuilder newLogin = getLoginBuilder(nom, prenom);
         ascensoriste.setLogin(newLogin.toString());
 
         stmt.setString(4, newLogin.toString());
@@ -96,9 +102,13 @@ public class AscensoristeDAO {
     }
 
     public void deleteAscensoriste(String login) throws SQLException {
-        PreparedStatement stmt = instance.getConnection().prepareStatement("delete from Ascensoriste where login=?;");
-        stmt.setString(1, login);
-        stmt.executeUpdate();
-        stmt.close();
+        String[] queries = { "delete from Ascensoriste where login=?;", "drop user if exists ?;" };
+
+        for (String query : queries) {
+            PreparedStatement stmt = instance.getConnection().prepareStatement(query);
+            stmt.setString(1, login);
+            stmt.executeUpdate();
+            stmt.close();
+        }
     }
 }
