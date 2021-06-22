@@ -162,3 +162,5 @@ DELIMITER ;
 
 -- distance Paris Marseille
 select distance(48.862725,2.3514616,43.2961743,5.3699525) as distance;
+
+select *, distance(latitude, longitude, 43.2961743, 5.3699525)  as distance from ascensoriste order by distance;
