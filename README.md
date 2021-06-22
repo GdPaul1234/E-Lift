@@ -34,7 +34,8 @@ Pour réaliser notre projet nous avons utiliser le langage JAVA pour pouvoir uti
 <a name="installation"></a>
 ### Installation
 
-Installation
+Pour installer notre application bureau chez vous il faudrat ouvrir le fichier ZIP : E-lift.zip et le déziper dans un unique et même dossier. Un fois le tout déziper, il vous faudra copier le fichier SQL et l'installer sur votre MySQL Workbench pour l'initialiser et appliquer quelques lignes de commande utilies à la présentation de notre application.  
+Il vous suffira de lancer l'executable pour voir apparaitre l'interface de notre application sur votre écran avec un menu de connexion.
 
 <a name="collaboration"></a>
 ### Collaboration
