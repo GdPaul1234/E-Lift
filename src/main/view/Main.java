@@ -37,7 +37,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         if(loginSucess) {
-            Parent root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/main/view/fxml/MainPage.fxml"));
             primaryStage.setTitle("E-Lift - Maintenance des ascenseurs");
             primaryStage.setScene(new Scene(root, 850, 480));
             primaryStage.show();

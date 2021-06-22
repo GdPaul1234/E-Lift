@@ -8,7 +8,7 @@
 
 <DialogPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
-        <URL value="@style.css" />
+        <URL value="@../style.css" />
     </stylesheets>
 
     <content>

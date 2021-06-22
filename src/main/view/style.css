@@ -30,6 +30,10 @@
     -fx-font-weight: bold;
 }
 
+.info-pane .text-input {
+    -fx-border-color: derive(darkgray, -20%);
+}
+
 /***************************************************
  *                   Controls                      *
  ***************************************************/

@@ -14,7 +14,7 @@ public class AscensoristeOverview extends Application {
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Start ascensoriste editing...");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("PersonneOverview.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/view/fxml/PersonneOverview.fxml"));
         loader.setController(new PersonneOverviewController<>(new Ascensoriste()));
 
         Parent root = loader.load();

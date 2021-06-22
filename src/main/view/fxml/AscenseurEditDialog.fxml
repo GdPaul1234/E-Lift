@@ -14,13 +14,13 @@
     </buttonTypes>
 
     <stylesheets>
-        <URL value="@style.css"/>
+        <URL value="@../style.css"/>
     </stylesheets>
 
     <header>
         <HBox alignment="CENTER" prefWidth="350.0" spacing="10.0" styleClass="hero-header">
             <ImageView fitHeight="25.0" fitWidth="30.0">
-                <Image url="@../resource/ascenseur-d'urgence.png"/>
+                <Image url="@../../resource/ascenseur-d'urgence.png"/>
             </ImageView>
 
             <Label text="Edition ascenseur"/>
