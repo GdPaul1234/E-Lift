@@ -31,7 +31,8 @@ CREATE TABLE Gestionnaire(
 
 CREATE TABLE Ascensoriste(
         login        Varchar (50) NOT NULL ,
-        localisation Varchar (50)  NULL
+        longitude    float NULL,
+        latitude    float NULL
 	,CONSTRAINT Ascensoriste_PK PRIMARY KEY (login)
 
 	,CONSTRAINT Ascensoriste_Personne_FK FOREIGN KEY (login) REFERENCES Personne(login)
@@ -44,7 +45,7 @@ CREATE TABLE Ascensoriste(
 
 CREATE TABLE DateReparation(
         dateReparation Datetime NOT NULL ,
-        duree          Int NOT NULL COMMENT "duree en min" 
+        duree          Int NOT NULL COMMENT 'duree en min'
 	,CONSTRAINT DateReparation_PK PRIMARY KEY (dateReparation)
 )ENGINE=InnoDB;
 
@@ -55,7 +56,9 @@ CREATE TABLE DateReparation(
 CREATE TABLE Adresse(
         rue   Varchar (100) NOT NULL ,
         ville Varchar (50) NOT NULL ,
-        CP    Char (5) NOT NULL
+        CP    Char (5) NOT NULL,
+        longitude Float NOT NULL ,
+        latitude Float NOT NULL
 	,CONSTRAINT Adresse_PK PRIMARY KEY (rue,ville)
 )ENGINE=InnoDB;
 
@@ -109,6 +112,17 @@ CREATE TABLE ContratMaintenance(
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
+# Table: TrajetAller
+#------------------------------------------------------------
+
+CREATE TABLE TrajetAller(
+        idTrajet    Int  Auto_increment  NOT NULL ,
+        dateTrajet  Datetime NOT NULL ,
+        dureeTrajet Int NOT NULL
+	,CONSTRAINT TrajetAller_PK PRIMARY KEY (idTrajet)
+)ENGINE=InnoDB;
+
+#------------------------------------------------------------
 # Table: reparation
 #------------------------------------------------------------
 
@@ -128,3 +142,25 @@ CREATE TABLE reparation(
 
 CREATE ROLE 'e-lift_employe', 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
+
+
+USE `e-lift`;
+DROP function IF EXISTS `distance`;
+
+DELIMITER $$
+USE `e-lift`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `distance`(lat1 float, long1 float, lat2 float, long2 float) RETURNS float
+    DETERMINISTIC
+BEGIN
+# 01Net, Astuce Excel : calculez la distance entre deux points de la Terre 
+# https://www.01net.com/astuces/astuce-excel-calculez-la-distance-entre-deux-points-de-la-terre-555908.html
+RETURN ACOS(SIN(RADIANS(lat1))*SIN(RADIANS(lat2))+COS(RADIANS(lat1))*COS(RADIANS(lat2))*COS(RADIANS(long1-long2)))*6371;
+END
+$$
+
+DELIMITER ;
+
+-- distance Paris Marseille
+select distance(48.862725,2.3514616,43.2961743,5.3699525) as distance;
+
+select *, distance(latitude, longitude, 43.2961743, 5.3699525)  as distance from ascensoriste order by distance;

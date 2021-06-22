@@ -21,7 +21,7 @@ public class PersonneEditDialog {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("PersonneEditDialog.fxml"));
+            loader.setLocation(getClass().getResource("/main/view/fxml/PersonneEditDialog.fxml"));
             DialogPane page = loader.load();
 
             // Create the dialog Stage.

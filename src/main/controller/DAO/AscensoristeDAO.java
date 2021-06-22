@@ -1,6 +1,7 @@
 package main.controller.DAO;
 
 import main.model.Ascensoriste;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +24,8 @@ public class AscensoristeDAO {
         ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
             Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                    rs.getString("telephone"), rs.getString("localisation"));
+                    rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
+            ascensoriste.setLogin(rs.getString("login"));
             result.add(ascensoriste);
         }
 
@@ -31,6 +33,15 @@ public class AscensoristeDAO {
         stmt.close();
 
         return result;
+    }
+
+    public StringBuilder getLoginBuilder(String nom, String prenom) {
+        StringBuilder newLogin = new StringBuilder();
+        newLogin.append(prenom.toLowerCase());
+        newLogin.append('.');
+        newLogin.append(nom.toLowerCase());
+        newLogin.append("@e-lift.fr");
+        return newLogin;
     }
 
     public void addAscensoriste(Ascensoriste ascensoriste, String password) throws SQLException {
@@ -46,11 +57,7 @@ public class AscensoristeDAO {
         stmt.setString(2, prenom);
         stmt.setString(3, ascensoriste.getTelephone());
 
-        StringBuilder newLogin = new StringBuilder();
-        newLogin.append(prenom.toLowerCase());
-        newLogin.append('.');
-        newLogin.append(nom.toLowerCase());
-        newLogin.append("@e-lift.fr");
+        StringBuilder newLogin = getLoginBuilder(nom, prenom);
         ascensoriste.setLogin(newLogin.toString());
 
         stmt.setString(4, newLogin.toString());
@@ -92,5 +99,16 @@ public class AscensoristeDAO {
 
         stmt.executeUpdate();
         stmt.close();
+    }
+
+    public void deleteAscensoriste(String login) throws SQLException {
+        String[] queries = { "delete from Ascensoriste where login=?;", "drop user if exists ?;" };
+
+        for (String query : queries) {
+            PreparedStatement stmt = instance.getConnection().prepareStatement(query);
+            stmt.setString(1, login);
+            stmt.executeUpdate();
+            stmt.close();
+        }
     }
 }

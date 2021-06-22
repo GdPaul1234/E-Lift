@@ -16,6 +16,10 @@ public class Gestionnaire extends Personne implements Observer {
         super(nom, prenom, telephone);
     }
 
+    public Gestionnaire(Personne personne) {
+        super(personne);
+    }
+
 
     /**
      * @param ascenseur

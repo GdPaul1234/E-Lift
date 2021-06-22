@@ -25,6 +25,15 @@
     -fx-text-fill: derive(darkgray, -50%);
 }
 
+.title {
+    -fx-font-size: 1.25em;
+    -fx-font-weight: bold;
+}
+
+.info-pane .text-input {
+    -fx-border-color: derive(darkgray, -20%);
+}
+
 /***************************************************
  *                   Controls                      *
  ***************************************************/

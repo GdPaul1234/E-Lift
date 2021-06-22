@@ -27,6 +27,10 @@ public class Personne {
         columnsHeader = personne.columnsHeader;
     }
 
+    public Personne() {
+
+    }
+
     public boolean isValid() {
         return nom.isNotEmpty().get() && prenom.isNotEmpty().get() && telephone.isNotEmpty().get();
     }

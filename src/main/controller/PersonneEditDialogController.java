@@ -66,6 +66,7 @@ public class PersonneEditDialogController {
 
         prenomTextField.setText(personne.getPrenom());
         nomTextField.setText(personne.getNom());
+        telephoneTextField.setText(personne.getTelephone());
     }
 
 }
