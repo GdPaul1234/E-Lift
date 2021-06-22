@@ -32,7 +32,7 @@ CREATE TABLE Gestionnaire(
 CREATE TABLE Ascensoriste(
         login        Varchar (50) NOT NULL ,
         longitude    float NULL,
-        lattitude    float NULL
+        latitude    float NULL
 	,CONSTRAINT Ascensoriste_PK PRIMARY KEY (login)
 
 	,CONSTRAINT Ascensoriste_Personne_FK FOREIGN KEY (login) REFERENCES Personne(login)
@@ -58,7 +58,7 @@ CREATE TABLE Adresse(
         ville Varchar (50) NOT NULL ,
         CP    Char (5) NOT NULL,
         longitude Float NOT NULL ,
-        lattitude Float NOT NULL
+        latitude Float NOT NULL
 	,CONSTRAINT Adresse_PK PRIMARY KEY (rue,ville)
 )ENGINE=InnoDB;
 

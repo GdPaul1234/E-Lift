@@ -24,7 +24,7 @@ public class AscensoristeDAO {
         ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
             Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                    rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("lattitude"));
+                    rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
             ascensoriste.setLogin(rs.getString("login"));
             result.add(ascensoriste);
         }
