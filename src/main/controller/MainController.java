@@ -1,23 +1,23 @@
 package main.controller;
 
-
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import main.controller.DAO.AscensoristeDAO;
+import main.controller.DAO.GestionnaireDAO;
 import main.model.Ascensoriste;
+import main.model.Gestionnaire;
 import main.model.Personne;
 import main.view.AscensoristeOverview;
+import main.view.GestionnaireOverview;
 import main.view.PersonneEditDialog;
 
 import java.sql.SQLException;
 
 public class MainController {
 
-    @FXML
-    private void handleAddAscensoriste() {
+    private <T extends Personne> void handleAddPersonne(T role) {
         Platform.runLater(() -> {
             boolean reaskAdd = false;
             do {
@@ -28,7 +28,13 @@ public class MainController {
                     try {
                         // Verify is all field are not empty
                         if (userInput.getKey().isValid() && !userInput.getValue().isEmpty()) {
-                            new AscensoristeDAO().addAscensoriste(new Ascensoriste(userInput.getKey()), userInput.getValue());
+                            if(role instanceof Ascensoriste) {
+                                new AscensoristeDAO().addAscensoriste(new Ascensoriste(userInput.getKey()), userInput.getValue());
+                            } else if(role instanceof Gestionnaire) {
+                                new GestionnaireDAO().addGestionnaire(new Gestionnaire(userInput.getKey()), userInput.getValue());
+                            } else {
+                                throw new IllegalArgumentException("Unexpected value: " + role);
+                            }
                             reaskAdd = false;
                         } else reaskAdd = true;
                     } catch (SQLException throwables) {
@@ -42,7 +48,22 @@ public class MainController {
     }
 
     @FXML
-    void handleEditAscensoriste() throws Exception {
+    private void handleAddAscensoriste() {
+        handleAddPersonne(new Ascensoriste());
+    }
+
+    @FXML
+    private void handleEditAscensoriste() throws Exception {
         new AscensoristeOverview().start(new Stage());
+    }
+
+    @FXML
+    private void handleAddGestionnaire() {
+        handleAddPersonne(new Gestionnaire());
+    }
+
+    @FXML
+    private void handleEditGestionnaire() throws Exception {
+        new GestionnaireOverview().start(new Stage());
     }
 }

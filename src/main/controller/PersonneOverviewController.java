@@ -152,7 +152,6 @@ public class PersonneOverviewController<T extends Personne> {
                     }
                 } while (reaskAdd);
 
-
             });
         }
 
