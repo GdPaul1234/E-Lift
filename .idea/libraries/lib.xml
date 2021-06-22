@@ -1,19 +1,13 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" />
+      <root url="file://D:/- EFREI/e-Lift JavaFX/javafx-sdk-16/lib" />
     </CLASSES>
-    <JAVADOC>
-      <root url="https://openjfx.io/javadoc/16/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" />
-      <root url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" />
+      <root url="file://D:/- EFREI/e-Lift JavaFX/javafx-sdk-16/lib" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" recursive="false" type="SOURCES" />
-    <jarDirectory url="file://$PROJECT_DIR$/../../../../../../Users/33634/javafx-sdk-16/lib" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://D:/- EFREI/e-Lift JavaFX/javafx-sdk-16/lib" recursive="false" />
+    <jarDirectory url="file://D:/- EFREI/e-Lift JavaFX/javafx-sdk-16/lib" recursive="false" type="SOURCES" />
   </library>
 </component>
