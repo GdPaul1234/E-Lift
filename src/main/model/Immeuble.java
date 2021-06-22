@@ -1,20 +1,26 @@
 package main.model;
 
+import javafx.beans.property.*;
+
 import java.util.Set;
 
 public class Immeuble {
 
     private int idImmeuble;
-    private String nom;
-    private int nbEtage;
+    private StringProperty nom = new SimpleStringProperty(null, "nom");
+    private IntegerProperty nbEtage = new SimpleIntegerProperty(null, "nb étage");
+    private ObjectProperty<Adresse> adresse = new SimpleObjectProperty<>(null, "adresse");
     private Set<ContratMaintenance> contrats;
-    private Adresse adresse;
     private Set<Ascenseur> ascenseurs;
 
-    public Immeuble(String nom,int idImmeuble, int nbEtage) {
-        this.nom = nom;
-        this.idImmeuble = idImmeuble;
-        this.nbEtage = nbEtage;
+    public Immeuble(String nom, int nbEtage, Adresse adresse) {
+        this.nom.set(nom);
+        this.nbEtage.set(nbEtage);
+        this.adresse.set(adresse);
+    }
+
+    public boolean isValid() {
+        return nom.isNotEmpty().get() && nbEtage.greaterThanOrEqualTo(1).get() && adresse.isNotNull().get();
     }
 
     public int getIdImmeuble() {
@@ -22,19 +28,19 @@ public class Immeuble {
     }
 
     public String getNom() {
-        return nom;
+        return nom.get();
     }
 
     public int getNbEtage() {
-        return nbEtage;
+        return nbEtage.get();
+    }
+
+    public Adresse getAdresse() {
+        return adresse.get();
     }
 
     public Set<ContratMaintenance> getContrats() {
         return contrats;
-    }
-
-    public Adresse getAdresse() {
-        return adresse;
     }
 
     public Set<Ascenseur> getAscenseurs() {
@@ -43,5 +49,18 @@ public class Immeuble {
 
     public void setIdImmeuble(int idImmeuble) {
         this.idImmeuble = idImmeuble;
+    }
+
+    /* Property getter */
+    public StringProperty nomProperty() {
+        return nom;
+    }
+
+    public IntegerProperty nbEtageProperty() {
+        return nbEtage;
+    }
+
+    public ObjectProperty<Adresse> adresseProperty() {
+        return adresse;
     }
 }

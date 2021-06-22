@@ -12,7 +12,7 @@ public class GestionnaireOverview extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("Start ascensoriste editing...");
+        System.out.println("Start gestionnaire editing...");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/view/fxml/PersonneOverview.fxml"));
         loader.setController(new PersonneOverviewController<>(new Gestionnaire()));

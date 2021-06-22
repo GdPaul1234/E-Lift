@@ -3,6 +3,7 @@ package main.controller.DAO;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.util.Pair;
+import main.controller.MainController;
 import main.view.LoginDialog;
 
 import java.sql.Connection;
@@ -19,14 +20,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DataAccess {
     private static DataAccess instance;
     private Connection conn;
+    private String login;
 
-    private DataAccess(String[] args) throws SQLException {
-        String url = args[0];
-        String login = args[1];
-        String password = args[2];
-
+    private DataAccess(String url, String login, String password) throws SQLException {
+        this.login = login;
         /* Get the Connection object. */
         conn = DriverManager.getConnection(url, login, password);
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     /**
@@ -46,13 +49,12 @@ public class DataAccess {
                 Optional<Pair<String, String>> result = dialog.showAndWait();
 
                 result.ifPresent(usernamePassword -> {
-                    String[] args = {"jdbc:mysql://localhost:3306/e-lift", usernamePassword.getKey(), usernamePassword.getValue()};
+                    String login = usernamePassword.getKey();
+                    String password = usernamePassword.getValue();
                     try {
-                        instance = new DataAccess(args);
+                        instance = new DataAccess("jdbc:mysql://localhost:3306/e-lift", login, password);
                     } catch (SQLException e) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setContentText(e.getMessage());
-                        alert.showAndWait();
+                        MainController.showError(e);
                         error.set(true);
                     }
                 });
@@ -74,7 +76,7 @@ public class DataAccess {
                 }
 
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                MainController.showError(e);
             }
 
             if(error.get()) {
@@ -95,8 +97,7 @@ public class DataAccess {
             instance.getConnection().close();
         }
 
-        String[] args = { "jdbc:mysql://localhost:3306/e-lift", login, password };
-        instance = new DataAccess(args);
+        instance = new DataAccess("jdbc:mysql://localhost:3306/e-lift", login, password);
 
         if (instance == null)
             throw new IllegalArgumentException();

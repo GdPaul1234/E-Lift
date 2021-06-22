@@ -2,21 +2,37 @@ package main.controller;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import main.controller.DAO.AscensoristeDAO;
 import main.controller.DAO.GestionnaireDAO;
+import main.controller.DAO.ImmeubleDAO;
 import main.model.Ascensoriste;
 import main.model.Gestionnaire;
+import main.model.Immeuble;
 import main.model.Personne;
 import main.view.AscensoristeOverview;
 import main.view.GestionnaireOverview;
+import main.view.ImmeubleEditDialog;
 import main.view.PersonneEditDialog;
 
 import java.sql.SQLException;
 
 public class MainController {
 
+    public static void showError(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
+
+        // TODO deleted this
+        e.printStackTrace();
+    }
+
+    /* ********************************************* *
+     *                Gestion Personne               *
+     * ********************************************* */
     private <T extends Personne> void handleAddPersonne(T role) {
         Platform.runLater(() -> {
             boolean reaskAdd = false;
@@ -37,8 +53,8 @@ public class MainController {
                             }
                             reaskAdd = false;
                         } else reaskAdd = true;
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                    } catch (SQLException e) {
+                        showError(e);
                     }
                 } else {
                     reaskAdd = false;
@@ -65,5 +81,32 @@ public class MainController {
     @FXML
     private void handleEditGestionnaire() throws Exception {
         new GestionnaireOverview().start(new Stage());
+    }
+
+    /* ********************************************* *
+     *                Gestion Immeuble               *
+     * ********************************************* */
+    @FXML private void handleAddImmeuble() {
+        Platform.runLater(() -> {
+            boolean reaskAdd = false;
+            do {
+                // Ask user input
+                Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleEditDialog();
+
+                if (userInput != null) {
+                    try {
+                        // Verify is all field are not empty
+                        if (userInput.isValid()) {
+                            new ImmeubleDAO().addImmeuble(userInput);
+                            reaskAdd = false;
+                        } else reaskAdd = true;
+                    } catch (SQLException e) {
+                        showError(e);
+                    }
+                } else {
+                    reaskAdd = false;
+                }
+            } while (reaskAdd);
+        });
     }
 }

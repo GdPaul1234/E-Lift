@@ -19,13 +19,13 @@ public class AscenseurDAO {
         instance = DataAccess.getInstance();
     }
 
-    public List<Ascenseur> getAllAscenseur() throws SQLException {
+    public List<Ascenseur> getAllAscenseurs() throws SQLException {
         Statement stmt = instance.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select * from ascenseur;");
 
         ArrayList<Ascenseur> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
-            Ascenseur ascenseur = new Ascenseur(rs.getInt("idAscenseur"),rs.getString("marque"), rs.getString("modele"), rs.getDate("miseEnService"), rs.getInt("etage"), (EtatAscenseur.get(rs.getString("etat"))), (TypeReparation.get(rs.getString("typeReparation"))));
+            Ascenseur ascenseur = new Ascenseur(rs.getInt("idAscenseur"),rs.getString("marque"), rs.getString("modele"), rs.getDate("miseEnService"), rs.getInt("etage"), EtatAscenseur.get(rs.getString("etat")));
             result.add(ascenseur);
         }
 
@@ -35,50 +35,37 @@ public class AscenseurDAO {
         return result;
     }
 
-    public void addImmeuble(Ascenseur ascenseur) throws SQLException {
-        instance.getConnection().setAutoCommit(false);
-
-        Integer idAscenseur = ascenseur.getIdAscenseur();
-        Integer etage = ascenseur.getEtage();
-        String marque = ascenseur.getMarque();
-        String modele = ascenseur.getModele();
-        String state = ascenseur.getEtatAscenceur().toString();
-        Date miseEnService = ascenseur.getDateMiseEnService();
-        TypeReparation type = ascenseur.getTypeReparation();
-
-        // ajouter ascenseur dans BDD
+    public void addImmeuble(Ascenseur ascenseur, int idImmeuble) throws SQLException {
         PreparedStatement stmt = instance.getConnection().prepareStatement(
-                "insert into ascenseur(idAscenseur,marque,modele,miseEnService,etat,etage) values(?,?,?,?,?,?);");
-        stmt.setInt(1, idAscenseur);
-        stmt.setString(2, marque);
-        stmt.setString(3, modele);
-        stmt.setDate(4, (java.sql.Date) miseEnService);
-        stmt.setString(5, state);
-        stmt.setInt(6, etage);
-
+                "insert into ascenseur(idAscenseur,marque,modele,miseEnService,etat,etage,IdImmeuble) values(?,?,?,?,?,?,?);");
+        stmt.setInt(1, ascenseur.getIdAscenseur());
+        stmt.setString(2, ascenseur.getMarque());
+        stmt.setString(3, ascenseur.getModele());
+        stmt.setDate(4, (java.sql.Date) ascenseur.getDateMiseEnService());
+        stmt.setString(5,  ascenseur.getState().toString());
+        stmt.setInt(6, ascenseur.getEtage());
+        stmt.setInt(7, idImmeuble);
+        stmt.executeUpdate();
         stmt.close();
-
-        instance.getConnection().setAutoCommit(true);
     }
 
     public void editAscenseur(Ascenseur ascenseur) throws SQLException {
-        // insertion vehicule
-        PreparedStatement stmtVehicule = instance.getConnection()
+        PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("update Ascenseur set marque=?, modele=?, miseEnService=?, etage=?, etat=? where idAscenseur=?;");
-        stmtVehicule.setString(1, ascenseur.getMarque());
-        stmtVehicule.setString(2, ascenseur.getModele());
-        stmtVehicule.setDate(3, (java.sql.Date) ascenseur.getDateMiseEnService());
-        stmtVehicule.setInt(4, ascenseur.getEtage());
-        stmtVehicule.setString(5, ascenseur.getEtatAscenceur().toString());
-        stmtVehicule.executeUpdate();
-        stmtVehicule.close();
+        stmt.setString(1, ascenseur.getMarque());
+        stmt.setString(2, ascenseur.getModele());
+        stmt.setDate(3, (java.sql.Date) ascenseur.getDateMiseEnService());
+        stmt.setInt(4, ascenseur.getEtage());
+        stmt.setString(5, ascenseur.getState().toString());
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     public void removeAscenceur(int idAscenceur) throws SQLException {
-        PreparedStatement stmtVehicule = instance.getConnection()
+        PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("delete from ascenseur where idAscenseur=?;");
-        stmtVehicule.setInt(1, idAscenceur);
-        stmtVehicule.executeUpdate();
-        stmtVehicule.close();
+        stmt.setInt(1, idAscenceur);
+        stmt.executeUpdate();
+        stmt.close();
     }
 }

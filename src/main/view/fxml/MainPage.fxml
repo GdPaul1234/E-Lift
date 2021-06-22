@@ -49,7 +49,7 @@
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem text="Ajouter immeuble">
+                   <MenuItem text="Ajouter immeuble" onAction="#handleAddImmeuble">
                       <graphic>
                          <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../../resource/ajouter-le-fichier.png" />

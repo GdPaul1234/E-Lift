@@ -1,5 +1,6 @@
 package main.model;
 
+import javafx.beans.property.*;
 import main.model.enums.EtatAscenseur;
 import main.model.enums.TypeReparation;
 
@@ -11,59 +12,48 @@ import java.util.Set;
  */
 public class Ascenseur {
 
-    private int idAscenseur;
-    private String marque;
-    private String modele;
-    private Date dateMiseEnService;
-    private int etage;
-    private EtatAscenseur state;
-    private TypeReparation reparation;
+    private IntegerProperty idAscenseur = new SimpleIntegerProperty(null,"ID");
+    private StringProperty marque = new SimpleStringProperty(null, "marque");
+    private StringProperty modele = new SimpleStringProperty(null, "modèle");
+    private ObjectProperty<Date> dateMiseEnService = new SimpleObjectProperty<>(null, "date mise en service");
+    private IntegerProperty etage = new SimpleIntegerProperty(null, "étage");
+    private ObjectProperty<EtatAscenseur> state = new SimpleObjectProperty<>(null, "état");
+
     private Set<Entretien> entretiens;
     private Set<Alerte> alertes;
 
-    public Ascenseur(int idAscenseur, String marque, String modele, Date dateMiseEnService, int etage, EtatAscenseur state, TypeReparation reparation) {
-        this.idAscenseur = idAscenseur;
-        this.marque = marque;
-        this.modele = modele;
-        this.dateMiseEnService = dateMiseEnService;
-        this.etage = etage;
-        this.state = state;
-        this.reparation = reparation;
+    public Ascenseur(int idAscenseur, String marque, String modele, Date dateMiseEnService, int etage, EtatAscenseur state) {
+        this.idAscenseur.set(idAscenseur);
+        this.marque.set(marque);
+        this.modele.set(modele);
+        this.dateMiseEnService.set(dateMiseEnService);
+        this.etage.set(etage);
+        this.state.set(state);
     }
 
-    public int getIdAscenseur() { return idAscenseur; }
+    /* Getters */
+    public int getIdAscenseur() { return idAscenseur.get(); }
 
     public String getMarque() {
-        return marque;
+        return marque.get();
     }
 
     public String getModele() {
-        return modele;
+        return modele.get();
     }
 
     public Date getDateMiseEnService() {
-        return dateMiseEnService;
+        return dateMiseEnService.get();
     }
 
-    public int getEtage() { return etage; }
+    public int getEtage() { return etage.get(); }
 
-    public EtatAscenseur getEtatAscenceur() { return state; }
-
-    public TypeReparation getTypeReparation() { return reparation; }
-
-    /**
-     * @return
-     */
     public EtatAscenseur getState() {
-        // TODO implement here
-        return null;
+        return state.get();
     }
 
-    /**
-     * @param etat
-     */
-    public void setState(EtatAscenseur etat) {
-        // TODO implement here
+    public void setState(EtatAscenseur state) {
+        this.state.set(state);
     }
 
     /**
@@ -73,5 +63,29 @@ public class Ascenseur {
         // TODO implement here
     }
 
+    /* Property getter */
 
+    public IntegerProperty idAscenseurProperty() {
+        return idAscenseur;
+    }
+
+    public StringProperty marqueProperty() {
+        return marque;
+    }
+
+    public StringProperty modeleProperty() {
+        return modele;
+    }
+
+    public ObjectProperty<Date> dateMiseEnServiceProperty() {
+        return dateMiseEnService;
+    }
+
+    public IntegerProperty etageProperty() {
+        return etage;
+    }
+
+    public ObjectProperty<EtatAscenseur> stateProperty() {
+        return state;
+    }
 }
