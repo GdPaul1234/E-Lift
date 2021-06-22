@@ -46,7 +46,7 @@ public class AscenseurDAO {
         Date miseEnService = ascenseur.getDateMiseEnService();
         TypeReparation type = ascenseur.getTypeReparation();
 
-        // ajouter personne dans BDD
+        // ajouter ascenseur dans BDD
         PreparedStatement stmt = instance.getConnection().prepareStatement(
                 "insert into ascenseur(idAscenseur,marque,modele,miseEnService,etat,etage) values(?,?,?,?,?,?);");
         stmt.setInt(1, idAscenseur);
