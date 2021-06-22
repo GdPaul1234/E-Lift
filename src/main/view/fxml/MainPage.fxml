@@ -25,15 +25,15 @@
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem text="Ajouter client">
+                   <MenuItem text="Ajouter client" onAction="#handleAddGestionnaire">
                       <graphic>
-                         <ImageView fitHeight="30.0" fitWidth="30.0">
+                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../../resource/ajouter-le-fichier.png" />
                          </ImageView>
                       </graphic>
                    </MenuItem>
 
-                   <MenuItem text="Modifier client">
+                   <MenuItem text="Modifier client" onAction="#handleEditGestionnaire">
                       <graphic>
                          <ImageView fitHeight="18.0" fitWidth="18.0">
                             <Image url="@../../resource/updated.png" />
