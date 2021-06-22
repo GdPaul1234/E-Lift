@@ -12,7 +12,7 @@ Projet MasterCamp 2021
 <a name="general-info"></a>
 ### General Info
 
-Dans le cadre de notre Master Camp, nous avons réaliser un projet centré sur la fillière que nous avons choisi (la fillière IT).
+Dans le cadre de notre Master Camp, nous avons réaliser un projet centré sur la fillière que nous avons choisi (la fillière IT).<\n>
 Nous sommes donc un groupe constitué de 6 personnes :
 Paul Godin
 Antoine Claudin
