@@ -116,10 +116,12 @@ CREATE TABLE ContratMaintenance(
 #------------------------------------------------------------
 
 CREATE TABLE TrajetAller(
-        idTrajet    Int  Auto_increment  NOT NULL ,
         dateTrajet  Datetime NOT NULL ,
-        dureeTrajet Int NOT NULL
-	,CONSTRAINT TrajetAller_PK PRIMARY KEY (idTrajet)
+        dureeTrajet Int NOT NULL,
+        destImmeuble Int NOT NULL
+	,CONSTRAINT TrajetAller_PK PRIMARY KEY (destImmeuble, dateTrajet)
+    
+    ,CONSTRAINT TrajetAller_FK FOREIGN KEY (destImmeuble) REFERENCES Immeuble(idImmeuble)
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
