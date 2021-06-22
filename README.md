@@ -21,6 +21,8 @@ Titouan Lellouche
 Marie Alessandri
 Josselin Renan
 
+![Image text](/img/E-LIFT.png)
+
 Parmi les différents choix qui étaient à notre disposition nous avons choisi le concernant la gestion des pannes d'ascenseurs.
 Un sujet touchant plusieurs points importants et interessant aussi bien au niveau logistique que technique, et dans un cadre particulier qui nous pousse à se concentrer sur un même problème durant un mois pour livrer une solution à celui-ci.
 
