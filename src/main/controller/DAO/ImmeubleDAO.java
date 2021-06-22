@@ -53,4 +53,12 @@ public class ImmeubleDAO {
 
         instance.getConnection().setAutoCommit(true);
     }
+
+    public void removeImmeuble(int idImmeuble) throws SQLException {
+        PreparedStatement stmtVehicule = instance.getConnection()
+                .prepareStatement("delete from immeuble where IdImmeuble=?;");
+        stmtVehicule.setInt(1, idImmeuble);
+        stmtVehicule.executeUpdate();
+        stmtVehicule.close();
+    }
 }

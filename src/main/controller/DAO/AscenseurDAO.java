@@ -60,4 +60,25 @@ public class AscenseurDAO {
 
         instance.getConnection().setAutoCommit(true);
     }
+
+    public void editAscenseur(Ascenseur ascenseur) throws SQLException {
+        // insertion vehicule
+        PreparedStatement stmtVehicule = instance.getConnection()
+                .prepareStatement("update Ascenseur set marque=?, modele=?, miseEnService=?, etage=?, etat=? where idAscenseur=?;");
+        stmtVehicule.setString(1, ascenseur.getMarque());
+        stmtVehicule.setString(2, ascenseur.getModele());
+        stmtVehicule.setDate(3, (java.sql.Date) ascenseur.getDateMiseEnService());
+        stmtVehicule.setInt(4, ascenseur.getEtage());
+        stmtVehicule.setString(5, ascenseur.getEtatAscenceur().toString());
+        stmtVehicule.executeUpdate();
+        stmtVehicule.close();
+    }
+
+    public void removeAscenceur(int idAscenceur) throws SQLException {
+        PreparedStatement stmtVehicule = instance.getConnection()
+                .prepareStatement("delete from ascenseur where idAscenseur=?;");
+        stmtVehicule.setInt(1, idAscenceur);
+        stmtVehicule.executeUpdate();
+        stmtVehicule.close();
+    }
 }
