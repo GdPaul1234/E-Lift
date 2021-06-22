@@ -1,6 +1,7 @@
 package main.controller.DAO;
 
 import main.model.Gestionnaire;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GestionnaireDAO {
     private final DataAccess instance;
@@ -34,6 +36,18 @@ public class GestionnaireDAO {
         return result;
     }
 
+    public StringBuilder getLoginBuilder(String nom, String prenom) {
+        StringBuilder newLogin = new StringBuilder();
+        newLogin.append(prenom.toLowerCase());
+        newLogin.append('.');
+        newLogin.append(nom.toLowerCase());
+        {
+            Random value = new Random();
+            newLogin.append(String.format("%03d", value.nextInt(999)));
+        }
+        return newLogin;
+    }
+
     public void addGestionnaire(Gestionnaire gestionnaire, String password) throws SQLException {
         instance.getConnection().setAutoCommit(false);
 
@@ -47,15 +61,7 @@ public class GestionnaireDAO {
         stmt.setString(2, prenom);
         stmt.setString(3, gestionnaire.getTelephone());
 
-        StringBuilder newLogin = new StringBuilder();
-        newLogin.append(prenom.toLowerCase());
-        newLogin.append('.');
-        newLogin.append(nom.toLowerCase());
-        {
-            String stripTel = gestionnaire.getTelephone().strip();
-            String telRight = stripTel.substring(stripTel.length() - 3);
-            newLogin.append(telRight);
-        }
+        StringBuilder newLogin = getLoginBuilder(nom, prenom);
         gestionnaire.setLogin(newLogin.toString());
 
         stmt.setString(4, newLogin.toString());

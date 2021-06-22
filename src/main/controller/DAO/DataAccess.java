@@ -104,7 +104,7 @@ public class DataAccess {
     }
 
     /**
-     * Obtenir la connexion à la BDD rentcar
+     * Obtenir la connexion à la BDD e-lift
      *
      * @return connexion à la BDD
      */
