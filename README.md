@@ -23,3 +23,21 @@ Josselin Renan
 
 Parmi les différents choix qui étaient à notre disposition nous avons choisi le concernant la gestion des pannes d'ascenseurs.
 Un sujet touchant plusieurs points importants et interessant aussi bien au niveau logistique que technique, et dans un cadre particulier qui nous pousse à se concentrer sur un même problème durant un mois pour livrer une solution à celui-ci.
+
+<a name="technologies"></a>
+### Technologies
+
+Pour réaliser notre projet nous avons utiliser le langage JAVA pour pouvoir utiliser la base de données MySQL dans le but de créer une application capable de contacter les principaux interessé à savoir les gestionnaires d'ascenseur et les ascensoristes. Pour rendre son utilisation simple et efficace nous avons opté pour une interface graphique avec JAVAfx le dernier framework mit en place dans le but de réaliser des applications de bureau.
+
+<a name="installation"></a>
+### Installation
+
+Installation
+
+<a name="collaboration"></a>
+### Collaboration
+
+Collaboration
+
+<a name="faqs"></a>
+### FAQs
