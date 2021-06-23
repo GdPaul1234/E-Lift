@@ -1,30 +1,22 @@
 package main.model;
 
+import java.util.Date;
+import java.util.Calendar;
 
-import java.sql.Date;
 
-/**
- * 
- */
 public class ContratMaintenance {
 
-    private int idContrat;
-    private String nom;
     private Date debut;
     private Date fin;
-    public ContratMaintenance(int idContrat, String nom, Date debut, Date fin) {
-        this.idContrat = idContrat;
-        this.nom = nom;
+
+    public ContratMaintenance(Date debut) {
         this.debut = debut;
-        this.fin = fin;
-    }
-
-    public int getIdContrat() {
-        return idContrat;
-    }
-
-    public String getNom() {
-        return nom;
+        if (debut != null) {
+            Calendar dateFin = Calendar.getInstance();
+            dateFin.setTime(debut);
+            dateFin.add(Calendar.YEAR, 1);
+            fin = dateFin.getTime();
+        }
     }
 
     public Date getDebut() {

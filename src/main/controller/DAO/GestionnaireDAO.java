@@ -1,7 +1,6 @@
 package main.controller.DAO;
 
 import main.model.Gestionnaire;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
