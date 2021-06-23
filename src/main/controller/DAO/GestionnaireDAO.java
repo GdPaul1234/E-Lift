@@ -35,7 +35,7 @@ public class GestionnaireDAO {
         return result;
     }
 
-    public StringBuilder getLoginBuilder(String nom, String prenom) {
+    public String getLoginBuilder(String nom, String prenom) {
         StringBuilder newLogin = new StringBuilder();
         newLogin.append(prenom.toLowerCase());
         newLogin.append('.');
@@ -44,10 +44,10 @@ public class GestionnaireDAO {
             Random value = new Random();
             newLogin.append(String.format("%03d", value.nextInt(999)));
         }
-        return newLogin;
+        return newLogin.toString();
     }
 
-    public void addGestionnaire(Gestionnaire gestionnaire, String password) throws SQLException {
+    public void addGestionnaire(Gestionnaire gestionnaire, String newLogin, String password) throws SQLException {
         instance.getConnection().setAutoCommit(false);
 
         String nom = gestionnaire.getNom().stripTrailing();
@@ -60,10 +60,9 @@ public class GestionnaireDAO {
         stmt.setString(2, prenom);
         stmt.setString(3, gestionnaire.getTelephone());
 
-        StringBuilder newLogin = getLoginBuilder(nom, prenom);
-        gestionnaire.setLogin(newLogin.toString());
+        gestionnaire.setLogin(newLogin);
 
-        stmt.setString(4, newLogin.toString());
+        stmt.setString(4, newLogin);
         stmt.executeUpdate();
 
         // ajouter personne dans liste gestionnaires

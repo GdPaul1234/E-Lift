@@ -11,11 +11,14 @@ import main.model.Ascensoriste;
 import main.model.Gestionnaire;
 import main.model.Immeuble;
 import main.model.Personne;
-import main.view.*;
+import main.view.AscensoristeOverview;
+import main.view.GestionnaireOverview;
+import main.view.ImmeubleOverview;
 import main.view.dialog.ImmeubleEditDialog;
 import main.view.dialog.PersonneEditDialog;
 
 import java.sql.SQLException;
+import java.text.MessageFormat;
 
 public class MainController {
 
@@ -33,24 +36,44 @@ public class MainController {
      * ********************************************* */
     private <T extends Personne> void handleAddPersonne(T role) {
 
-                Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonDialog();
+        Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonDialog();
 
-                if (userInput != null) {
+        if (userInput != null) {
+
+            // Verify is all field are not empty
+            if (userInput.getKey().isValid() && !userInput.getValue().isEmpty()) {
+
+                if (role instanceof Ascensoriste || role instanceof Gestionnaire) {
                     try {
-                        // Verify is all field are not empty
-                        if (userInput.getKey().isValid() && !userInput.getValue().isEmpty()) {
-                            if (role instanceof Ascensoriste) {
-                                new AscensoristeDAO().addAscensoriste(new Ascensoriste(userInput.getKey()), userInput.getValue());
-                            } else if (role instanceof Gestionnaire) {
-                                new GestionnaireDAO().addGestionnaire(new Gestionnaire(userInput.getKey()), userInput.getValue());
-                            } else {
-                                throw new IllegalArgumentException("Unexpected value: " + role);
-                            }
+                        String login;
+
+                        if (role instanceof Ascensoriste) {
+                            AscensoristeDAO ascensoristeDAO = new AscensoristeDAO();
+                            Ascensoriste ascensoriste = new Ascensoriste(userInput.getKey());
+                            login = ascensoristeDAO.getLoginBuilder(ascensoriste.getNom(), ascensoriste.getPrenom());
+
+                            new AscensoristeDAO().addAscensoriste(ascensoriste, login, userInput.getValue());
+                        } else {
+                            GestionnaireDAO gestionnaireDAO = new GestionnaireDAO();
+                            Gestionnaire gestionnaire = new Gestionnaire(userInput.getKey());
+                            login = gestionnaireDAO.getLoginBuilder(gestionnaire.getNom(), gestionnaire.getPrenom());
+
+                            new GestionnaireDAO().addGestionnaire(gestionnaire, login, userInput.getValue());
                         }
+
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText("Votre identifiant pour vous connecter\n\nà votre espace personnel");
+                        alert.setContentText(MessageFormat.format("{0}\nGardez-le précieusement !", login));
+                        alert.showAndWait();
                     } catch (SQLException e) {
                         showError(e);
                     }
+                } else {
+                    throw new IllegalArgumentException("Unexpected value: " + role);
                 }
+            }
+
+        }
 
     }
 
@@ -80,22 +103,23 @@ public class MainController {
     @FXML
     void handleAddImmeuble() {
 
-                // Ask user input
-                Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleDialog();
+        // Ask user input
+        Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleDialog();
 
-                if (userInput != null) {
-                    try {
-                        // Verify is all field are not empty
-                        if (userInput.isValid()) {
-                            new ImmeubleDAO().addImmeuble(userInput);
-                        }
-                    } catch (SQLException e) {
-                        showError(e);
-                    }
+        if (userInput != null) {
+            try {
+                // Verify is all field are not empty
+                if (userInput.isValid()) {
+                    new ImmeubleDAO().addImmeuble(userInput);
                 }
+            } catch (SQLException e) {
+                showError(e);
+            }
+        }
     }
 
-    @FXML private void handleEditImmeuble() throws Exception {
+    @FXML
+    private void handleEditImmeuble() throws Exception {
         new ImmeubleOverview().start(new Stage());
     }
 }

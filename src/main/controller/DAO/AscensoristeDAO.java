@@ -35,16 +35,16 @@ public class AscensoristeDAO {
         return result;
     }
 
-    public StringBuilder getLoginBuilder(String nom, String prenom) {
+    public String getLoginBuilder(String nom, String prenom) {
         StringBuilder newLogin = new StringBuilder();
         newLogin.append(prenom.toLowerCase());
         newLogin.append('.');
         newLogin.append(nom.toLowerCase());
         newLogin.append("@e-lift.fr");
-        return newLogin;
+        return newLogin.toString();
     }
 
-    public void addAscensoriste(Ascensoriste ascensoriste, String password) throws SQLException {
+    public void addAscensoriste(Ascensoriste ascensoriste, String newLogin, String password) throws SQLException {
         instance.getConnection().setAutoCommit(false);
 
         String nom = ascensoriste.getNom().stripTrailing();
@@ -57,10 +57,9 @@ public class AscensoristeDAO {
         stmt.setString(2, prenom);
         stmt.setString(3, ascensoriste.getTelephone());
 
-        StringBuilder newLogin = getLoginBuilder(nom, prenom);
-        ascensoriste.setLogin(newLogin.toString());
+        ascensoriste.setLogin(newLogin);
 
-        stmt.setString(4, newLogin.toString());
+        stmt.setString(4, ascensoriste.getLogin());
         stmt.executeUpdate();
 
         // ajouter personne dans liste ascensoristes
