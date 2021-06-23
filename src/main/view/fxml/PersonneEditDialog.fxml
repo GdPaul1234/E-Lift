@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<DialogPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.PersonneEditDialogController">
+<DialogPane xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.PersonneEditDialogController">
     <buttonTypes>
         <ButtonType fx:constant="CANCEL" />
         <ButtonType fx:constant="OK" />

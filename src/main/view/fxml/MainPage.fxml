@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainController">
+<BorderPane xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainController">
    <stylesheets>
       <URL value="@../style.css" />
    </stylesheets>
@@ -73,7 +73,7 @@
                    </ImageView>
                 </graphic>
                 <items>
-                   <MenuItem text="Ajouter ascenseur">
+                   <MenuItem text="Ajouter ascenseur" onAction="#handleEditImmeuble">
                       <graphic>
                          <ImageView fitHeight="20.0" fitWidth="20.0">
                             <Image url="@../../resource/ajouter-le-fichier.png" />
