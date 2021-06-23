@@ -1,10 +1,10 @@
-package main.controller;
+package main.controller.dialog;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.util.Pair;
 import main.model.Personne;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +18,9 @@ public class PersonneEditDialogController {
     @FXML
     private PasswordField passwordTextField;
 
+    private final Personne personne = new Personne();
+    private final StringProperty password = new SimpleStringProperty();
+
     // https://code.makery.ch/fr/library/javafx-tutorial/part3/
 
     /**
@@ -26,6 +29,11 @@ public class PersonneEditDialogController {
      */
     @FXML
     private void initialize() {
+        // Data Binding
+        personne.nomProperty().bind(nomTextField.textProperty());
+        personne.prenomProperty().bind(prenomTextField.textProperty());
+        personne.telephoneProperty().bind(telephoneTextField.textProperty());
+        password.bind(passwordTextField.textProperty());
     }
 
     /**
@@ -34,16 +42,20 @@ public class PersonneEditDialogController {
      * @param dialog
      */
     public void setDialog(Dialog<Pair<Personne, String>> dialog) {
+        // Prevent a dialog from closing until some aspect of the dialog becomes internally consistent
+        // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Dialog.html
+        final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        btOk.addEventFilter(ActionEvent.ACTION, event -> {
+            if (!personne.isValid()) {
+                event.consume();
+            }
+        });
 
         dialog.setResultConverter(
                 buttonType -> {
                     if (Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
-                        return new Pair<>(
-                                new Personne(nomTextField.getText(), prenomTextField.getText(), telephoneTextField.getText()),
-                                passwordTextField.getText()
-                        );
-                    }
-                    return null;
+                        return new Pair<>(personne, password.get());
+                    } else return null;
                 }
         );
     }

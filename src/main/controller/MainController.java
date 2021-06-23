@@ -12,6 +12,8 @@ import main.model.Gestionnaire;
 import main.model.Immeuble;
 import main.model.Personne;
 import main.view.*;
+import main.view.dialog.ImmeubleEditDialog;
+import main.view.dialog.PersonneEditDialog;
 
 import java.sql.SQLException;
 
@@ -30,9 +32,7 @@ public class MainController {
      *                Gestion Personne               *
      * ********************************************* */
     private <T extends Personne> void handleAddPersonne(T role) {
-            boolean reaskAdd = false;
-            do {
-                // Ask user input
+
                 Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonDialog();
 
                 if (userInput != null) {
@@ -46,15 +46,12 @@ public class MainController {
                             } else {
                                 throw new IllegalArgumentException("Unexpected value: " + role);
                             }
-                            reaskAdd = false;
-                        } else reaskAdd = true;
+                        }
                     } catch (SQLException e) {
                         showError(e);
                     }
-                } else {
-                    reaskAdd = false;
                 }
-            } while (reaskAdd);
+
     }
 
     @FXML
@@ -82,8 +79,7 @@ public class MainController {
      * ********************************************* */
     @FXML
     void handleAddImmeuble() {
-            boolean reaskAdd = false;
-            do {
+
                 // Ask user input
                 Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleDialog();
 
@@ -92,15 +88,11 @@ public class MainController {
                         // Verify is all field are not empty
                         if (userInput.isValid()) {
                             new ImmeubleDAO().addImmeuble(userInput);
-                            reaskAdd = false;
-                        } else reaskAdd = true;
+                        }
                     } catch (SQLException e) {
                         showError(e);
                     }
-                } else {
-                    reaskAdd = false;
                 }
-            } while (reaskAdd);
     }
 
     @FXML private void handleEditImmeuble() throws Exception {

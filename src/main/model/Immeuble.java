@@ -19,6 +19,8 @@ public class Immeuble {
         this.adresse.set(adresse);
     }
 
+    public Immeuble() { }
+
     public boolean isValid() {
         return nom.isNotEmpty().get() && nbEtage.greaterThanOrEqualTo(1).get() && adresse.isNotNull().get();
     }
@@ -47,8 +49,15 @@ public class Immeuble {
         return ascenseurs;
     }
 
+    /* Setter */
+
     public void setIdImmeuble(int idImmeuble) {
         this.idImmeuble = idImmeuble;
+    }
+
+
+    public void setAdresse(Adresse adresse) {
+        this.adresse.set(adresse);
     }
 
     /* Property getter */

@@ -13,8 +13,8 @@ import main.model.Adresse;
 import main.model.Ascenseur;
 import main.model.Immeuble;
 import main.model.enums.EtatAscenseur;
-import main.view.AscenseurEditDialog;
-import main.view.ImmeubleEditDialog;
+import main.view.dialog.AscenseurEditDialog;
+import main.view.dialog.ImmeubleEditDialog;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -90,7 +90,7 @@ public class ImmeubleOverviewController {
     }
 
     private void updateAscenseursData() throws SQLException {
-        if(selectedImmeuble != null) {
+        if (selectedImmeuble != null) {
             ObservableList<Ascenseur> ascenseurs = FXCollections.observableArrayList(new AscenseurDAO().getAscenseursImmeuble(selectedImmeuble.getIdImmeuble()));
             ascenseurTable.setItems(ascenseurs);
         }
@@ -153,26 +153,20 @@ public class ImmeubleOverviewController {
         Immeuble selectedItem = immeubleTable.getSelectionModel().getSelectedItem();
 
         if (selectedItem != null) {
-            boolean reaskEdit = false;
-            do {
-                // Ask user input
-                Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleEditDialog(selectedItem);
+            // Ask user input
+            Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleEditDialog(selectedItem);
 
-                if (userInput != null) {
-                    try {
-                        // Verify is all field are not empty
-                        if (userInput.isValid()) {
-                            new ImmeubleDAO().editImmeuble(selectedItem.getIdImmeuble(), userInput);
-                            updateImmeublesData();
-                            reaskEdit = false;
-                        } else reaskEdit = true;
-                    } catch (SQLException e) {
-                        MainController.showError(e);
+            if (userInput != null) {
+                try {
+                    // Verify is all field are not empty
+                    if (userInput.isValid()) {
+                        new ImmeubleDAO().editImmeuble(selectedItem.getIdImmeuble(), userInput);
+                        updateImmeublesData();
                     }
-                } else {
-                    reaskEdit = false;
+                } catch (SQLException e) {
+                    MainController.showError(e);
                 }
-            } while (reaskEdit);
+            }
         }
 
     }
@@ -201,9 +195,7 @@ public class ImmeubleOverviewController {
 
         if (selectedImmeuble != null) {
             int idImmeuble = selectedImmeuble.getIdImmeuble();
-            boolean reaskAdd = false;
 
-            do {
                 // Ask user input
                 Ascenseur userInput = new AscenseurEditDialog(null).showAscenseurDialog();
 
@@ -213,15 +205,11 @@ public class ImmeubleOverviewController {
                         if (userInput.isValid()) {
                             new AscenseurDAO().addAscenseur(userInput, idImmeuble);
                             updateAscenseursData();
-                            reaskAdd = false;
-                        } else reaskAdd = true;
+                        }
                     } catch (SQLException e) {
                         MainController.showError(e);
                     }
-                } else {
-                    reaskAdd = false;
                 }
-            } while (reaskAdd);
         }
 
     }
@@ -231,8 +219,6 @@ public class ImmeubleOverviewController {
         Ascenseur selectedItem = ascenseurTable.getSelectionModel().getSelectedItem();
 
         if (selectedItem != null) {
-            boolean reaskEdit = false;
-            do {
                 // Ask user input
                 Ascenseur userInput = new AscenseurEditDialog(null).showAscenseurEditDialog(selectedItem);
 
@@ -242,15 +228,11 @@ public class ImmeubleOverviewController {
                         if (userInput.isValid()) {
                             new AscenseurDAO().editAscenseur(selectedItem.getIdAscenseur(), userInput);
                             updateAscenseursData();
-                            reaskEdit = false;
-                        } else reaskEdit = true;
+                        }
                     } catch (SQLException e) {
                         MainController.showError(e);
                     }
-                } else {
-                    reaskEdit = false;
                 }
-            } while (reaskEdit);
         }
     }
 

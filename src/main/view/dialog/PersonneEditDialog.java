@@ -1,4 +1,4 @@
-package main.view;
+package main.view.dialog;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Dialog;
@@ -6,7 +6,7 @@ import javafx.scene.control.DialogPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import main.controller.PersonneEditDialogController;
+import main.controller.dialog.PersonneEditDialogController;
 import main.model.Personne;
 
 import java.io.IOException;

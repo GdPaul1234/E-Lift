@@ -29,6 +29,10 @@ public class Ascenseur {
         this.state.set(state);
     }
 
+    public Ascenseur() {
+
+    }
+
     public boolean isValid() {
         return marque.isNotEmpty().get() && modele.isNotEmpty().get() && dateMiseEnService.isNotNull().get() && etage.greaterThan(0).get() && state.isNotNull().get();
     }
@@ -62,8 +66,14 @@ public class Ascenseur {
         return state.get();
     }
 
+    /* Setters */
+
     public void setState(EtatAscenseur state) {
         this.state.set(state);
+    }
+
+    public void setDateMiseEnService(Date date) {
+        this.dateMiseEnService.set(date);
     }
 
     /**

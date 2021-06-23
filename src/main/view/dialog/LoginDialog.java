@@ -1,4 +1,4 @@
-package main.view;
+package main.view.dialog;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

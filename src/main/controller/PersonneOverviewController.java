@@ -13,7 +13,7 @@ import main.controller.DAO.GestionnaireDAO;
 import main.model.Ascensoriste;
 import main.model.Gestionnaire;
 import main.model.Personne;
-import main.view.PersonneEditDialog;
+import main.view.dialog.PersonneEditDialog;
 
 import java.sql.SQLException;
 
@@ -117,37 +117,30 @@ public class PersonneOverviewController<T extends Personne> {
 
         if (selectedItem != null) {
             String login = selectedItem.getLogin();
-            boolean reaskAdd = false;
 
-            do {
-                // Ask user input
-                Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonEditDialog(selectedItem);
+            // Ask user input
+            Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonEditDialog(selectedItem);
 
-                if (userInput != null) {
-                    System.out.println(login);
+            if (userInput != null) {
+                System.out.println(login);
 
-                    try {
-                        // Verify is all field are not empty
-                        if (userInput.getKey().isValid()) {
-                            if (role instanceof Ascensoriste) {
-                                new AscensoristeDAO().editAscensoriste(login, new Ascensoriste(userInput.getKey()));
-                                updateDate();
-                            } else if (role instanceof Gestionnaire) {
-                                new GestionnaireDAO().editGestionnaire(login, new Gestionnaire(userInput.getKey()));
-                                updateDate();
-                            } else {
-                                throw new IllegalArgumentException("Unexpected value: " + role);
-                            }
-
-                            reaskAdd = false;
-                        } else reaskAdd = true;
-                    } catch (SQLException e) {
-                        MainController.showError(e);
+                try {
+                    // Verify is all field are not empty
+                    if (userInput.getKey().isValid()) {
+                        if (role instanceof Ascensoriste) {
+                            new AscensoristeDAO().editAscensoriste(login, new Ascensoriste(userInput.getKey()));
+                            updateDate();
+                        } else if (role instanceof Gestionnaire) {
+                            new GestionnaireDAO().editGestionnaire(login, new Gestionnaire(userInput.getKey()));
+                            updateDate();
+                        } else {
+                            throw new IllegalArgumentException("Unexpected value: " + role);
+                        }
                     }
-                } else {
-                    reaskAdd = false;
+                } catch (SQLException e) {
+                    MainController.showError(e);
                 }
-            } while (reaskAdd);
+            }
         }
 
     }

@@ -1,26 +1,26 @@
-package main.view;
+package main.view.dialog;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.controller.ImmeubleEditDialogController;
-import main.model.Immeuble;
+import main.controller.dialog.AscenseurEditDialogController;
+import main.model.Ascenseur;
 
 import java.io.IOException;
 
-public class ImmeubleEditDialog {
+public class AscenseurEditDialog {
     // https://code.makery.ch/fr/library/javafx-tutorial/part3/
 
-    private Dialog<Immeuble> dialog;
-    private ImmeubleEditDialogController controller;
+    private Dialog<Ascenseur> dialog;
+    private AscenseurEditDialogController controller;
 
-    public ImmeubleEditDialog(Stage stage) {
+    public AscenseurEditDialog(Stage stage) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/main/view/fxml/ImmeubleEditDialog.fxml"));
+            loader.setLocation(getClass().getResource("/main/view/fxml/AscenseurEditDialog.fxml"));
             DialogPane page = loader.load();
 
             // Create the dialog Stage.
@@ -37,13 +37,12 @@ public class ImmeubleEditDialog {
         }
     }
 
-    public Immeuble showImmeubleEditDialog(Immeuble immeuble) {
-        // Set the immeuble into the controller.
-        controller.setImmeuble(immeuble);
-        return showImmeubleDialog();
+    public Ascenseur showAscenseurEditDialog(Ascenseur ascenseur) {
+        controller.setAscenseur(ascenseur);
+        return showAscenseurDialog();
     }
 
-    public Immeuble showImmeubleDialog() {
+    public Ascenseur showAscenseurDialog() {
         // Show the dialog and wait until the user closes it
         return dialog.showAndWait().orElse(null);
     }

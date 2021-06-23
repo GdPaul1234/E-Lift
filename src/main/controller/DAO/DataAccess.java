@@ -1,10 +1,9 @@
 package main.controller.DAO;
 
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import javafx.util.Pair;
 import main.controller.MainController;
-import main.view.LoginDialog;
+import main.view.dialog.LoginDialog;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

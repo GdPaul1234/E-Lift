@@ -24,6 +24,14 @@ public class Adresse {
         this.latitude.set(latitude);
     }
 
+    public Adresse() {
+
+    }
+
+    public boolean isValid() {
+        return rue.isNotEmpty().and(ville.isNotEmpty()).and(codePostal.isNotEmpty()).get();
+    }
+
     public String getRue() {
         return rue.get();
     }
@@ -64,4 +72,6 @@ public class Adresse {
     public FloatProperty latitudeProperty() {
         return latitude;
     }
+
+
 }
