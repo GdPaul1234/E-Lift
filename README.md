@@ -5,8 +5,7 @@ Projet MasterCamp 2021
 1. [General Info](#general-info)
 2. [Technologies](#technologies)
 3. [Installation](#installation)
-4. [Collaboration](#collaboration)
-5. [FAQs](#faqs)
+4. [FAQs](#faqs)
 
 
 <a name="general-info"></a>
@@ -24,7 +23,9 @@ Josselin Renan
 ![Image text](/img/E-LIFT.png)
 
 Parmi les différents choix qui étaient à notre disposition nous avons choisi le concernant la gestion des pannes d'ascenseurs.  
-Un sujet touchant plusieurs points importants et interessant aussi bien au niveau logistique que technique, et dans un cadre particulier qui nous pousse à se concentrer sur un même problème durant un mois pour livrer une solution à celui-ci.
+Un sujet touchant plusieurs points importants et interessant aussi bien au niveau logistique que technique, et dans un cadre particulier qui nous pousse à se concentrer sur un même problème durant un mois pour livrer une solution à celui-ci.  
+Tous les projets de ce mastercamp avaient pour but de nous faire rentrer dans une situation de travail réelle avec un client et notre équipe ayant pour but d'y répondre.  
+Le cahier des charges étant peu éxhaustif, celui-ci nous permetant de faire travailler notre imagination et de pouvoir réfléchir à un maximum de possibilité pouvant ainsi livrer un produit fonctionnel répondant aux différents critères requis pour être utilisé sur le terrain par d'autres professionnels.
 
 <a name="technologies"></a>
 ### Technologies
@@ -36,11 +37,6 @@ Pour réaliser notre projet nous avons utiliser le langage JAVA pour pouvoir uti
 
 Pour installer notre application bureau chez vous il faudrat ouvrir le fichier ZIP : E-lift.zip et le déziper dans un unique et même dossier. Un fois le tout déziper, il vous faudra copier le fichier SQL et l'installer sur votre MySQL Workbench pour l'initialiser et appliquer quelques lignes de commande utilies à la présentation de notre application.  
 Il vous suffira de lancer l'executable pour voir apparaitre l'interface de notre application sur votre écran avec un menu de connexion.
-
-<a name="collaboration"></a>
-### Collaboration
-
-Collaboration
 
 <a name="faqs"></a>
 ### FAQs
