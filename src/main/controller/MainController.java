@@ -1,6 +1,5 @@
 package main.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -86,7 +85,7 @@ public class MainController {
             boolean reaskAdd = false;
             do {
                 // Ask user input
-                Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleEditDialog();
+                Immeuble userInput = new ImmeubleEditDialog(null).showImmeubleDialog();
 
                 if (userInput != null) {
                     try {

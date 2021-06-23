@@ -24,9 +24,6 @@ public class ImmeubleEditDialogController {
     @FXML
     private TextField villeTextField;
 
-    private Dialog<Immeuble> dialog;
-    private Immeuble immeuble;
-
     @FXML
     private void initialize() {
     }
@@ -37,12 +34,11 @@ public class ImmeubleEditDialogController {
      * @param dialog
      */
     public void setDialog(Dialog<Immeuble> dialog) {
-        this.dialog = dialog;
 
         dialog.setResultConverter(
                 buttonType -> {
                     if (Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
-                        // TODO get longitude et get lattitude
+                        // TODO get longitude et get latitude
                         return new Immeuble(nomTextField.getText(), etageSpinner.getValue(), new Adresse(rueTextField.getText(), villeTextField.getText(), codePostalTextField.getText(), 0, 0));
                     }
                     return null;
@@ -56,8 +52,6 @@ public class ImmeubleEditDialogController {
      * @param immeuble
      */
     public void setImmeuble(@NotNull Immeuble immeuble) {
-        this.immeuble = immeuble;
-
         nomTextField.setText(immeuble.getNom());
         etageSpinner.getValueFactory().setValue(immeuble.getNbEtage());
         rueTextField.setText(immeuble.getAdresse().getRue());

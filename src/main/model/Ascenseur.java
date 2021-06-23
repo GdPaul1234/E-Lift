@@ -2,7 +2,6 @@ package main.model;
 
 import javafx.beans.property.*;
 import main.model.enums.EtatAscenseur;
-import main.model.enums.TypeReparation;
 
 import java.util.Date;
 import java.util.Set;
@@ -12,7 +11,7 @@ import java.util.Set;
  */
 public class Ascenseur {
 
-    private IntegerProperty idAscenseur = new SimpleIntegerProperty(null,"ID");
+    private IntegerProperty idAscenseur = new SimpleIntegerProperty(null, "ID");
     private StringProperty marque = new SimpleStringProperty(null, "marque");
     private StringProperty modele = new SimpleStringProperty(null, "modèle");
     private ObjectProperty<Date> dateMiseEnService = new SimpleObjectProperty<>(null, "date mise en service");
@@ -22,8 +21,7 @@ public class Ascenseur {
     private Set<Entretien> entretiens;
     private Set<Alerte> alertes;
 
-    public Ascenseur(int idAscenseur, String marque, String modele, Date dateMiseEnService, int etage, EtatAscenseur state) {
-        this.idAscenseur.set(idAscenseur);
+    public Ascenseur(String marque, String modele, Date dateMiseEnService, int etage, EtatAscenseur state) {
         this.marque.set(marque);
         this.modele.set(modele);
         this.dateMiseEnService.set(dateMiseEnService);
@@ -31,8 +29,18 @@ public class Ascenseur {
         this.state.set(state);
     }
 
+    public boolean isValid() {
+        return marque.isNotEmpty().get() && modele.isNotEmpty().get() && dateMiseEnService.isNotNull().get() && etage.greaterThan(0).get() && state.isNotNull().get();
+    }
+
     /* Getters */
-    public int getIdAscenseur() { return idAscenseur.get(); }
+    public int getIdAscenseur() {
+        return idAscenseur.get();
+    }
+
+    public void setIdAscenseur(int idAscenseur) {
+        this.idAscenseur.set(idAscenseur);
+    }
 
     public String getMarque() {
         return marque.get();
@@ -46,7 +54,9 @@ public class Ascenseur {
         return dateMiseEnService.get();
     }
 
-    public int getEtage() { return etage.get(); }
+    public int getEtage() {
+        return etage.get();
+    }
 
     public EtatAscenseur getState() {
         return state.get();

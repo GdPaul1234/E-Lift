@@ -1,7 +1,5 @@
 package main.model;
 
-import main.model.enums.EtatOccupation;
-
 import java.util.Set;
 
 public class Ascensoriste extends Personne {

@@ -5,8 +5,10 @@
     -fx-base: #3D4956;
     -fx-background : -fx-base;
 
-    -fx-text-inner-color: lightgray;
-    -fx-text-background-color: lightgray;
+    -fx-text-inner-color: white;
+    -fx-text-background-color: white;
+
+    -fx-selection-bar-non-focused: derive(lightgray, -20%);
 
     -fx-color: -fx-base;
 }
@@ -58,3 +60,14 @@
 .menu-button:focused {
     -fx-background-color: derive(-fx-background, 20%);
 }
+
+ /* DatePicker
+  * **************** */
+.date-picker-popup {
+    /* reset to modena theme */
+    -fx-base: #ececec;
+
+    -fx-text-inner-color: black;
+    -fx-text-background-color: black;
+}
+

@@ -20,9 +20,6 @@ public class PersonneEditDialogController {
 
     // https://code.makery.ch/fr/library/javafx-tutorial/part3/
 
-    private Dialog<Pair<Personne, String>> dialog;
-    private Personne personne;
-
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -37,7 +34,6 @@ public class PersonneEditDialogController {
      * @param dialog
      */
     public void setDialog(Dialog<Pair<Personne, String>> dialog) {
-        this.dialog = dialog;
 
         dialog.setResultConverter(
                 buttonType -> {
@@ -58,7 +54,6 @@ public class PersonneEditDialogController {
      * @param personne
      */
     public void setPersonne(@NotNull Personne personne) {
-        this.personne = personne;
 
         prenomTextField.setText(personne.getPrenom());
         nomTextField.setText(personne.getNom());
