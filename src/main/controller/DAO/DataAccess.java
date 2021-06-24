@@ -32,7 +32,7 @@ public class DataAccess {
     }
 
     /**
-     * Connexion à la BDD rentcar
+     * Connexion à la BDD e-lift
      *
      * @return instance de DataAccess
      */
@@ -81,7 +81,7 @@ public class DataAccess {
             if(error.get()) {
                 System.out.println("Error");
                 throw  new IllegalArgumentException("Mot de passe incorrect");
-            } else {
+            } else if (instance != null) {
                 // Déterminer role personne (notamment pour masquer certaines actions)
                 try {
                     ascensoriste = new AscensoristeDAO().isAscensoriste(login);
