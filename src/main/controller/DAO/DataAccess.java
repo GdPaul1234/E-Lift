@@ -18,17 +18,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class DataAccess {
     private static DataAccess instance;
-    private Connection conn;
-    private String login;
+    private final Connection conn;
+
+    private static String login;
+    private static  boolean ascensoriste = false;
+    private static boolean gestionnaire = false;
+
 
     private DataAccess(String url, String login, String password) throws SQLException {
-        this.login = login;
+        DataAccess.login = login;
         /* Get the Connection object. */
         conn = DriverManager.getConnection(url, login, password);
-    }
-
-    public String getLogin() {
-        return login;
     }
 
     /**
@@ -81,12 +81,17 @@ public class DataAccess {
             if(error.get()) {
                 System.out.println("Error");
                 throw  new IllegalArgumentException("Mot de passe incorrect");
+            } else {
+                // Déterminer role personne (notamment pour masquer certaines actions)
+                try {
+                    ascensoriste = new AscensoristeDAO().isAscensoriste(login);
+                    gestionnaire = new GestionnaireDAO().isGestionnaire(login);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
-
-        if(instance != null) System.out.println("Success !");
-
-
         return instance;
     }
 
@@ -96,9 +101,9 @@ public class DataAccess {
             instance.getConnection().close();
         }
 
-        instance = new DataAccess("jdbc:mysql://localhost:3306/e-lift", login, password);
+         instance = new DataAccess("jdbc:mysql://localhost:3306/e-lift", login, password);
 
-        if (instance == null)
+        if (instance.getConnection() == null)
             throw new IllegalArgumentException();
         return instance;
     }
@@ -110,6 +115,18 @@ public class DataAccess {
      */
     public Connection getConnection() {
         return conn;
+    }
+
+    public static String getLogin() {
+        return login;
+    }
+
+    public static boolean isAscensoriste() {
+        return ascensoriste;
+    }
+
+    public static boolean isGestionnaire() {
+        return gestionnaire;
     }
 
     public void close() throws SQLException {

@@ -1,10 +1,14 @@
 package main.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuButton;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import main.controller.DAO.AscensoristeDAO;
+import main.controller.DAO.DataAccess;
 import main.controller.DAO.GestionnaireDAO;
 import main.controller.DAO.ImmeubleDAO;
 import main.model.Ascensoriste;
@@ -17,10 +21,14 @@ import main.view.ImmeubleOverview;
 import main.view.dialog.ImmeubleEditDialog;
 import main.view.dialog.PersonneEditDialog;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainController {
+    @FXML private HBox topbar;
 
     public static void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -30,6 +38,26 @@ public class MainController {
         // TODO deleted this
         e.printStackTrace();
     }
+
+    @FXML
+    private void initialize() {
+        // Masquer les actions non permises selon les roles
+        // https://stackoverflow.com/a/30019190
+        Set<Node> removeItems = new HashSet<>();
+
+        if (DataAccess.isAscensoriste()) {
+            removeItems.addAll(topbar.lookupAll(".gestionnaire-control"));
+            System.out.println("Bienvenue ascensoriste");
+        }
+
+        if(DataAccess.isGestionnaire()) {
+            removeItems.addAll(topbar.lookupAll(".ascensoriste-control"));
+            System.out.println("Bienvenue gestionnaire");
+        }
+
+        topbar.getChildren().removeAll(removeItems);
+    }
+
 
     /* ********************************************* *
      *                Gestion Personne               *

@@ -113,4 +113,18 @@ public class GestionnaireDAO {
             stmt.close();
         }
     }
+
+    public boolean isGestionnaire(String login) throws SQLException {
+        PreparedStatement stmt = instance.getConnection().prepareStatement("select login from Gestionnaire where login=?;");
+        stmt.setString(1, login);
+        ResultSet rs = stmt.executeQuery();
+
+        boolean result = false;
+        if(rs.next()) result = rs.getString("login").equals(login);
+
+        rs.close();
+        stmt.close();
+
+        return result;
+    }
 }

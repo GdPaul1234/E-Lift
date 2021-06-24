@@ -143,7 +143,7 @@ CREATE TABLE reparation(
 )ENGINE=InnoDB;
 
 CREATE ROLE 'e-lift_employe', 'e-lift_gestionnaire';
-GRANT INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
 
 GRANT INSERT ON `e-lift`.adresse TO 'e-lift_gestionnaire';
 GRANT INSERT, DELETE ON `e-lift`.ascenseur TO 'e-lift_gestionnaire';
