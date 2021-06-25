@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImmeubleDAO {
+public class  ImmeubleDAO {
     private final DataAccess instance;
 
     public ImmeubleDAO() {
