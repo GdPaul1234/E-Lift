@@ -38,6 +38,10 @@ public class PersonneEditDialog {
         }
     }
 
+    public void setTitle(String role) {
+        controller.setTitle(role);
+    }
+
     public Pair<Personne, String> showPersonEditDialog(Personne personne) {
             // Set the person into the controller.
             controller.setPersonne(personne);

@@ -3,10 +3,7 @@ package main.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.util.Pair;
 import main.controller.DAO.AscensoristeDAO;
 import main.controller.DAO.GestionnaireDAO;
@@ -30,6 +27,9 @@ public class PersonneOverviewController<T extends Personne> {
     private TextField nomTextField, prenomTextField, telephoneTextField, loginTextField;
     private ObservableList<? extends Personne> personnes;
 
+    @FXML
+    private Label titleLabel;
+
     public PersonneOverviewController(T role) {
         this.role = role;
     }
@@ -41,6 +41,8 @@ public class PersonneOverviewController<T extends Personne> {
      */
     @FXML
     private void initialize() throws Exception {
+        titleLabel.setText("Gestion " + role.getClass().getSimpleName());
+
         fetchData();
 
         // add button listener

@@ -3,6 +3,7 @@ package main.controller;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -63,8 +64,9 @@ public class MainController {
      *                Gestion Personne               *
      * ********************************************* */
     private <T extends Personne> void handleAddPersonne(T role) {
-
-        Pair<Personne, String> userInput = new PersonneEditDialog(null).showPersonDialog();
+        PersonneEditDialog dialog = new PersonneEditDialog(null);
+        dialog.setTitle(role.getClass().getSimpleName());
+        Pair<Personne, String> userInput = dialog.showPersonDialog();
 
         if (userInput != null) {
 

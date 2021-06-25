@@ -15,6 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 //@Generated("jsonschema2pojo") (https://www.jsonschema2pojo.org/)
 public class FeatureCollection {
@@ -24,24 +37,8 @@ public class FeatureCollection {
     @JsonProperty("filters")
     private Filters filters;
 
-    @JsonProperty("features")
-    public List<Feature> getFeatures() {
-        return features;
-    }
+    public FeatureCollection() {
 
-    @JsonProperty("features")
-    public void setFeatures(List<Feature> features) {
-        this.features = features;
-    }
-
-    @JsonProperty("filters")
-    public Filters getFilters() {
-        return filters;
-    }
-
-    @JsonProperty("filters")
-    public void setFilters(Filters filters) {
-        this.filters = filters;
     }
 
     public FeatureCollection(String query) throws URISyntaxException, IOException {
@@ -69,6 +66,26 @@ public class FeatureCollection {
         features = new ArrayList<>(featureCollection.features);
     }
 
+    @JsonProperty("features")
+    public List<Feature> getFeatures() {
+        return features;
+    }
+
+    @JsonProperty("features")
+    public void setFeatures(List<Feature> features) {
+        this.features = features;
+    }
+
+    @JsonProperty("filters")
+    public Filters getFilters() {
+        return filters;
+    }
+
+    @JsonProperty("filters")
+    public void setFilters(Filters filters) {
+        this.filters = filters;
+    }
+
     public List<Adresse> toAdresseList() {
         return features.stream().map(Feature::toAdresse).collect(Collectors.toList());
     }
@@ -80,4 +97,5 @@ public class FeatureCollection {
                 ", filters=" + filters +
                 '}';
     }
+
 }
