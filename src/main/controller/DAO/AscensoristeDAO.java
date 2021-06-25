@@ -129,4 +129,29 @@ public class AscensoristeDAO {
 
         return result;
     }
+
+    public List<Ascensoriste> getAvailableAscensoriste(int latitude, int longitude) throws SQLException {
+
+        PreparedStatement stmt = instance.getConnection()
+                .prepareStatement("select *, distance(latitude, longitude, ?, ?) " +
+                        "as distance from ascensoriste order by distance;");
+
+        stmt.setInt(1, latitude);
+        stmt.setInt(2, longitude);
+
+        ResultSet rs = stmt.executeQuery();
+
+        ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
+
+        while (rs.next()) {
+            Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
+                    rs.getString("telephone"), rs.getInt("longitude"), rs.getInt("latitude"));
+            result.add(ascensoriste);
+        }
+
+        rs.close();
+        stmt.close();
+
+        return result;
+    }
 }
