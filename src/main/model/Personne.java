@@ -32,7 +32,7 @@ public class Personne {
     }
 
     public boolean isValid() {
-        return nom.isNotEmpty().get() && prenom.isNotEmpty().get() && telephone.isNotEmpty().get();
+        return nom.isNotEmpty().and(prenom.isNotEmpty()).and(telephone.isNotEmpty()).get();
     }
 
     public String getLogin() {

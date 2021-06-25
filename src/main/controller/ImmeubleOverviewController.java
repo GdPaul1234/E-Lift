@@ -88,7 +88,7 @@ public class ImmeubleOverviewController {
     }
 
     private void updateImmeublesData() throws SQLException {
-        ObservableList<Immeuble> immeubles = FXCollections.observableArrayList(new ImmeubleDAO().getAllImmeubles());
+        ObservableList<Immeuble> immeubles = FXCollections.observableArrayList(new ImmeubleDAO().getMyImmeubles());
         immeubleTable.setItems(immeubles);
     }
 

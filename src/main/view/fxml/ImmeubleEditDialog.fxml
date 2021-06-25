@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<DialogPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11"
-            fx:controller="main.controller.dialog.ImmeubleEditDialogController">
+
+<DialogPane xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.dialog.ImmeubleEditDialogController">
     <buttonTypes>
-        <ButtonType fx:constant="CANCEL"/>
-        <ButtonType fx:constant="OK"/>
+        <ButtonType fx:constant="CANCEL" />
+        <ButtonType fx:constant="OK" />
     </buttonTypes>
 
     <stylesheets>
-        <URL value="@../style.css"/>
+        <URL value="@../style.css" />
     </stylesheets>
 
     <header>
         <HBox alignment="CENTER" prefWidth="400.0" spacing="10.0" styleClass="hero-header">
             <ImageView fitHeight="25.0" fitWidth="30.0">
-                <Image url="@../../resource/imeuble.png"/>
+                <Image url="@../../resource/imeuble.png" />
             </ImageView>
 
-            <Label text="Edition immeuble"/>
+            <Label text="Edition immeuble" />
             <padding>
-                <Insets bottom="10.0" top="10.0"/>
+                <Insets bottom="10.0" top="10.0" />
             </padding>
             <opaqueInsets>
-                <Insets/>
+                <Insets />
             </opaqueInsets>
         </HBox>
     </header>
@@ -36,50 +35,42 @@
     <content>
         <GridPane hgap="10.0" vgap="5.0">
             <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="40.0" minWidth="10.0"
-                                   prefWidth="40.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints />
             </columnConstraints>
 
             <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
             </rowConstraints>
 
             <padding>
-                <Insets left="20.0" right="20.0" top="10.0"/>
+                <Insets left="20.0" right="20.0" top="10.0" />
             </padding>
 
 
             <children>
-                <Label text="Nom"/>
-                <TextField fx:id="nomTextField" promptText="Résidence des Lilas" GridPane.columnIndex="1"
-                           GridPane.columnSpan="2147483647"/>
+                <Label text="Nom" />
+                <TextField fx:id="nomTextField" promptText="Résidence des Lilas" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
 
-                <Label text="Etage" GridPane.rowIndex="1"/>
-                <Spinner fx:id="etageSpinner" editable="true" prefHeight="27.0" prefWidth="204.0"
-                         GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <Label text="Etage" GridPane.rowIndex="1" />
+                <Spinner fx:id="etageSpinner" editable="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                     <valueFactory>
-                        <SpinnerValueFactory.IntegerSpinnerValueFactory max="100" min="1"/>
+                        <SpinnerValueFactory.IntegerSpinnerValueFactory max="100" min="1" />
                     </valueFactory>
                 </Spinner>
 
-                <Label text="Rue" GridPane.rowIndex="3"/>
-                <TextField fx:id="rueTextField" promptText="8, rue de la Paix" GridPane.columnIndex="1"
-                           GridPane.columnSpan="2147483647" GridPane.rowIndex="3"/>
+                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
 
-                <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2"/>
+                <Label text="Adresse" GridPane.rowIndex="3" />
+                <ComboBox fx:id="adresseComboBox" editable="true" maxWidth="1.7976931348623157E308" onAction="#handleSelectedAdresse" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
 
-                <Label text="Code Postal" GridPane.rowIndex="4"/>
-                <TextField fx:id="codePostalTextField" promptText="75001" GridPane.columnIndex="1"
-                               GridPane.rowIndex="4"/>
-                <Label text="Ville" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-                <TextField fx:id="villeTextField" promptText="Paris" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                <Label text="GPS" GridPane.rowIndex="4" />
+                <TextField fx:id="coordTextField" editable="false" maxWidth="-Infinity" prefWidth="147.0" promptText="0, 0" styleClass="not-editable" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
 
             </children>
 

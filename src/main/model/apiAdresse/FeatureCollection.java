@@ -7,12 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import main.model.Adresse;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -28,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.joining;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 //@Generated("jsonschema2pojo") (https://www.jsonschema2pojo.org/)
 public class FeatureCollection {
@@ -41,29 +41,48 @@ public class FeatureCollection {
 
     }
 
-    public FeatureCollection(String query) throws URISyntaxException, IOException {
-        String params = new StringBuilder()
-                .append("q=")
-                .append(query)
-                .append("&type=housenumber")
-                .append("&autocomplete=1")
-                .toString();
+    public FeatureCollection(String query) throws URISyntaxException {
+
+        // https://www.baeldung.com/java-url-encoding-decoding
+        Map<String, String> requestParams = new HashMap<>();
+        requestParams.put("q", query);
+        requestParams.put("type", "housenumber");
+        requestParams.put("autocomplete", "1");
+
+        String params = requestParams.keySet().stream()
+                .map(key -> {
+                    String param = "";
+                    try {
+                        param = key + "=" + URLEncoder.encode(requestParams.get(key), StandardCharsets.UTF_8.toString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    return param;
+                })
+                .collect(joining("&"));
 
         URI uri = new URI("https", "api-adresse.data.gouv.fr", "/search", params, null);
-
-        System.out.println(uri);
 
         // https://www.baeldung.com/jackson-deserialize-json-unknown-properties
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        FeatureCollection featureCollection = mapper.readValue(new URL(uri.toString()), FeatureCollection.class);
+        try {
+            FeatureCollection featureCollection = mapper.readValue(new URL(uri.toString()), FeatureCollection.class);
 
-        // Copy the returned feature collection (list of adresses returned by the gouv.fr) here
-        filters = new Filters();
-        filters.setType(featureCollection.filters.getType());
+            // Copy the returned feature collection (list of adresses returned by the gouv.fr) here
+            filters = new Filters();
+            if(featureCollection.filters != null) {
+                filters.setType(featureCollection.filters.getType());
+                features = new ArrayList<>(featureCollection.features);
+            } else {
+                features = new ArrayList<>();
+            }
 
-        features = new ArrayList<>(featureCollection.features);
+        } catch (IOException e) {
+            features = new ArrayList<>();
+        }
+
     }
 
     @JsonProperty("features")

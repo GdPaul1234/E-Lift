@@ -18,10 +18,7 @@ public class  ImmeubleDAO {
         instance = DataAccess.getInstance();
     }
 
-    public List<Immeuble> getAllImmeubles() throws SQLException {
-        Statement stmt = instance.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("select * from Immeuble natural join Adresse;");
-
+    private List<Immeuble> buidListImmeuble(ResultSet rs) throws SQLException {
         ArrayList<Immeuble> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
             Immeuble immeuble = new Immeuble(rs.getString("nom"), rs.getInt("nbEtage"),
@@ -29,6 +26,27 @@ public class  ImmeubleDAO {
             immeuble.setIdImmeuble(rs.getInt("IdImmeuble"));
             result.add(immeuble);
         }
+        return result;
+    }
+
+    public List<Immeuble> getAllImmeubles() throws SQLException {
+        Statement stmt = instance.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("select * from Immeuble natural join Adresse;");
+
+        List<Immeuble> result = buidListImmeuble(rs);
+
+        rs.close();
+        stmt.close();
+
+        return result;
+    }
+
+    public List<Immeuble> getMyImmeubles() throws SQLException {
+        PreparedStatement stmt = instance.getConnection().prepareStatement("select * from Immeuble natural join Adresse where login=?;");
+        stmt.setString(1, DataAccess.getLogin());
+        ResultSet rs = stmt.executeQuery();
+
+        List<Immeuble> result = buidListImmeuble(rs);
 
         rs.close();
         stmt.close();
@@ -77,7 +95,7 @@ public class  ImmeubleDAO {
         stmt.setInt(2, immeuble.getNbEtage());
         stmt.setString(3, immeuble.getAdresse().getRue());
         stmt.setString(4, immeuble.getAdresse().getVille());
-        stmt.setString(5, instance.getLogin());
+        stmt.setString(5, DataAccess.getLogin());
         stmt.executeUpdate();
         stmt.close();
     }

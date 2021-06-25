@@ -9,6 +9,7 @@ import main.controller.dialog.ImmeubleEditDialogController;
 import main.model.Immeuble;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ImmeubleEditDialog {
     // https://code.makery.ch/fr/library/javafx-tutorial/part3/
@@ -39,7 +40,11 @@ public class ImmeubleEditDialog {
 
     public Immeuble showImmeubleEditDialog(Immeuble immeuble) {
         // Set the immeuble into the controller.
-        controller.setImmeuble(immeuble);
+        try {
+            controller.setImmeuble(immeuble);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
         return showImmeubleDialog();
     }
 

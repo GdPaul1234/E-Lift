@@ -73,5 +73,8 @@ public class Adresse {
         return latitude;
     }
 
-
+    @Override
+    public String toString() {
+        return rue.get() + ", " + codePostal.get() + " " + ville.get();
+    }
 }

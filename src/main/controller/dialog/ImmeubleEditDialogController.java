@@ -1,38 +1,87 @@
 package main.controller.dialog;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.model.Adresse;
 import main.model.Immeuble;
+import main.model.apiAdresse.Feature;
+import main.model.apiAdresse.FeatureCollection;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ImmeubleEditDialogController {
 
+    private final Immeuble immeuble = new Immeuble();
+    private final ListProperty<Feature> features = new SimpleListProperty<>();
+    private final long delay = 750;
     @FXML
     private TextField nomTextField;
     @FXML
     private Spinner<Integer> etageSpinner;
     @FXML
-    private TextField rueTextField;
+    private ComboBox<Feature> adresseComboBox;
     @FXML
-    private TextField codePostalTextField;
-    @FXML
-    private TextField villeTextField;
-
-    private final Immeuble immeuble = new Immeuble();
-    private final Adresse adresse = new Adresse();
+    private TextField coordTextField;
+    private Adresse adresse = new Adresse();
+    private long starTimeInputAdresse;
 
     @FXML
     private void initialize() {
         // Data Binding
         immeuble.nomProperty().bind(nomTextField.textProperty());
         immeuble.nbEtageProperty().bind(etageSpinner.valueProperty());
-        adresse.rueProperty().bind(rueTextField.textProperty());
-        adresse.codePostalProperty().bind(codePostalTextField.textProperty());
-        adresse.villeProperty().bind(villeTextField.textProperty());
+
+        TextField adresseInput = adresseComboBox.getEditor();
+        adresseComboBox.itemsProperty().bind(features);
+
+        adresseInput.setOnKeyReleased(keyEvent -> {
+            AtomicLong oldTimeInputAdresse = new AtomicLong(starTimeInputAdresse);
+            starTimeInputAdresse = System.currentTimeMillis();
+
+            CompletableFuture.delayedExecutor(delay, TimeUnit.MILLISECONDS).execute(() -> {
+                if (starTimeInputAdresse - oldTimeInputAdresse.get() >= delay) {
+
+                    AdresseSuggestionWorker worker = new AdresseSuggestionWorker(adresseInput.getText());
+                    oldTimeInputAdresse.set(System.currentTimeMillis());
+
+                    CompletableFuture<ObservableList<Feature>> completableFuture = CompletableFuture.supplyAsync(() -> {
+                        try {
+                            return worker.call();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return FXCollections.emptyObservableList();
+                    });
+                    completableFuture.thenAccept(f -> {
+                        if (f.size() > 0) features.set(f);
+                    });
+                }
+            });
+
+        });
+    }
+
+    @FXML
+    private void handleSelectedAdresse() {
+        int index = adresseComboBox.getSelectionModel().getSelectedIndex();
+
+        if (index != -1 && index < features.size()) {
+            Feature value = features.get(index);
+            adresse = value.toAdresse();
+            coordTextField.setText(adresse.getLatitude() + ", " + adresse.getLongitude());
+        }
     }
 
     /**
@@ -45,14 +94,11 @@ public class ImmeubleEditDialogController {
         // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Dialog.html
         final Button btOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         btOk.addEventFilter(ActionEvent.ACTION, event -> {
-            if (!immeuble.isValid() && !adresse.isValid()) {
+            immeuble.setAdresse(adresse);
+            if (!immeuble.isValid()) {
                 event.consume();
-            } else {
-                immeuble.setAdresse(adresse);
             }
         });
-
-        // TODO get longitude et get latitude
 
         dialog.setResultConverter(
                 buttonType -> {
@@ -68,11 +114,48 @@ public class ImmeubleEditDialogController {
      *
      * @param immeuble
      */
-    public void setImmeuble(@NotNull Immeuble immeuble) {
+    public void setImmeuble(@NotNull Immeuble immeuble) throws URISyntaxException, IOException {
         nomTextField.setText(immeuble.getNom());
         etageSpinner.getValueFactory().setValue(immeuble.getNbEtage());
-        rueTextField.setText(immeuble.getAdresse().getRue());
-        codePostalTextField.setText(immeuble.getAdresse().getCodePostal());
-        villeTextField.setText(immeuble.getAdresse().getVille());
+
+        Adresse adresseImmeuble = immeuble.getAdresse();
+        coordTextField.setText(adresseImmeuble.getLatitude() + ", " + adresseImmeuble.getLongitude());
+
+        adresseComboBox.getEditor().setText(adresseImmeuble.toString());
+        // update inner adresse
+        AdresseSuggestionWorker worker = new AdresseSuggestionWorker(adresseImmeuble.toString());
+
+        FeatureCollection featureCollection = new FeatureCollection(adresseImmeuble.toString());
+        features.set(FXCollections.observableArrayList(featureCollection.getFeatures()));
+
+        CompletableFuture<ObservableList<Feature>> completableFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                return worker.call();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return FXCollections.emptyObservableList();
+        });
+        completableFuture.thenAcceptAsync(f -> {
+            if (f.size() > 0) {
+                adresse = f.get(0).toAdresse();
+                coordTextField.setText(adresse.getLatitude() + ", " + adresse.getLongitude());
+            }
+        });
+
+
+    }
+
+    public static class AdresseSuggestionWorker extends Task<ObservableList<Feature>> {
+        private final String query;
+
+        public AdresseSuggestionWorker(String query) {
+            this.query = query;
+        }
+
+        @Override
+        protected ObservableList<Feature> call() throws Exception {
+            return FXCollections.observableList(new FeatureCollection(query).getFeatures());
+        }
     }
 }

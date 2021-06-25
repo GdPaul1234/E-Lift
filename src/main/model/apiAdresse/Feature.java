@@ -64,10 +64,6 @@ public class Feature {
 
     @Override
     public String toString() {
-        return "Feature{" +
-                "type='" + type + '\'' +
-                ", geometry=" + geometry +
-                ", properties=" + properties +
-                '}';
+        return properties.toString();
     }
 }

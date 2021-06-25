@@ -32,7 +32,7 @@
     -fx-font-weight: bold;
 }
 
-.info-pane .text-input {
+.info-pane .text-input, .text-input.not-editable {
     -fx-border-color: derive(darkgray, -20%);
 }
 
@@ -45,6 +45,10 @@
     -fx-border-color: -fx-accent;
     -fx-background-color: derive(-fx-background, 20%);
     -fx-prompt-text-fill: derive(-fx-control-inner-background,-10%);
+}
+
+.combo-box-base:editable > .text-field {
+    -fx-border-width: 0;
 }
 
 .text-input:focused, .combo-box:focused {

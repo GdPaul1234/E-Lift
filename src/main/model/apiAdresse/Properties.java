@@ -83,13 +83,6 @@ public class Properties {
 
     @Override
     public String toString() {
-        return "Properties{" +
-                "label='" + label + '\'' +
-                ", score=" + score +
-                ", name='" + name + '\'' +
-                ", postcode='" + postcode + '\'' +
-                ", city='" + city + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        return name + ", " + postcode + " " + city;
     }
 }

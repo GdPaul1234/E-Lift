@@ -22,7 +22,7 @@ public class Immeuble {
     public Immeuble() { }
 
     public boolean isValid() {
-        return nom.isNotEmpty().get() && nbEtage.greaterThanOrEqualTo(1).get() && adresse.isNotNull().get();
+        return nom.isNotEmpty().and(nbEtage.greaterThanOrEqualTo(1)).and(adresse.isNotNull()).get() && adresse.get().isValid();
     }
 
     public int getIdImmeuble() {

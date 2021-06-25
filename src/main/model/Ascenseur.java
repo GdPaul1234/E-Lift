@@ -34,7 +34,9 @@ public class Ascenseur {
     }
 
     public boolean isValid() {
-        return marque.isNotEmpty().get() && modele.isNotEmpty().get() && dateMiseEnService.isNotNull().get() && etage.greaterThan(0).get() && state.isNotNull().get();
+        return marque.isNotEmpty().and(modele.isNotEmpty())
+                .and(dateMiseEnService.isNotNull())
+                .and(etage.greaterThan(0)).and(state.isNotNull()).get();
     }
 
     /* Getters */
