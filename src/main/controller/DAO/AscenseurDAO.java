@@ -1,6 +1,7 @@
 package main.controller.DAO;
 
 import main.model.Ascenseur;
+import main.model.Ascensoriste;
 import main.model.enums.EtatAscenseur;
 import main.model.enums.TypeReparation;
 
@@ -43,7 +44,9 @@ public class AscenseurDAO {
 
         ArrayList<Ascenseur> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
-            Ascenseur ascenseur = new Ascenseur(rs.getString("marque"), rs.getString("modele"), rs.getDate("miseEnService"), rs.getInt("etage"), EtatAscenseur.get(rs.getString("etat")));
+            Ascenseur ascenseur = new Ascenseur(rs.getString("marque"), rs.getString("modele"),
+                    rs.getDate("miseEnService"), rs.getInt("etage"),
+                    EtatAscenseur.get(rs.getString("etat")));
             ascenseur.setIdAscenseur(rs.getInt("idAscenseur"));
             result.add(ascenseur);
         }

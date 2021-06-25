@@ -17,7 +17,7 @@
                 <Image url="@../../resource/silhouette-d'utilisateurs-multiples.png" />
             </ImageView>
 
-            <Label text="Gestion personne" />
+            <Label fx:id="titleLabel" text="Gestion personne" />
 
             <padding>
                 <Insets bottom="10.0" top="10.0" />

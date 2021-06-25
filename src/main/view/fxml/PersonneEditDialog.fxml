@@ -22,7 +22,7 @@
                 <Image url="@../../resource/silhouette-d'utilisateurs-multiples.png" />
             </ImageView>
 
-            <Label text="Edition personne" />
+            <Label fx:id="titleLabel" text="Edition personne" />
             <padding>
                 <Insets bottom="10.0" top="10.0" />
             </padding>

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class AscensoristeDAO {
     private final DataAccess instance;
@@ -40,6 +41,10 @@ public class AscensoristeDAO {
         newLogin.append(prenom.toLowerCase());
         newLogin.append('.');
         newLogin.append(nom.toLowerCase());
+        {
+            Random value = new Random();
+            newLogin.append(String.format("%03d", value.nextInt(999)));
+        }
         newLogin.append("@e-lift.fr");
         return newLogin.toString();
     }
@@ -118,6 +123,31 @@ public class AscensoristeDAO {
 
         boolean result = false;
         if(rs.next()) result = rs.getString("login").equals(login);
+
+        rs.close();
+        stmt.close();
+
+        return result;
+    }
+
+    public List<Ascensoriste> getAvailableAscensoriste(int latitude, int longitude) throws SQLException {
+
+        PreparedStatement stmt = instance.getConnection()
+                .prepareStatement("select *, distance(latitude, longitude, ?, ?) " +
+                        "as distance from ascensoriste order by distance;");
+
+        stmt.setInt(1, latitude);
+        stmt.setInt(2, longitude);
+
+        ResultSet rs = stmt.executeQuery();
+
+        ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
+
+        while (rs.next()) {
+            Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
+                    rs.getString("telephone"), rs.getInt("longitude"), rs.getInt("latitude"));
+            result.add(ascensoriste);
+        }
 
         rs.close();
         stmt.close();

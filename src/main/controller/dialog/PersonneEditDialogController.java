@@ -17,6 +17,8 @@ public class PersonneEditDialogController {
     private TextField nomTextField,prenomTextField,telephoneTextField;
     @FXML
     private PasswordField passwordTextField;
+    @FXML
+    private Label titleLabel;
 
     private final Personne personne = new Personne();
     private final StringProperty password = new SimpleStringProperty();
@@ -34,6 +36,12 @@ public class PersonneEditDialogController {
         personne.prenomProperty().bind(prenomTextField.textProperty());
         personne.telephoneProperty().bind(telephoneTextField.textProperty());
         password.bind(passwordTextField.textProperty());
+    }
+
+
+
+    public void setTitle(String role) {
+        titleLabel.setText("Edition " + role);
     }
 
     /**
