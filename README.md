@@ -1,3 +1,7 @@
+
+
+https://user-images.githubusercontent.com/61010983/123441733-7a812880-d5d4-11eb-8252-49cfaeb83f16.mp4
+
 # E-Lift
 Projet MasterCamp 2021
 
@@ -26,6 +30,9 @@ Parmi les différents choix qui étaient à notre disposition nous avons choisi 
 Un sujet touchant plusieurs points importants et interessant aussi bien au niveau logistique que technique, et dans un cadre particulier qui nous pousse à se concentrer sur un même problème durant un mois pour livrer une solution à celui-ci.  
 Tous les projets de ce mastercamp avaient pour but de nous faire rentrer dans une situation de travail réelle avec un client et notre équipe ayant pour but d'y répondre.  
 Le cahier des charges étant peu éxhaustif, celui-ci nous permetant de faire travailler notre imagination et de pouvoir réfléchir à un maximum de possibilité pouvant ainsi livrer un produit fonctionnel répondant aux différents critères requis pour être utilisé sur le terrain par d'autres professionnels.
+
+
+https://user-images.githubusercontent.com/61010983/123441733-7a812880-d5d4-11eb-8252-49cfaeb83f16.mp4
 
 <a name="technologies"></a>
 ### Technologies
