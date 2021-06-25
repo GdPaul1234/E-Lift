@@ -134,6 +134,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" exported="" name="org.openjfx:javafx-fxml:11" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.7.4" level="project" />
   </component>
 </module>

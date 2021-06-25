@@ -90,7 +90,7 @@ public class MainController {
                         }
 
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setHeaderText("Votre identifiant pour vous connecter\n\nà votre espace personnel");
+                        alert.setHeaderText("Votre identifiant pour vous connecter\nà votre espace personnel");
                         alert.setContentText(MessageFormat.format("{0}\nGardez-le précieusement !", login));
                         alert.showAndWait();
                     } catch (SQLException e) {

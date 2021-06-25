@@ -82,6 +82,9 @@ public class ImmeubleOverviewController {
         // Listen for selection changes and show the ascenseur details when changed.
         ascenseurTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showAscenseurDetails(newValue));
+
+        immeubleTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        ascenseurTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void updateImmeublesData() throws SQLException {
