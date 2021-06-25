@@ -59,10 +59,11 @@ public class ReparationDAO {
         stmt.close();
     }
 
-    public void removeAscenceur(int idAscenceur, String login) throws SQLException {
+    public void removeReparation(int idAscenceur, String login) throws SQLException {
         PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("delete from reparation where idAscenseur=? and login=?;");
         stmt.setInt(1, idAscenceur);
+        stmt.setString(2,login);
         stmt.executeUpdate();
         stmt.close();
     }

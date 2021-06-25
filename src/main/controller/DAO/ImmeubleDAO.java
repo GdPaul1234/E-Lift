@@ -61,7 +61,7 @@ public class  ImmeubleDAO {
         stmtAdresse.setString(2, adresse.getVille());
         stmtAdresse.setString(3, adresse.getCodePostal());
         stmtAdresse.setFloat(4, 0);// TODO get real latitude
-        stmtAdresse.setFloat(5, 0);
+        stmtAdresse.setFloat(5, 0);// TODO get real longitude
 
         stmtAdresse.executeUpdate();
         stmtAdresse.close();
