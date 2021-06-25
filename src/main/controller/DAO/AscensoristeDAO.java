@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class AscensoristeDAO {
     private final DataAccess instance;
@@ -40,6 +41,10 @@ public class AscensoristeDAO {
         newLogin.append(prenom.toLowerCase());
         newLogin.append('.');
         newLogin.append(nom.toLowerCase());
+        {
+            Random value = new Random();
+            newLogin.append(String.format("%03d", value.nextInt(999)));
+        }
         newLogin.append("@e-lift.fr");
         return newLogin.toString();
     }
