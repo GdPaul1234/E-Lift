@@ -118,32 +118,11 @@ public class ImmeubleEditDialogController {
         nomTextField.setText(immeuble.getNom());
         etageSpinner.getValueFactory().setValue(immeuble.getNbEtage());
 
-        Adresse adresseImmeuble = immeuble.getAdresse();
-        coordTextField.setText(adresseImmeuble.getLatitude() + ", " + adresseImmeuble.getLongitude());
+        adresse = immeuble.getAdresse();
+        coordTextField.setText(adresse.getLatitude() + ", " + adresse.getLongitude());
 
-        adresseComboBox.getEditor().setText(adresseImmeuble.toString());
-        // update inner adresse
-        AdresseSuggestionWorker worker = new AdresseSuggestionWorker(adresseImmeuble.toString());
-
-        FeatureCollection featureCollection = new FeatureCollection(adresseImmeuble.toString());
-        features.set(FXCollections.observableArrayList(featureCollection.getFeatures()));
-
-        CompletableFuture<ObservableList<Feature>> completableFuture = CompletableFuture.supplyAsync(() -> {
-            try {
-                return worker.call();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return FXCollections.emptyObservableList();
-        });
-        completableFuture.thenAcceptAsync(f -> {
-            if (f.size() > 0) {
-                adresse = f.get(0).toAdresse();
-                coordTextField.setText(adresse.getLatitude() + ", " + adresse.getLongitude());
-            }
-        });
-
-
+        adresseComboBox.getEditor().setText(adresse.toString());
+        coordTextField.setText(adresse.getLatitude() + ", " + adresse.getLongitude());
     }
 
     public static class AdresseSuggestionWorker extends Task<ObservableList<Feature>> {
