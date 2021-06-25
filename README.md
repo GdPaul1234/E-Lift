@@ -36,7 +36,9 @@ Pour réaliser notre projet nous avons utiliser le langage JAVA pour pouvoir uti
 ### Installation
 
 Pour installer notre application bureau chez vous il faudrat ouvrir le fichier ZIP : E-lift.zip et le déziper dans un unique et même dossier. Un fois le tout déziper, il vous faudra copier le fichier SQL et l'installer sur votre MySQL Workbench pour l'initialiser et appliquer quelques lignes de commande utilies à la présentation de notre application.  
-Il vous suffira de lancer l'executable pour voir apparaitre l'interface de notre application sur votre écran avec un menu de connexion.
+Il vous suffira de lancer l'executable pour voir apparaitre l'interface de notre application sur votre écran avec un menu de connexion. Pour vous connecté rien de plus simple, mettez en *login* votre nom d'utilisateur (souvent *root* par défaut) puis votre mot de passe que vous avez assignez à votre connexion MySQL. Une fois les champs remplis il vous suffit de cliquer sur _OK_ ou sur votre _SPACEBAR_. Si les identifiants sont corrects alors vous êtes redirigé sur notre page principale.  
+
+Sur cette page principale plusieurs options vous sont proposé comme ceux de modifier les tableaux d'immeubles, d'ascenseurs, de gestionnaire d'immeuble ou d'ascensoristes à travers des interfaces graphiques intuitives et faciles d'utilisation.
 
 <a name="faqs"></a>
 ### FAQs
