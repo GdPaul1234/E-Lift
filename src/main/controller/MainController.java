@@ -1,35 +1,55 @@
 package main.controller;
 
+import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.Extent;
+import com.sothawo.mapjfx.MapView;
+import com.sothawo.mapjfx.Marker;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.MenuButton;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import main.controller.DAO.AscensoristeDAO;
-import main.controller.DAO.DataAccess;
-import main.controller.DAO.GestionnaireDAO;
-import main.controller.DAO.ImmeubleDAO;
-import main.model.Ascensoriste;
-import main.model.Gestionnaire;
-import main.model.Immeuble;
-import main.model.Personne;
+import main.controller.DAO.*;
+import main.model.*;
+import main.model.enums.EtatAscenseur;
+import main.model.interfaces.Ressource;
 import main.view.AscensoristeOverview;
 import main.view.GestionnaireOverview;
 import main.view.ImmeubleOverview;
 import main.view.dialog.ImmeubleEditDialog;
 import main.view.dialog.PersonneEditDialog;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.FutureTask;
 
 public class MainController {
-    @FXML private HBox topbar;
+    @FXML
+    private HBox topbar;
+    @FXML
+    private MapView mapView;
+    @FXML
+    private ComboBox<EtatAscenseur> filtrePanneComboBox;
+    @FXML
+    private TreeView<Ressource> ascenseurTreeView;
+
+    private Extent extentAllLocations;
+    private List<Marker> positionImmeubles;
 
     public static void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -51,12 +71,81 @@ public class MainController {
             System.out.println("Bienvenue ascensoriste");
         }
 
-        if(DataAccess.isGestionnaire()) {
+        if (DataAccess.isGestionnaire()) {
             removeItems.addAll(topbar.lookupAll(".ascensoriste-control"));
             System.out.println("Bienvenue gestionnaire");
         }
 
         topbar.getChildren().removeAll(removeItems);
+
+        initComboBox();
+        updateTreeViewTask().run();
+        initMapViewTask().run();
+    }
+
+    private void initComboBox() {
+        // Remplir la Combobox des etats d'un ascenseur
+        ObservableList<EtatAscenseur> etats = FXCollections.observableArrayList(EtatAscenseur.getValues());
+        filtrePanneComboBox.setItems(etats);
+    }
+
+    private Runnable initMapViewTask() {
+        // Init MapView to center of France
+        return () -> {
+            mapView.setCenter(new Coordinate(46.603354, 1.8883335));
+            mapView.setZoom(5);
+            mapView.initialize();
+        };
+    }
+
+    @FXML
+    private void handleUpdate() {
+        updateTreeViewTask().run();
+    }
+
+    private Runnable updateTreeViewTask() {
+        final Service<TreeItem<Ressource>> updateListAscenseur = new Service<>() {
+
+            @Override
+            protected Task<TreeItem<Ressource>> createTask() {
+                return new Task<>() {
+
+                    @Override
+                    protected TreeItem<Ressource> call() throws Exception {
+                        ImmeubleDAO immeubleDAO = new ImmeubleDAO();
+                        AscenseurDAO ascenseurDAO = new AscenseurDAO();
+
+                        TreeItem<Ressource> rootItem = new TreeItem<>(new Personne());
+                        rootItem.setExpanded(true);
+
+                        for (Immeuble immeuble : DataAccess.isGestionnaire() ? immeubleDAO.getMyImmeubles() : immeubleDAO.getAllImmeubles()) {
+                            ImageView immeubleIcon = new ImageView(new Image(getClass().getResourceAsStream("/main/resource/imeuble 16.png")));
+                            TreeItem<Ressource> immeubleNode = new TreeItem<>(immeuble, immeubleIcon);
+                            immeubleNode.setExpanded(true);
+                            rootItem.getChildren().add(immeubleNode);
+
+                            // TODO ajout immeuble sur carte
+
+                            for (Ascenseur ascenseur : ascenseurDAO.getAscenseursImmeuble(immeuble.getIdImmeuble())) {
+                                TreeItem<Ressource> ascenseurLeaf = new TreeItem<>(ascenseur);
+                                immeubleNode.getChildren().add(ascenseurLeaf);
+                            }
+                        }
+
+                        return rootItem;
+                    }
+                };
+            }
+        };
+
+        return () -> {
+            updateListAscenseur.start();
+            updateListAscenseur.setOnSucceeded((WorkerStateEvent event) -> {
+                ascenseurTreeView.setShowRoot(false);
+                ascenseurTreeView.setRoot(updateListAscenseur.getValue());
+            });
+        };
+
     }
 
 

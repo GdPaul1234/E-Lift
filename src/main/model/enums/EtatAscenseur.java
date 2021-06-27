@@ -11,8 +11,10 @@ public enum EtatAscenseur {
     EnCoursDeReparation,
     EnService;
 
+    private static EtatAscenseur[] values = EtatAscenseur.EnPanne.getDeclaringClass().getEnumConstants();
+
     public static EtatAscenseur[] getValues() {
-        return EtatAscenseur.EnPanne.getDeclaringClass().getEnumConstants();
+        return values;
     }
 
     public static EtatAscenseur get(String state) {

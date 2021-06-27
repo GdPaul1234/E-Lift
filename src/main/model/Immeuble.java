@@ -1,15 +1,16 @@
 package main.model;
 
 import javafx.beans.property.*;
+import main.model.interfaces.Ressource;
 
 import java.util.Set;
 
-public class Immeuble {
+public class Immeuble implements Ressource {
 
     private int idImmeuble;
-    private StringProperty nom = new SimpleStringProperty(null, "nom");
-    private IntegerProperty nbEtage = new SimpleIntegerProperty(null, "nb étage");
-    private ObjectProperty<Adresse> adresse = new SimpleObjectProperty<>(null, "adresse");
+    private final StringProperty nom = new SimpleStringProperty(null, "nom");
+    private final IntegerProperty nbEtage = new SimpleIntegerProperty(null, "nb étage");
+    private final ObjectProperty<Adresse> adresse = new SimpleObjectProperty<>(null, "adresse");
     private Set<ContratMaintenance> contrats;
     private Set<Ascenseur> ascenseurs;
 
@@ -71,5 +72,10 @@ public class Immeuble {
 
     public ObjectProperty<Adresse> adresseProperty() {
         return adresse;
+    }
+
+    @Override
+    public String toString() {
+        return nom.get() + ", " + adresse.get().getVille() ;
     }
 }

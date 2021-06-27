@@ -3,8 +3,9 @@ package main.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import main.model.interfaces.Ressource;
 
-public class Personne {
+public class Personne implements Ressource {
 
     private StringProperty login  = new SimpleStringProperty(null, "login");
     private StringProperty  nom = new SimpleStringProperty(null, "nom");
@@ -70,5 +71,10 @@ public class Personne {
 
     public StringProperty telephoneProperty() {
         return telephone;
+    }
+
+    @Override
+    public String toString() {
+        return nom.get() + ", " + prenom.get();
     }
 }

@@ -1,5 +1,6 @@
 package main.controller.dialog;
 
+import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -65,7 +66,14 @@ public class ImmeubleEditDialogController {
                         return FXCollections.emptyObservableList();
                     });
                     completableFuture.thenAccept(f -> {
-                        if (f.size() > 0) features.set(f);
+                        Runnable updateSuggestions = () -> {
+                            if (f.size() > 0) features.set(f);
+                        };
+                        if (Platform.isFxApplicationThread()) {
+                            updateSuggestions.run();
+                        } else {
+                            Platform.runLater(updateSuggestions);
+                        }
                     });
                 }
             });

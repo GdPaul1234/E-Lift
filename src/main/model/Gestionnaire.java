@@ -1,5 +1,7 @@
 package main.model;
 
+import main.model.interfaces.Ressource;
+
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;

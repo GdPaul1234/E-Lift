@@ -2,6 +2,7 @@ package main.model;
 
 import javafx.beans.property.*;
 import main.model.enums.EtatAscenseur;
+import main.model.interfaces.Ressource;
 
 import java.util.Date;
 import java.util.Set;
@@ -9,14 +10,14 @@ import java.util.Set;
 /**
  * A
  */
-public class Ascenseur {
+public class Ascenseur implements Ressource {
 
-    private IntegerProperty idAscenseur = new SimpleIntegerProperty(null, "ID");
-    private StringProperty marque = new SimpleStringProperty(null, "marque");
-    private StringProperty modele = new SimpleStringProperty(null, "modèle");
-    private ObjectProperty<Date> dateMiseEnService = new SimpleObjectProperty<>(null, "date mise en service");
-    private IntegerProperty etage = new SimpleIntegerProperty(null, "étage");
-    private ObjectProperty<EtatAscenseur> state = new SimpleObjectProperty<>(null, "état");
+    private final IntegerProperty idAscenseur = new SimpleIntegerProperty(null, "ID");
+    private final StringProperty marque = new SimpleStringProperty(null, "marque");
+    private final StringProperty modele = new SimpleStringProperty(null, "modèle");
+    private final ObjectProperty<Date> dateMiseEnService = new SimpleObjectProperty<>(null, "date mise en service");
+    private final IntegerProperty etage = new SimpleIntegerProperty(null, "étage");
+    private final ObjectProperty<EtatAscenseur> state = new SimpleObjectProperty<>(null, "état");
 
     private Set<Entretien> entretiens;
     private Set<Alerte> alertes;
@@ -60,22 +61,22 @@ public class Ascenseur {
         return dateMiseEnService.get();
     }
 
+    public void setDateMiseEnService(Date date) {
+        this.dateMiseEnService.set(date);
+    }
+
     public int getEtage() {
         return etage.get();
     }
+
+    /* Setters */
 
     public EtatAscenseur getState() {
         return state.get();
     }
 
-    /* Setters */
-
     public void setState(EtatAscenseur state) {
         this.state.set(state);
-    }
-
-    public void setDateMiseEnService(Date date) {
-        this.dateMiseEnService.set(date);
     }
 
     /**
@@ -109,5 +110,11 @@ public class Ascenseur {
 
     public ObjectProperty<EtatAscenseur> stateProperty() {
         return state;
+    }
+
+    @Override
+    public String toString() {
+        return marque.get() + " " + modele.get() + ", "
+                + state.get() + " au " + etage.get() + "e étage";
     }
 }
