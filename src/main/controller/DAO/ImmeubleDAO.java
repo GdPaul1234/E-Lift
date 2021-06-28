@@ -125,4 +125,21 @@ public class  ImmeubleDAO {
         stmt.executeUpdate();
         stmt.close();
     }
+
+    public Immeuble findImmeubleByLocation(float latitude, float longitude) throws SQLException {
+        PreparedStatement stmt = instance.getConnection().prepareStatement("select * from immeuble natural join adresse where latitude=? and longitude=?");
+        stmt.setFloat(1, latitude);
+        stmt.setFloat(2, longitude);
+        ResultSet rs = stmt.executeQuery();
+
+        Immeuble immeuble = null;
+
+        if(rs.next()) {
+            immeuble = new Immeuble(rs.getString("nom"), rs.getInt("nbEtage"),
+                    new Adresse(rs.getString("rue"), rs.getString("ville"), rs.getString("CP"), rs.getFloat("latitude"), rs.getFloat("longitude")));
+            immeuble.setIdImmeuble(rs.getInt("IdImmeuble"));
+        }
+
+        return immeuble;
+    }
 }

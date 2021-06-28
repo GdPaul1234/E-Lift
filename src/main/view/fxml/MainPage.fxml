@@ -1,35 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.sothawo.mapjfx.MapView?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11"
-            fx:controller="main.controller.MainController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainController">
     <stylesheets>
-        <URL value="@../style.css"/>
+        <URL value="@../style.css" />
     </stylesheets>
 
     <top>
         <VBox>
             <HBox fx:id="topbar" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
                 <ImageView fitHeight="60.0" fitWidth="152.0" preserveRatio="true">
-                    <Image url="@../../resource/E-lift1.png"/>
+                    <Image url="@../../resource/E-lift1.png" />
                 </ImageView>
 
                 <MenuButton styleClass="ascensoriste-control" text="Gestion clients" textOverrun="CLIP">
                     <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0">
-                            <Image url="@../../resource/silhouette-d'utilisateurs-multiples.png"/>
+                            <Image url="@../../resource/silhouette-d'utilisateurs-multiples.png" />
                         </ImageView>
                     </graphic>
                     <items>
                         <MenuItem onAction="#handleAddGestionnaire" text="Ajouter client">
                             <graphic>
                                 <ImageView fitHeight="20.0" fitWidth="20.0">
-                                    <Image url="@../../resource/ajouter-le-fichier.png"/>
+                                    <Image url="@../../resource/ajouter-le-fichier.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
@@ -37,7 +49,7 @@
                         <MenuItem onAction="#handleEditGestionnaire" text="Modifier client">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0">
-                                    <Image url="@../../resource/updated.png"/>
+                                    <Image url="@../../resource/updated.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
@@ -46,21 +58,21 @@
                 <MenuButton styleClass="gestionnaire-control" text="Gestion immeubles" textOverrun="CLIP">
                     <graphic>
                         <ImageView fitHeight="25.0" fitWidth="30.0">
-                            <Image url="@../../resource/imeuble.png"/>
+                            <Image url="@../../resource/imeuble.png" />
                         </ImageView>
                     </graphic>
                     <items>
                         <MenuItem onAction="#handleAddImmeuble" text="Ajouter immeuble">
                             <graphic>
                                 <ImageView fitHeight="20.0" fitWidth="20.0">
-                                    <Image url="@../../resource/ajouter-le-fichier.png"/>
+                                    <Image url="@../../resource/ajouter-le-fichier.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
                         <MenuItem onAction="#handleEditImmeuble" text="Modifier immeuble">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0">
-                                    <Image url="@../../resource/updated.png"/>
+                                    <Image url="@../../resource/updated.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
@@ -70,21 +82,21 @@
                 <MenuButton styleClass="gestionnaire-control" text="Gestion acsenseurs" textOverrun="CLIP">
                     <graphic>
                         <ImageView fitHeight="25.0" fitWidth="30.0">
-                            <Image url="@../../resource/ascenseur-d'urgence.png"/>
+                            <Image url="@../../resource/ascenseur-d'urgence.png" />
                         </ImageView>
                     </graphic>
                     <items>
                         <MenuItem onAction="#handleEditImmeuble" text="Ajouter ascenseur">
                             <graphic>
                                 <ImageView fitHeight="20.0" fitWidth="20.0">
-                                    <Image url="@../../resource/ajouter-le-fichier.png"/>
+                                    <Image url="@../../resource/ajouter-le-fichier.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
                         <MenuItem onAction="#handleEditImmeuble" text="Modifier ascenseur">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0">
-                                    <Image url="@../../resource/updated.png"/>
+                                    <Image url="@../../resource/updated.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
@@ -93,21 +105,21 @@
                 <MenuButton styleClass="ascensoriste-control" text="Gestion employés" textOverrun="CLIP">
                     <graphic>
                         <ImageView fitHeight="30.0" fitWidth="35.0">
-                            <Image url="@../../resource/employe.png"/>
+                            <Image url="@../../resource/employe.png" />
                         </ImageView>
                     </graphic>
                     <items>
                         <MenuItem onAction="#handleAddAscensoriste" text="Ajouter employé">
                             <graphic>
                                 <ImageView fitHeight="20.0" fitWidth="20.0">
-                                    <Image url="@../../resource/ajouter-le-fichier.png"/>
+                                    <Image url="@../../resource/ajouter-le-fichier.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
                         <MenuItem onAction="#handleEditAscensoriste" text="Modifier employé">
                             <graphic>
                                 <ImageView fitHeight="18.0" fitWidth="18.0">
-                                    <Image url="@../../resource/updated.png"/>
+                                    <Image url="@../../resource/updated.png" />
                                 </ImageView>
                             </graphic>
                         </MenuItem>
@@ -115,13 +127,13 @@
                 </MenuButton>
 
                 <padding>
-                    <Insets right="20.0"/>
+                    <Insets right="20.0" />
                 </padding>
             </HBox>
 
             <HBox style="-fx-background-color: derive(lightgray, 20%)">
                 <padding>
-                    <Insets bottom="5.0"/>
+                    <Insets bottom="5.0" />
                 </padding>
             </HBox>
         </VBox>
@@ -135,11 +147,15 @@
                     <BorderPane>
                         <top>
                             <AnchorPane>
-                                <ComboBox fx:id="filtrePanneComboBox" maxWidth="1.7976931348623157E308"
-                                          prefWidth="156.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                                          AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="5.0"/>
-                                <Button onAction="#handleUpdate" text="Actualiser" AnchorPane.bottomAnchor="5.0"
-                                        AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
+                                <StackPane prefWidth="156.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="5.0">
+                                    <ComboBox fx:id="filtrePanneComboBox" maxWidth="1.7976931348623157E308" />
+                                    <Button onAction="#handleClearFilter" styleClass="clear-button" text="❌" StackPane.alignment="CENTER_RIGHT">
+                              <StackPane.margin>
+                                 <Insets right="15.0" />
+                              </StackPane.margin></Button>
+                                </StackPane>
+
+                                <Button onAction="#handleUpdate" text="Actualiser" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                             </AnchorPane>
 
                         </top>
@@ -147,7 +163,7 @@
                         <center>
                             <TreeView fx:id="ascenseurTreeView">
                                 <BorderPane.margin>
-                                    <Insets left="2.0" right="2.0"/>
+                                    <Insets left="2.0" right="2.0" />
                                 </BorderPane.margin>
                             </TreeView>
                         </center>
@@ -155,11 +171,11 @@
                 </Tab>
 
                 <Tab text="Mon planning">
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                 </Tab>
             </TabPane>
 
-            <MapView fx:id="mapView"/>
+            <MapView fx:id="mapView" />
         </SplitPane>
 
     </center>

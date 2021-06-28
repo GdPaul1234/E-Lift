@@ -36,6 +36,11 @@
     -fx-border-color: derive(darkgray, -20%);
 }
 
+.clear-button {
+    -fx-background-radius: 5em;
+    -fx-background-color: transparent;
+}
+
 /***************************************************
  *                   Controls                      *
  ***************************************************/

@@ -11,10 +11,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -33,11 +30,11 @@ import main.view.dialog.PersonneEditDialog;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class MainController {
     private final List<Marker> positionImmeubles = Collections.synchronizedList(new ArrayList<>());
+    private final ObjectProperty<TreeItem<Ressource>> rootItem = new SimpleObjectProperty<>(new TreeItem<>(new Personne()));
     @FXML
     private HBox topbar;
     @FXML
@@ -46,8 +43,6 @@ public class MainController {
     private ComboBox<EtatAscenseur> filtrePanneComboBox;
     @FXML
     private TreeView<Ressource> ascenseurTreeView;
-    private final ObjectProperty<TreeItem<Ressource>> rootItem = new SimpleObjectProperty<>(new TreeItem<>(new Personne()));
-
 
     public static void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -80,8 +75,21 @@ public class MainController {
 
         initComboBox();
 
+        // init treeview params
         ascenseurTreeView.setShowRoot(false);
         ascenseurTreeView.rootProperty().bind(rootItem);
+        ascenseurTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ascenseurTreeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (newValue != null) {
+                Ressource ressource = newValue.getValue();
+                if (ressource instanceof Immeuble) {
+                    Adresse adresse = ((Immeuble) ressource).getAdresse();
+                    mapView.setZoom(16);
+                    mapView.setCenter(new Coordinate(Float.valueOf(adresse.getLatitude()).doubleValue(), Float.valueOf(adresse.getLongitude()).doubleValue()));
+                }
+            }
+        });
+
         updateTreeView();
         initMapViewTask();
 
@@ -97,14 +105,16 @@ public class MainController {
         // Remplir la Combobox des etats d'un ascenseur
         ObservableList<EtatAscenseur> etats = FXCollections.observableArrayList(EtatAscenseur.getValues());
         filtrePanneComboBox.setItems(etats);
+        filtrePanneComboBox.getSelectionModel().selectedItemProperty()
+                .addListener((observableValue, oldValue, newValue) -> updateTreeView());
     }
 
     private void initMapViewTask() {
         // Init MapView to center of France
         Runnable task = () -> {
-            mapView.setCustomMapviewCssURL(getClass().getResource("/main/view/custom_mapview.css"));
             mapView.setCenter(new Coordinate(46.603354, 1.8883335));
             mapView.setZoom(5);
+            mapView.setAnimationDuration(750);
             mapView.initialize();
         };
         task.run();
@@ -116,13 +126,17 @@ public class MainController {
         updateTreeView();
     }
 
+    @FXML
+    private void handleClearFilter() {
+        filtrePanneComboBox.setValue(null);
+    }
+
     /* ********************************************* *
      *                Gestion carte                  *
      * ********************************************* */
     private void updateTreeView() {
         positionImmeubles.forEach(mapView::removeMarker);
         positionImmeubles.clear();
-        System.out.println("Cleared");
 
         final Service<Void> updateListAscenseur = new Service<>() {
             @Override
@@ -131,6 +145,8 @@ public class MainController {
 
                     @Override
                     protected Void call() throws Exception {
+                        // Get Filter
+                        EtatAscenseur etatAscenseur = filtrePanneComboBox.getValue();
 
                         ImmeubleDAO immeubleDAO = new ImmeubleDAO();
                         AscenseurDAO ascenseurDAO = new AscenseurDAO();
@@ -143,38 +159,50 @@ public class MainController {
                             ImageView immeubleIcon = new ImageView(new Image(getClass().getResourceAsStream("/main/resource/imeuble 16.png")));
                             TreeItem<Ressource> immeubleNode = new TreeItem<>(immeuble, immeubleIcon);
                             immeubleNode.setExpanded(true);
-                            rootItem.getChildren().add(immeubleNode);
 
-                            int nbPanne = 0, nbReparation = 0;
+                            int nbPanne = 0, nbPannePersonne = 0, nbReparation = 0;
 
                             for (Ascenseur ascenseur : ascenseurDAO.getAscenseursImmeuble(immeuble.getIdImmeuble())) {
                                 switch (ascenseur.getState()) {
-                                    case EnPanne, EnPannePersonnes -> nbPanne++;
+                                    case EnPanne -> nbPanne++;
+                                    case EnPannePersonnes -> nbPannePersonne++;
                                     case EnCoursDeReparation -> nbReparation++;
                                 }
 
-                                TreeItem<Ressource> ascenseurLeaf = new TreeItem<>(ascenseur);
-                                immeubleNode.getChildren().add(ascenseurLeaf);
+                                // filtre ascenseur par etatAscenseur
+                                if (etatAscenseur == null || ascenseur.getState() == etatAscenseur) {
+                                    TreeItem<Ressource> ascenseurLeaf = new TreeItem<>(ascenseur);
+                                    immeubleNode.getChildren().add(ascenseurLeaf);
+                                }
+
                             }
 
-                            // Afficher marqueur immeuble sur la carte
-                            Adresse adresse = immeuble.getAdresse();
-                            Marker.Provided markerColor = (nbPanne > 0) ? Marker.Provided.RED :
-                                    ((nbReparation > 0) ? Marker.Provided.ORANGE : Marker.Provided.GREEN);
-                            Marker marker = Marker.createProvided(markerColor)
-                                    .setPosition(new Coordinate(Float.valueOf(adresse.getLatitude()).doubleValue(), Float.valueOf(adresse.getLongitude()).doubleValue()))
-                                    .attachLabel(new MapLabel(immeuble.getNom()).setCssClass("mapview-label"));
-                            positionImmeubles.add(marker);
+                            // ajouter noeud immeuble si pas vide
+                            if ((nbPanne > 0 && etatAscenseur == EtatAscenseur.EnPanne) ||
+                                    (nbPannePersonne > 0 && etatAscenseur == EtatAscenseur.EnPannePersonnes) ||
+                                    (nbReparation > 0 && etatAscenseur == EtatAscenseur.EnCoursDeReparation) ||
+                                    etatAscenseur == EtatAscenseur.EnService ||
+                                    etatAscenseur == null
+                            ) {
+                                rootItem.getChildren().add(immeubleNode);
+
+                                // Afficher marqueur immeuble sur la carte
+                                Adresse adresse = immeuble.getAdresse();
+                                Marker.Provided markerColor = (nbPanne > 0 || nbPannePersonne > 0) ? Marker.Provided.RED :
+                                        ((nbReparation > 0) ? Marker.Provided.ORANGE : Marker.Provided.GREEN);
+                                Marker marker = Marker.createProvided(markerColor)
+                                        .setPosition(new Coordinate(Float.valueOf(adresse.getLatitude()).doubleValue(), Float.valueOf(adresse.getLongitude()).doubleValue()))
+                                        .attachLabel(new MapLabel(immeuble.getNom()));
+                                positionImmeubles.add(marker);
+                            }
+
 
                         }
 
                         if (Platform.isFxApplicationThread()) {
                             MainController.this.rootItem.set(rootItem);
                         } else {
-                            Platform.runLater(() -> {
-                                MainController.this.rootItem.set(rootItem);
-                                System.out.println("ok async");
-                            });
+                            Platform.runLater(() -> MainController.this.rootItem.set(rootItem));
                         }
 
                         return null;
