@@ -1,0 +1,9 @@
+/***************************************************
+ *                       Maps                      *
+ ***************************************************/
+
+.mapview-label {
+    -fx-font-family: System, SansSerif;
+    -fx-font-size: 12px;
+    -fx-text-fill: red;
+}

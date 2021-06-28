@@ -1,9 +1,9 @@
 package main.controller;
 
-import com.sothawo.mapjfx.Coordinate;
-import com.sothawo.mapjfx.Extent;
-import com.sothawo.mapjfx.MapView;
-import com.sothawo.mapjfx.Marker;
+import com.sothawo.mapjfx.*;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -32,13 +32,12 @@ import main.view.dialog.PersonneEditDialog;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 public class MainController {
+    private final List<Marker> positionImmeubles = Collections.synchronizedList(new ArrayList<>());
     @FXML
     private HBox topbar;
     @FXML
@@ -47,9 +46,8 @@ public class MainController {
     private ComboBox<EtatAscenseur> filtrePanneComboBox;
     @FXML
     private TreeView<Ressource> ascenseurTreeView;
+    private final ObjectProperty<TreeItem<Ressource>> rootItem = new SimpleObjectProperty<>(new TreeItem<>(new Personne()));
 
-    private Extent extentAllLocations;
-    private List<Marker> positionImmeubles;
 
     public static void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -62,6 +60,8 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        long start = System.currentTimeMillis();
+
         // Masquer les actions non permises selon les roles
         // https://stackoverflow.com/a/30019190
         Set<Node> removeItems = new HashSet<>();
@@ -79,8 +79,18 @@ public class MainController {
         topbar.getChildren().removeAll(removeItems);
 
         initComboBox();
-        updateTreeViewTask().run();
-        initMapViewTask().run();
+
+        ascenseurTreeView.setShowRoot(false);
+        ascenseurTreeView.rootProperty().bind(rootItem);
+        updateTreeView();
+        initMapViewTask();
+
+        // attendre la fin de l'initialisation de la TreeView et de la MapView pour afficher les marqueurs
+        mapView.initializedProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (newValue) showUpdatedMarker();
+        });
+
+        System.out.printf("Start MainPage : %d ms\n", System.currentTimeMillis() - start);
     }
 
     private void initComboBox() {
@@ -89,33 +99,44 @@ public class MainController {
         filtrePanneComboBox.setItems(etats);
     }
 
-    private Runnable initMapViewTask() {
+    private void initMapViewTask() {
         // Init MapView to center of France
-        return () -> {
+        Runnable task = () -> {
+            mapView.setCustomMapviewCssURL(getClass().getResource("/main/view/custom_mapview.css"));
             mapView.setCenter(new Coordinate(46.603354, 1.8883335));
             mapView.setZoom(5);
             mapView.initialize();
         };
+        task.run();
     }
+
 
     @FXML
     private void handleUpdate() {
-        updateTreeViewTask().run();
+        updateTreeView();
     }
 
-    private Runnable updateTreeViewTask() {
-        final Service<TreeItem<Ressource>> updateListAscenseur = new Service<>() {
+    /* ********************************************* *
+     *                Gestion carte                  *
+     * ********************************************* */
+    private void updateTreeView() {
+        positionImmeubles.forEach(mapView::removeMarker);
+        positionImmeubles.clear();
+        System.out.println("Cleared");
 
+        final Service<Void> updateListAscenseur = new Service<>() {
             @Override
-            protected Task<TreeItem<Ressource>> createTask() {
+            protected Task<Void> createTask() {
                 return new Task<>() {
 
                     @Override
-                    protected TreeItem<Ressource> call() throws Exception {
+                    protected Void call() throws Exception {
+
                         ImmeubleDAO immeubleDAO = new ImmeubleDAO();
                         AscenseurDAO ascenseurDAO = new AscenseurDAO();
 
                         TreeItem<Ressource> rootItem = new TreeItem<>(new Personne());
+                        rootItem.getChildren().clear();
                         rootItem.setExpanded(true);
 
                         for (Immeuble immeuble : DataAccess.isGestionnaire() ? immeubleDAO.getMyImmeubles() : immeubleDAO.getAllImmeubles()) {
@@ -124,27 +145,66 @@ public class MainController {
                             immeubleNode.setExpanded(true);
                             rootItem.getChildren().add(immeubleNode);
 
-                            // TODO ajout immeuble sur carte
+                            int nbPanne = 0, nbReparation = 0;
 
                             for (Ascenseur ascenseur : ascenseurDAO.getAscenseursImmeuble(immeuble.getIdImmeuble())) {
+                                switch (ascenseur.getState()) {
+                                    case EnPanne, EnPannePersonnes -> nbPanne++;
+                                    case EnCoursDeReparation -> nbReparation++;
+                                }
+
                                 TreeItem<Ressource> ascenseurLeaf = new TreeItem<>(ascenseur);
                                 immeubleNode.getChildren().add(ascenseurLeaf);
                             }
+
+                            // Afficher marqueur immeuble sur la carte
+                            Adresse adresse = immeuble.getAdresse();
+                            Marker.Provided markerColor = (nbPanne > 0) ? Marker.Provided.RED :
+                                    ((nbReparation > 0) ? Marker.Provided.ORANGE : Marker.Provided.GREEN);
+                            Marker marker = Marker.createProvided(markerColor)
+                                    .setPosition(new Coordinate(Float.valueOf(adresse.getLatitude()).doubleValue(), Float.valueOf(adresse.getLongitude()).doubleValue()))
+                                    .attachLabel(new MapLabel(immeuble.getNom()).setCssClass("mapview-label"));
+                            positionImmeubles.add(marker);
+
                         }
 
-                        return rootItem;
+                        if (Platform.isFxApplicationThread()) {
+                            MainController.this.rootItem.set(rootItem);
+                        } else {
+                            Platform.runLater(() -> {
+                                MainController.this.rootItem.set(rootItem);
+                                System.out.println("ok async");
+                            });
+                        }
+
+                        return null;
                     }
                 };
             }
         };
 
-        return () -> {
-            updateListAscenseur.start();
-            updateListAscenseur.setOnSucceeded((WorkerStateEvent event) -> {
-                ascenseurTreeView.setShowRoot(false);
-                ascenseurTreeView.setRoot(updateListAscenseur.getValue());
-            });
-        };
+        updateListAscenseur.start();
+        updateListAscenseur.setOnSucceeded((WorkerStateEvent event) -> {
+            ascenseurTreeView.refresh();
+            if (mapView.getInitialized()) {
+                showUpdatedMarker();
+            }
+        });
+    }
+
+    private synchronized void showUpdatedMarker() {
+        positionImmeubles.forEach(v -> {
+            v.setVisible(true);
+            mapView.addMarker(v);
+        });
+
+        if (positionImmeubles.size() > 1) {
+            Extent extentImmeubles = Extent.forCoordinates(positionImmeubles.stream()
+                    .map(MapCoordinateElement::getPosition).collect(Collectors.toList()));
+            mapView.setExtent(extentImmeubles);
+        } else if (positionImmeubles.size() == 1) {
+            mapView.setCenter(positionImmeubles.get(0).getPosition());
+        }
 
     }
 
