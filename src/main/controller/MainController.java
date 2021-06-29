@@ -234,6 +234,7 @@ public class MainController {
                     .map(MapCoordinateElement::getPosition).collect(Collectors.toList()));
             mapView.setExtent(extentImmeubles);
         } else if (positionImmeubles.size() == 1) {
+            mapView.setZoom(16);
             mapView.setCenter(positionImmeubles.get(0).getPosition());
         }
 
