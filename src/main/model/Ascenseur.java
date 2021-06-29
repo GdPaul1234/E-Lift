@@ -37,7 +37,7 @@ public class Ascenseur implements Ressource {
     public boolean isValid() {
         return marque.isNotEmpty().and(modele.isNotEmpty())
                 .and(dateMiseEnService.isNotNull())
-                .and(etage.greaterThan(0)).and(state.isNotNull()).get();
+                .and(etage.greaterThanOrEqualTo(-10)).and(state.isNotNull()).get();
     }
 
     /* Getters */
