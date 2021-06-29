@@ -134,7 +134,8 @@ public class AscensoristeDAO {
 
         PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("select *, distance(latitude, longitude, ?, ?) " +
-                        "as distance from ascensoriste order by distance;");
+                        "as distance from ascensoriste where not exists (select login from reparation where " +
+                        "ascensoriste.login = reparation.login) order by distance;");
 
         stmt.setInt(1, latitude);
         stmt.setInt(2, longitude);
