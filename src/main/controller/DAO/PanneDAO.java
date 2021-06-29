@@ -4,13 +4,11 @@ import main.model.Adresse;
 import main.model.Ascenseur;
 import main.model.Immeuble;
 import main.model.Panne;
+import main.model.TrajetAller;
 import main.model.enums.EtatAscenseur;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,5 +56,14 @@ public class PanneDAO {
             result.add(new Panne(immeuble, ascenseur));
         }
         return result;
+    }
+    public void addPanne(TrajetAller trajetAller, int idAscenseur, String login) throws SQLException {
+        PreparedStatement stmt = instance.getConnection().prepareStatement(
+                "insert into trajetaller(dateTrajet,dureeTrajet,destImmeuble) values(?,?,?);");
+        stmt.setDate(1, new java.sql.Date(trajetAller.getDateTrajet().getTime()));
+        stmt.setInt(2, trajetAller.getDureeTrajet());
+        stmt.setInt(3, trajetAller.getDestImmeuble());
+        stmt.executeUpdate();
+        stmt.close();
     }
 }

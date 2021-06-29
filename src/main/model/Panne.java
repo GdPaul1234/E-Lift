@@ -11,6 +11,8 @@ public class Panne {
     private ObjectProperty<Ascenseur> ascenseur = new SimpleObjectProperty<>(null, "Ascenseur");
     private ObjectProperty<TypeReparation> typeReparation = new SimpleObjectProperty<>(null, "Type");
     private IntegerProperty avancement = new SimpleIntegerProperty(0, "avancement");
+    private ObjectProperty<Ascensoriste> ascensoriste = new SimpleObjectProperty<>(null,"Ascensoriste");
+    private ObjectProperty<Ascensoriste> trajetAller = new SimpleObjectProperty<>(null,"Ascensoriste");
 
     public Panne(Immeuble immeuble, Ascenseur ascenseur) {
         this.immeuble.set(immeuble);
