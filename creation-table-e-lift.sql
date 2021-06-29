@@ -41,13 +41,15 @@ CREATE TABLE Ascensoriste(
 
 
 #------------------------------------------------------------
-# Table: DateReparation
+# Table: Intervention
 #------------------------------------------------------------
 
-CREATE TABLE DateReparation(
-        dateReparation Datetime NOT NULL ,
-        duree          Int NOT NULL COMMENT 'duree en min'
-	,CONSTRAINT DateReparation_PK PRIMARY KEY (dateReparation)
+
+CREATE TABLE Intervention(
+         IdIntervention   Int  Auto_increment  NOT NULL ,
+         dateIntervention Datetime NOT NULL ,
+         duree            Int NOT NULL COMMENT 'duree en min'
+    ,CONSTRAINT Intervention_PK PRIMARY KEY (IdIntervention)
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
@@ -117,10 +119,11 @@ CREATE TABLE ContratMaintenance(
 #------------------------------------------------------------
 
 CREATE TABLE TrajetAller(
+        idTrajet    Int  Auto_increment  NOT NULL ,
         dateTrajet  Datetime NOT NULL ,
         dureeTrajet Int NOT NULL,
         destImmeuble Int NOT NULL
-	,CONSTRAINT TrajetAller_PK PRIMARY KEY (destImmeuble, dateTrajet)
+	,CONSTRAINT TrajetAller_PK PRIMARY KEY (idTrajet)
     
     ,CONSTRAINT TrajetAller_FK FOREIGN KEY (destImmeuble) REFERENCES Immeuble(idImmeuble)
 )ENGINE=InnoDB;
@@ -130,24 +133,27 @@ CREATE TABLE TrajetAller(
 #------------------------------------------------------------
 
 CREATE TABLE reparation(
-        idAscenseur    Int NOT NULL ,
-        login          Varchar (50) NOT NULL ,
-        dateReparation Datetime NOT NULL ,
-        commentaire    Text NOT NULL ,
-        typeReparation Varchar (50) NOT NULL ,
-        avancement     Varchar (50) NOT NULL
-	,CONSTRAINT reparation_PK PRIMARY KEY (idAscenseur,login,dateReparation)
+       idAscenseur    Int NOT NULL ,
+       login          Varchar (50) NULL ,
+       IdIntervention Int NULL ,
+       idTrajet       Int NOT NULL ,
+       datePanne      Datetime NOT NULL ,
+       typeReparation Varchar (50) NOT NULL ,
+       commentaire    Text ,
+       avancement     Varchar (50)
+    ,CONSTRAINT reparation_PK PRIMARY KEY (idAscenseur,datePanne)
 
-	,CONSTRAINT reparation_Ascenseur_FK FOREIGN KEY (idAscenseur) REFERENCES Ascenseur(idAscenseur)
-	,CONSTRAINT reparation_Ascensoriste0_FK FOREIGN KEY (login) REFERENCES Ascensoriste(login)
-	,CONSTRAINT reparation_DateReparation1_FK FOREIGN KEY (dateReparation) REFERENCES DateReparation(dateReparation)
+    ,CONSTRAINT reparation_Ascenseur_FK FOREIGN KEY (idAscenseur) REFERENCES Ascenseur(idAscenseur)
+    ,CONSTRAINT reparation_Ascensoriste0_FK FOREIGN KEY (login) REFERENCES Ascensoriste(login)
+    ,CONSTRAINT reparation_Intervention1_FK FOREIGN KEY (IdIntervention) REFERENCES Intervention(IdIntervention)
+    ,CONSTRAINT reparation_TrajetAller2_FK FOREIGN KEY (idTrajet) REFERENCES TrajetAller(idTrajet)
 )ENGINE=InnoDB;
 
 CREATE ROLE 'e-lift_employe', 'e-lift_gestionnaire';
 GRANT SELECT, INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
 
 GRANT INSERT ON `e-lift`.adresse TO 'e-lift_gestionnaire';
-GRANT INSERT, DELETE ON `e-lift`.ascenseur TO 'e-lift_gestionnaire';
+GRANT INSERT, UPDATE, DELETE ON `e-lift`.ascenseur TO 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.contratmaintenance TO 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.immeuble TO 'e-lift_gestionnaire';
 GRANT SELECT ON `e-lift`.* TO 'e-lift_gestionnaire';
