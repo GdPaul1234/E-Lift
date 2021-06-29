@@ -13,32 +13,23 @@
     <orderEntry type="library" name="org.openjfx:javafx-web:16" level="project" />
     <orderEntry type="library" name="org.openjfx:javafx-fxml:16" level="project" />
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.12.3" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/annotations-20.1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library name="JUnit5.7.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-5.7.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-api-5.7.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/apiguardian-api-1.1.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/opentest4j-1.2.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/junit-platform-commons-1.7.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-params-5.7.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-engine-5.7.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/junit-platform-engine-1.7.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="com.sothawo:mapjfx:3.0.1" level="project" />
     <orderEntry type="library" name="org.slf4j:slf4j-jdk14:1.7.31" level="project" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="JUnit5.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-5.4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-api-5.4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/apiguardian-api-1.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/opentest4j-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-platform-commons-1.4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-params-5.4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-engine-5.4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-platform-engine-1.4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

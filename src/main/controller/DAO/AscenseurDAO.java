@@ -3,10 +3,10 @@ package main.controller.DAO;
 import main.model.Ascenseur;
 import main.model.enums.EtatAscenseur;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,17 +38,26 @@ public class AscenseurDAO {
     }
 
     public void addAscenseur(Ascenseur ascenseur, int idImmeuble) throws SQLException {
+        PreparedStatement verifEtage = instance.getConnection().prepareStatement("select nbEtage from immeuble where IdImmeuble=?");
+        verifEtage.setInt(1, idImmeuble);
+        ResultSet ve = verifEtage.executeQuery();
+        int verifNbEtage = ve.getInt("nbEtage");
+        verifEtage.close();
+
         PreparedStatement stmt = instance.getConnection().prepareStatement(
                 "insert into ascenseur(idAscenseur,marque,modele,miseEnService,etat,etage,IdImmeuble) values(?,?,?,?,?,?,?);");
         stmt.setInt(1, ascenseur.getIdAscenseur());
         stmt.setString(2, ascenseur.getMarque());
         stmt.setString(3, ascenseur.getModele());
-        stmt.setDate(4, new java.sql.Date(ascenseur.getDateMiseEnService().getTime()));
-        stmt.setString(5,  ascenseur.getState().toString());
+        stmt.setDate(4, new Date(ascenseur.getDateMiseEnService().getTime()));
+        stmt.setString(5, ascenseur.getState().toString());
         stmt.setInt(6, ascenseur.getEtage());
         stmt.setInt(7, idImmeuble);
-        stmt.executeUpdate();
-        stmt.close();
+        if(ascenseur.getEtage()<=verifNbEtage) {
+            stmt.executeUpdate();
+        }
+            stmt.close();
+
     }
 
     public void editAscenseur(int ascenseurID, Ascenseur ascenseur) throws SQLException {
