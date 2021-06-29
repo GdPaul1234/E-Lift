@@ -6,12 +6,17 @@ import java.util.Arrays;
  * 
  */
 public enum EtatAscenseur {
-    EnPanne,
-    EnPannePersonnes,
-    EnCoursDeReparation,
-    EnService;
+    EnPanne("-fx-text-fill: derive(red, 20%)"),
+    EnPannePersonnes("-fx-text-fill: derive(red, 20%)"),
+    EnCoursDeReparation("-fx-text-fill: orange"),
+    EnService("-fx-text-fill: lightgreen");
 
     private static EtatAscenseur[] values = EtatAscenseur.EnPanne.getDeclaringClass().getEnumConstants();
+    public final String style;
+
+    EtatAscenseur(String style) {
+        this.style = style;
+    }
 
     public static EtatAscenseur[] getValues() {
         return values;

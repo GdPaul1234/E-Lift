@@ -7,6 +7,7 @@
 
     -fx-text-inner-color: white;
     -fx-text-background-color: white;
+    -fx-control-inner-background: derive(-fx-base,40%);
 
     -fx-selection-bar-non-focused: derive(lightgray, -20%);
 
@@ -49,7 +50,7 @@
     -fx-border-radius: 0.25em;
     -fx-border-color: -fx-accent;
     -fx-background-color: derive(-fx-background, 20%);
-    -fx-prompt-text-fill: derive(-fx-control-inner-background,-10%);
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, 30%);
 }
 
 .combo-box-base:editable > .text-field {

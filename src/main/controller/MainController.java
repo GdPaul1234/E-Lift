@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Pair;
 import main.controller.DAO.*;
 import main.model.*;
@@ -24,6 +25,7 @@ import main.model.interfaces.Ressource;
 import main.view.AscensoristeOverview;
 import main.view.GestionnaireOverview;
 import main.view.ImmeubleOverview;
+import main.view.custom.RessourceTreeCell;
 import main.view.dialog.ImmeubleEditDialog;
 import main.view.dialog.PersonneEditDialog;
 
@@ -79,6 +81,7 @@ public class MainController {
         ascenseurTreeView.setShowRoot(false);
         ascenseurTreeView.rootProperty().bind(rootItem);
         ascenseurTreeView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ascenseurTreeView.setCellFactory(ressourceTreeView -> new RessourceTreeCell<>());
         ascenseurTreeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (newValue != null) {
                 Ressource ressource = newValue.getValue();
