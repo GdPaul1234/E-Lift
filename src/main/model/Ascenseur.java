@@ -7,9 +7,6 @@ import main.model.interfaces.Ressource;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * A
- */
 public class Ascenseur implements Ressource {
 
     private final IntegerProperty idAscenseur = new SimpleIntegerProperty(null, "ID");
