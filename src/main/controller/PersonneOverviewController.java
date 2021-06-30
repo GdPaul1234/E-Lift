@@ -86,6 +86,7 @@ public class PersonneOverviewController<T extends Personne> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void updateDate() throws SQLException {
         fetchData();
         personneTable.setItems((ObservableList<T>) personnes);

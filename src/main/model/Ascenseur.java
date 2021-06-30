@@ -75,12 +75,6 @@ public class Ascenseur implements Ressource {
         this.state.set(state);
     }
 
-    /**
-     * @param observer
-     */
-    public void attach(PanneObserver observer) {
-        // TODO implement here
-    }
 
     /* Property getter */
 

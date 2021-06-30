@@ -3,14 +3,20 @@ package main.model.enums;
 import java.util.Arrays;
 
 public enum TypeReparation {
-    BlocageDesDortesDAscenseur,
-    SurchargeDeLAscenseur,
-    PannesDesCartesElectronique,
-    PannesCauseAuConditionClimatique,
-    CoupuresElectrique;
+    BlocageDesPortes(30),
+    Surcharge(20),
+    CarteElectronique(40),
+    ConditionClimatique(90),
+    CoupuresElectrique(110);
+
+    public final int duree;
+
+    TypeReparation(int duree) {
+        this.duree = duree;
+    }
 
     public static TypeReparation[] getValues() {
-        return TypeReparation.BlocageDesDortesDAscenseur.getDeclaringClass().getEnumConstants();
+        return TypeReparation.BlocageDesPortes.getDeclaringClass().getEnumConstants();
     }
 
     public static TypeReparation get(String reparation) {

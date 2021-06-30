@@ -4,10 +4,7 @@ import  main.model.*;
 import  main.model.enums.EtatAscenseur;
 
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -148,7 +145,7 @@ public class AscensoristeDAO {
                 .prepareStatement("select * from reparation as r natural join ascenseur natural join immeuble " +
                         "where r.idAscenseur=? and r.datePanne=?;");
         stmt.setInt(1, reparation.getIdAscenseur());
-        stmt.setDate(2, new java.sql.Date(reparation.getDatePanne().getTime()));
+        stmt.setTimestamp(2, new Timestamp(reparation.getDatePanne().getTime()));
         ResultSet rs = stmt.executeQuery();
 
         Ascensoriste ascensoriste = null;

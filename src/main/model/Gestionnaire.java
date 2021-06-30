@@ -9,10 +9,9 @@ import java.util.Set;
 /**
  * 
  */
-public class Gestionnaire extends Personne implements Observer {
+public class Gestionnaire extends Personne {
 
     private Set<Immeuble> immeubles;
-    private Set<PanneObserver> panneObservers;
 
     public Gestionnaire(String nom, String prenom, String telephone) {
         super(nom, prenom, telephone);
@@ -24,26 +23,5 @@ public class Gestionnaire extends Personne implements Observer {
 
     public Gestionnaire() {
         super();
-    }
-
-
-    /**
-     * @param ascenseur
-     */
-    public void demanderReparationAscenseur(Ascenseur ascenseur) {
-        // TODO implement here
-    }
-
-    /**
-     * @param ascenseur
-     */
-    public void retirerPanneAscenseur(Ascenseur ascenseur) {
-        // TODO implement here
-    }
-
-
-    @Override
-    public void update(Observable o, Object arg) {
-
     }
 }
