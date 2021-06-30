@@ -1,6 +1,7 @@
 package main.controller.DAO;
 
-import main.model.Ascensoriste;
+import  main.model.*;
+import  main.model.enums.EtatAscenseur;
 
 
 import java.sql.PreparedStatement;
@@ -66,30 +67,32 @@ public class AscensoristeDAO {
 
         stmt.setString(4, ascensoriste.getLogin());
         stmt.executeUpdate();
+        stmt.close();
 
         // ajouter personne dans liste ascensoristes
-        stmt = instance.getConnection().prepareStatement(
+        PreparedStatement stmt1 = instance.getConnection().prepareStatement(
                 "select login from Personne where nom=? and prenom=? and telephone=?");
-        stmt.setString(1, ascensoriste.getNom());
-        stmt.setString(2, ascensoriste.getPrenom());
-        stmt.setString(3, ascensoriste.getTelephone());
-        ResultSet rs = stmt.executeQuery();
+        stmt1.setString(1, ascensoriste.getNom());
+        stmt1.setString(2, ascensoriste.getPrenom());
+        stmt1.setString(3, ascensoriste.getTelephone());
+        ResultSet rs = stmt1.executeQuery();
 
         if (rs.next()) {
             ascensoriste.setLogin(rs.getString("login"));
-            stmt = instance.getConnection().prepareStatement("insert into Ascensoriste(login) values(?)");
-            stmt.setString(1, rs.getString("login"));
-            stmt.executeUpdate();
+            PreparedStatement stmt2 = instance.getConnection().prepareStatement("insert into Ascensoriste(login) values(?)");
+            stmt2.setString(1, rs.getString("login"));
+            stmt2.executeUpdate();
+            stmt2.close();
 
             // ajoute employe dans liste user
-            stmt = instance.getConnection().prepareStatement("create user ? IDENTIFIED BY ?  default role `e-lift_employe`;");
-            stmt.setString(1, ascensoriste.getLogin());
-            stmt.setString(2, password);
-            stmt.executeUpdate();
-
+            PreparedStatement stmt3 = instance.getConnection().prepareStatement("create user ? IDENTIFIED BY ?  default role `e-lift_employe`;");
+            stmt3.setString(1, ascensoriste.getLogin());
+            stmt3.setString(2, password);
+            stmt3.executeUpdate();
+            stmt3.close();
         }
 
-        stmt.close();
+        stmt1.close();
 
         instance.getConnection().setAutoCommit(true);
     }
@@ -130,29 +133,78 @@ public class AscensoristeDAO {
         return result;
     }
 
-    public List<Ascensoriste> findAvailableAscensoriste(int latitude, int longitude) throws SQLException {
-
+    /**
+     * Find the first ascensoriste <b>available</b> order by <b>distance</b>
+     * <p>
+     * If not, find one ascensoriste who have the <b>least of work</b>
+     *
+     * @param reparation
+     * @return
+     * @throws SQLException
+     */
+    public Ascensoriste findAvailableAscensoriste(Reparation reparation) throws SQLException {
+        // Obtenir les informations concernant une réparation
         PreparedStatement stmt = instance.getConnection()
-                .prepareStatement("select reparation.login, count(*), distance(latitude, longitude, ?, ?) " +
-                        "as distance from reparation left join ascensoriste on reparation.login = ascensoriste.login " +
-                        "order by reparation.login, distance;");
-
-        stmt.setInt(1, latitude);
-        stmt.setInt(2, longitude);
-
+                .prepareStatement("select * from reparation as r natural join ascenseur natural join immeuble " +
+                        "where r.idAscenseur=? and r.datePanne=?;");
+        stmt.setInt(1, reparation.getIdAscenseur());
+        stmt.setDate(2, new java.sql.Date(reparation.getDatePanne().getTime()));
         ResultSet rs = stmt.executeQuery();
 
-        ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
+        Ascensoriste ascensoriste = null;
 
-        while (rs.next()) {
-            Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                    rs.getString("telephone"), rs.getInt("longitude"), rs.getInt("latitude"));
-            result.add(ascensoriste);
+        if(rs.next()) {
+            Ascenseur ascenseur = new Ascenseur(rs.getString("marque"), rs.getString("modele"),
+                    rs.getDate("miseEnService"), rs.getInt("etage"),
+                    EtatAscenseur.get(rs.getString("etat")));
+            ascenseur.setIdAscenseur(rs.getInt("idAscenseur"));
+
+            // Chercher ascensoriste uniquement si on en a besoin
+            EtatAscenseur etatAscenseur = ascenseur.getState();
+            if (etatAscenseur != EtatAscenseur.EnCoursDeReparation && etatAscenseur != EtatAscenseur.EnService) {
+                Immeuble immeuble = new Immeuble(rs.getString("nom"), rs.getInt("nbEtage"),
+                        new Adresse(rs.getString("rue"), rs.getString("ville"), rs.getString("CP"), rs.getFloat("latitude"), rs.getFloat("longitude")));
+                immeuble.setIdImmeuble(rs.getInt("IdImmeuble"));
+
+                // Obtenir ascensoriste disponible les plus proche
+                PreparedStatement stmt1 = instance.getConnection()
+                        .prepareStatement("select *, distance(latitude,longitude,?,?) as distance from ascensoriste where not exists( " +
+                                "select login from ascensoriste natural join intervention natural join trajetaller " +
+                                "where now() between dateIntervention and date_add(dateIntervention,INTERVAL duree MINUTE) " +
+                                "or now() between dateTrajet and date_add(dateTrajet, INTERVAL  dureeTrajet MINUTE )) " +
+                                "order by distance limit 1;");
+                stmt1.setFloat(1, immeuble.getAdresse().getLatitude());
+                stmt1.setFloat(2, immeuble.getAdresse().getLongitude());
+                ResultSet rs1 = stmt1.executeQuery();
+                if(rs1.next()) {
+                    ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
+                            rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
+                    ascensoriste.setLogin(rs.getString("login"));
+                } else {
+                    // sinon, rechercher les ascensoristes les plus proches ayant le moins de travail
+                    PreparedStatement stmt2 = instance.getConnection()
+                            .prepareStatement("select *, distance(latitude,longitude,?,?) as distance from ascensoriste where exists( " +
+                                    "select login from ascensoriste natural left join intervention natural left join trajetaller " +
+                                    "group by login order by count(login)) " +
+                                    "order by distance limit 1;");
+                    ResultSet rs2 = stmt2.executeQuery();
+                    if(rs2.next()) {
+                        ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
+                                rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
+                        ascensoriste.setLogin(rs.getString("login"));
+                    }
+                    rs2.close();
+                }
+
+                rs1.close();
+                stmt1.close();
+            }
+
         }
 
         rs.close();
         stmt.close();
 
-        return result;
+        return ascensoriste;
     }
 }

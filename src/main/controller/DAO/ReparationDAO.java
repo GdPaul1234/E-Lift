@@ -65,28 +65,27 @@ public class ReparationDAO {
 
         try {
             // Création intervention
-            PreparedStatement stmt = instance.getConnection().prepareStatement("insert into intervention (dateIntervention, duree) values(?,?);");
+            PreparedStatement stmt = instance.getConnection().prepareStatement("insert into intervention (dateIntervention) values(?);");
             stmt.setDate(1, new java.sql.Date(intervention.getDateIntervention().getTime()));
-            stmt.setInt(2, intervention.getDuree());
             stmt.executeUpdate();
+            stmt.close();
 
             // La rattacher à la panne
-            stmt.getConnection().prepareStatement("select * from intervention where dateIntervention=? and duree=?;");
-            stmt.setDate(1, new java.sql.Date(intervention.getDateIntervention().getTime()));
-            stmt.setInt(2, intervention.getDuree());
-            ResultSet rs = stmt.executeQuery();
+            Statement stmt1 = instance.getConnection().createStatement();
+            ResultSet rs1 = stmt1.executeQuery("SELECT LAST_INSERT_ID();");
 
-            if (rs.next()) {
-                int idIntervention = rs.getInt("idIntervention");
+            if (rs1.next()) {
+                int idIntervention = rs1.getInt("idIntervention");
 
-                stmt = instance.getConnection().prepareStatement("update reparation set IdIntervention=? where idAscenseur=? and datePanne=?;");
-                stmt.setInt(1, idIntervention);
-                stmt.setInt(2, reparation.getIdAscenseur());
-                stmt.setDate(3, new java.sql.Date(reparation.getDatePanne().getTime()));
-                stmt.executeUpdate();
+                PreparedStatement stmt2 = instance.getConnection().prepareStatement("update reparation set IdIntervention=? where idAscenseur=? and datePanne=?;");
+                stmt2.setInt(1, idIntervention);
+                stmt2.setInt(2, reparation.getIdAscenseur());
+                stmt2.setDate(3, new java.sql.Date(reparation.getDatePanne().getTime()));
+                stmt2.executeUpdate();
+                stmt2.close();
             }
-            rs.close();
-            stmt.close();
+            rs1.close();
+            stmt1.close();
 
             instance.getConnection().commit();
 
@@ -114,24 +113,26 @@ public class ReparationDAO {
             stmt.setDate(1, new java.sql.Date(trajet.getDateTrajet().getTime()));
             stmt.setInt(2, trajet.getDureeTrajet());
             stmt.executeUpdate();
+            stmt.close();
 
             // La rattacher à la panne
-            stmt.getConnection().prepareStatement("select * from trajetaller where dateTrajet=? and dureeTrajet=?;");
-            stmt.setDate(1, new java.sql.Date(trajet.getDateTrajet().getTime()));
-            stmt.setInt(2, trajet.getDureeTrajet());
-            ResultSet rs = stmt.executeQuery();
+            PreparedStatement stmt1 = instance.getConnection().prepareStatement("select * from trajetaller where dateTrajet=? and dureeTrajet=?;");
+            stmt1.setDate(1, new java.sql.Date(trajet.getDateTrajet().getTime()));
+            stmt1.setInt(2, trajet.getDureeTrajet());
+            ResultSet rs1 = stmt1.executeQuery();
 
-            if (rs.next()) {
-                int idTrajet = rs.getInt("idTrajet");
+            if (rs1.next()) {
+                int idTrajet = rs1.getInt("idTrajet");
 
-                stmt = instance.getConnection().prepareStatement("update reparation set idTrajet=? where idAscenseur=? and datePanne=?;");
-                stmt.setInt(1, idTrajet);
-                stmt.setInt(2, reparation.getIdAscenseur());
-                stmt.setDate(3, new java.sql.Date(reparation.getDatePanne().getTime()));
-                stmt.executeUpdate();
+                PreparedStatement stmt2 = instance.getConnection().prepareStatement("update reparation set idTrajet=? where idAscenseur=? and datePanne=?;");
+                stmt2.setInt(1, idTrajet);
+                stmt2.setInt(2, reparation.getIdAscenseur());
+                stmt2.setDate(3, new java.sql.Date(reparation.getDatePanne().getTime()));
+                stmt2.executeUpdate();
+                stmt2.close();
             }
-            rs.close();
-            stmt.close();
+            rs1.close();
+            stmt1.close();
 
             instance.getConnection().commit();
 
@@ -144,7 +145,7 @@ public class ReparationDAO {
         instance.getConnection().setAutoCommit(true);
     }
 
-    public void updateStatustReparation(Reparation reparation, String loginAscensoriste, String avancement) throws SQLException {
+    public void updateStatusReparation(Reparation reparation, String loginAscensoriste, String avancement) throws SQLException {
         PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("update Reparation set login=?, avancement=? where idAscenseur=? and datePanne=?;");
         stmt.setString(1, loginAscensoriste);

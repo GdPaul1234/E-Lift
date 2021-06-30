@@ -25,21 +25,7 @@ public class ImmeubleTest {
 
     }
 
-    @Test
-    void testInsertAdresse() throws SQLException {
-        PreparedStatement stmtAdresse = dataAccess.getConnection()
-                .prepareStatement("insert into Adresse(rue,ville,CP,latitude,longitude) values(?,?,?,?,?)");
-        stmtAdresse.setString(1, "Rue");
-        stmtAdresse.setString(2, "Ville");
-        stmtAdresse.setString(3, "CP");
-        stmtAdresse.setFloat(4, 0);// TODO get real latitude
-        stmtAdresse.setFloat(5, 0);// TODO get real longitude
 
-        assertNotNull(stmtAdresse.executeUpdate());
-        stmtAdresse.close();
-
-        fail("insertAdress doesn't work");
-    }
 
     @AfterAll
     static void tearDownAfterClass() {

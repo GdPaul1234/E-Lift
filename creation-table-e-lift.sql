@@ -47,8 +47,7 @@ CREATE TABLE Ascensoriste(
 
 CREATE TABLE Intervention(
          IdIntervention   Int  Auto_increment  NOT NULL ,
-         dateIntervention Datetime NOT NULL ,
-         duree            Int NOT NULL COMMENT 'duree en min'
+         dateIntervention Datetime NOT NULL
     ,CONSTRAINT Intervention_PK PRIMARY KEY (IdIntervention)
 )ENGINE=InnoDB;
 
@@ -136,6 +135,7 @@ CREATE TABLE reparation(
        idTrajet       Int NULL ,
        datePanne      Datetime NOT NULL ,
        typeReparation Varchar (50) NOT NULL ,
+       duree          Int NOT NULL COMMENT 'duree en min',
        commentaire    Text ,
        avancement     Varchar (50)
     ,CONSTRAINT reparation_PK PRIMARY KEY (idAscenseur,datePanne)

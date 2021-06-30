@@ -16,7 +16,6 @@ public class Ascenseur implements Ressource {
     private final IntegerProperty etage = new SimpleIntegerProperty(null, "étage");
     private final ObjectProperty<EtatAscenseur> state = new SimpleObjectProperty<>(null, "état");
 
-    private Set<Entretien> entretiens;
     private Set<Alerte> alertes;
 
     public Ascenseur(String marque, String modele, Date dateMiseEnService, int etage, EtatAscenseur state) {
