@@ -130,12 +130,12 @@ public class AscensoristeDAO {
         return result;
     }
 
-    public List<Ascensoriste> getAvailableAscensoriste(int latitude, int longitude) throws SQLException {
+    public List<Ascensoriste> findAvailableAscensoriste(int latitude, int longitude) throws SQLException {
 
         PreparedStatement stmt = instance.getConnection()
-                .prepareStatement("select *, distance(latitude, longitude, ?, ?) " +
-                        "as distance from ascensoriste where not exists (select login from reparation where " +
-                        "ascensoriste.login = reparation.login) order by distance;");
+                .prepareStatement("select reparation.login, count(*), distance(latitude, longitude, ?, ?) " +
+                        "as distance from reparation left join ascensoriste on reparation.login = ascensoriste.login " +
+                        "order by reparation.login, distance;");
 
         stmt.setInt(1, latitude);
         stmt.setInt(2, longitude);
