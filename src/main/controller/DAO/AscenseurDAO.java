@@ -68,7 +68,7 @@ public class AscenseurDAO {
                 int index = new Random().nextInt(values.length);
                 TypeReparation typeReparation = values[index];
 
-                Reparation reparation = new Reparation(idAscenseur, new java.util.Date(), typeReparation);
+                Reparation reparation = new Reparation(idAscenseur, new java.util.Date(), typeReparation, typeReparation.duree);
                 new ReparationDAO().addReparation(reparation, idAscenseur);
 
                 // TODO Envoyer message aux parties prenantes (gestionnaire de l'immeuble et société)

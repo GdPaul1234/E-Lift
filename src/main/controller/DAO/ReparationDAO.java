@@ -1,10 +1,15 @@
 package main.controller.DAO;
 
+import main.model.Intervention;
 import main.model.Reparation;
+import main.model.TrajetAller;
 import main.model.enums.TypeReparation;
+import main.model.interfaces.PlanningRessource;
+import main.model.interfaces.PlanningRessourceComparator;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ReparationDAO {
@@ -14,23 +19,93 @@ public class ReparationDAO {
         instance = DataAccess.getInstance();
     }
 
-    public List<Reparation> getAllReparations() throws SQLException {
-        Statement stmt = instance.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("select * from reparation;");
+    public List<PlanningRessource> getMyPlanning() throws SQLException {
+        ArrayList<PlanningRessource> result;
 
-        ArrayList<Reparation> result = new ArrayList<>(rs.getFetchSize());
+        // get available reparations according to our role
+        if(DataAccess.isAscensoriste()) {
+            try (PreparedStatement stmt = instance.getConnection().prepareStatement("select * from reparation where login=?;")) {
+                stmt.setString(1, DataAccess.getLogin());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    result = getReparations(rs);
+                }
+            }
+        } else if(DataAccess.isGestionnaire()) {
+            try (PreparedStatement stmt = instance.getConnection().prepareStatement("select * from reparation natural join ascenseur natural  join immeuble where immeuble.login=?;")) {
+               stmt.setString(1, DataAccess.getLogin());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    result = getReparations(rs);
+                }
+            }
+        } else {
+            try (Statement stmt = instance.getConnection().createStatement()) {
+                try (ResultSet rs = stmt.executeQuery("select * from reparation;")) {
+                    result = getReparations(rs);
+                }
+            }
+        }
+
+        // get intervention
+        try (Statement stmt1 = instance.getConnection().createStatement()) {
+            try (ResultSet rs1 = stmt1.executeQuery("select * from reparation natural join intervention;")) {
+                while (rs1.next()) {
+                    int idAscenseur = rs1.getInt("idAscenseur");
+                    Timestamp datePanne = rs1.getTimestamp("datePanne");
+
+                    Reparation reparation = getThisReparation(result, idAscenseur, datePanne);
+
+                    Intervention intervention = new Intervention(reparation, rs1.getTimestamp("dateIntervention"));
+                    result.add(intervention);
+                }
+            }
+        }
+
+        // get trajet
+        try (Statement stmt2 = instance.getConnection().createStatement()) {
+            try (ResultSet rs2 = stmt2.executeQuery("select * from reparation natural join trajetaller;")) {
+                while (rs2.next()) {
+                    int idAscenseur = rs2.getInt("idAscenseur");
+                    Timestamp datePanne = rs2.getTimestamp("datePanne");
+
+                    Reparation reparation = getThisReparation(result, idAscenseur, datePanne);
+
+                    TrajetAller trajetAller = new TrajetAller(reparation, rs2.getTimestamp("dateTrajet"), rs2.getInt("dureeTrajet"));
+                    result.add(trajetAller);
+                }
+            }
+        }
+
+        // sort result
+        result.sort(new PlanningRessourceComparator());
+
+        return result;
+    }
+
+
+    private ArrayList<PlanningRessource> getReparations(ResultSet rs) throws SQLException {
+        ArrayList<PlanningRessource> result = new ArrayList<>();
+
         while (rs.next()) {
-            Reparation reparation = new Reparation(rs.getInt("idAscenceur"), rs.getDate("datePanne"), TypeReparation.get(rs.getString("typeReparation")));
+            TypeReparation typeReparation = TypeReparation.get(rs.getString("typeReparation"));
+            Reparation reparation = new Reparation(rs.getInt("idAscenceur"), rs.getDate("datePanne"),
+                    typeReparation, typeReparation.duree);
             reparation.setLoginAscensoriste(rs.getString("login"));
             reparation.setCommentaire(rs.getString("commentaire"));
             reparation.setAvancement("avancement");
             result.add(reparation);
         }
-
-        rs.close();
-        stmt.close();
-
         return result;
+    }
+
+    private Reparation getThisReparation(ArrayList<PlanningRessource> result, int idAscenseur, Timestamp datePanne) {
+        return (Reparation) result.stream().filter(v -> {
+                    if (v instanceof Reparation) {
+                        return ((Reparation) v).getIdAscenseur() == idAscenseur &&
+                                ((Reparation) v).getDatePanne().equals(datePanne);
+                    }
+                    return false;
+                }
+        ).findFirst().orElse(null);
     }
 
     /**
@@ -53,12 +128,11 @@ public class ReparationDAO {
 
 
     /**
-     *
      * @param reparation
      * @param intervention
      * @throws SQLException
      */
-    public void attachIntervention(Reparation reparation, Reparation.Intervention intervention) throws SQLException {
+    public void attachIntervention(Reparation reparation, Intervention intervention) throws SQLException {
         instance.getConnection().setAutoCommit(false);
 
         try {
@@ -96,12 +170,11 @@ public class ReparationDAO {
     }
 
     /**
-     *
      * @param reparation
      * @param trajet
      * @throws SQLException
      */
-    public void attachTrajet(Reparation reparation, Reparation.TrajetAller trajet) throws SQLException {
+    public void attachTrajet(Reparation reparation, TrajetAller trajet) throws SQLException {
         instance.getConnection().setAutoCommit(false);
 
         try {

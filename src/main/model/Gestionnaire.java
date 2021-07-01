@@ -11,8 +11,6 @@ import java.util.Set;
  */
 public class Gestionnaire extends Personne {
 
-    private Set<Immeuble> immeubles;
-
     public Gestionnaire(String nom, String prenom, String telephone) {
         super(nom, prenom, telephone);
     }

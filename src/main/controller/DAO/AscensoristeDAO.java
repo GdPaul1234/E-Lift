@@ -23,7 +23,7 @@ public class AscensoristeDAO {
         ArrayList<Ascensoriste> result = new ArrayList<>(rs.getFetchSize());
         while (rs.next()) {
             Ascensoriste ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                    rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
+                    rs.getString("telephone"), rs.getFloat("latitude"), rs.getFloat("longitude"));
             ascensoriste.setLogin(rs.getString("login"));
             result.add(ascensoriste);
         }
@@ -175,7 +175,7 @@ public class AscensoristeDAO {
                 ResultSet rs1 = stmt1.executeQuery();
                 if(rs1.next()) {
                     ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                            rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
+                            rs.getString("telephone"), rs.getFloat("latitude"), rs.getFloat("longitude"));
                     ascensoriste.setLogin(rs.getString("login"));
                 } else {
                     // sinon, rechercher les ascensoristes les plus proches ayant le moins de travail
@@ -187,7 +187,7 @@ public class AscensoristeDAO {
                     ResultSet rs2 = stmt2.executeQuery();
                     if(rs2.next()) {
                         ascensoriste = new Ascensoriste(rs.getString("nom"), rs.getString("prenom"),
-                                rs.getString("telephone"), rs.getFloat("longitude"), rs.getFloat("latitude"));
+                                rs.getString("telephone"), rs.getFloat("latitude"), rs.getFloat("longitude"));
                         ascensoriste.setLogin(rs.getString("login"));
                     }
                     rs2.close();

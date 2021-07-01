@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Pair;
 import main.controller.DAO.*;
 import main.model.*;
@@ -37,6 +36,7 @@ import java.util.stream.Collectors;
 public class MainController {
     private final List<Marker> positionImmeubles = Collections.synchronizedList(new ArrayList<>());
     private final ObjectProperty<TreeItem<Ressource>> rootItem = new SimpleObjectProperty<>(new TreeItem<>(new Personne()));
+
     @FXML
     private HBox topbar;
     @FXML
@@ -240,6 +240,11 @@ public class MainController {
 
     }
 
+    /* ********************************************* *
+     *                Gestion Planning               *
+     * ********************************************* */
+
+
 
     /* ********************************************* *
      *                Gestion Personne               *
@@ -250,7 +255,6 @@ public class MainController {
         Pair<Personne, String> userInput = dialog.showPersonDialog();
 
         if (userInput != null) {
-
             // Verify is all field are not empty
             if (userInput.getKey().isValid() && !userInput.getValue().isEmpty()) {
 

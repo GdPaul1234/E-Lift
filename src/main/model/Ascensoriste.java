@@ -1,16 +1,13 @@
 package main.model;
 
-import java.util.Set;
-
 public class Ascensoriste extends Personne {
 
-    private float longitude, lattidude;
-    public Set<Reparation> planning;
+    private float longitude, latitude;
 
-    public Ascensoriste(String nom, String prenom, String telephone, float longitude, float lattidude) {
+    public Ascensoriste(String nom, String prenom, String telephone, float latitude, float longitude) {
         super(nom, prenom, telephone);
         this.longitude = longitude;
-        this.lattidude = lattidude;
+        this.latitude = latitude;
     }
 
     public Ascensoriste() {
@@ -25,22 +22,8 @@ public class Ascensoriste extends Personne {
         return longitude;
     }
 
-    public float getLattidude() {
-        return lattidude;
+    public float getLatitude() {
+        return latitude;
     }
 
-    /**
-     * @param ascenseur
-     */
-    public void reparerAscenseur(Ascenseur ascenseur) {
-        // TODO implement here
-    }
-
-
-    /**
-     * @param observer
-     */
-    public void attach(AscensoristeObserver observer) {
-        // TODO implement here
-    }
 }

@@ -14,6 +14,7 @@ public class Reparation implements PlanningRessource {
     private final IntegerProperty idAscenseur = new SimpleIntegerProperty(null, "ID");
     private final ObjectProperty<Date> datePanne = new SimpleObjectProperty<>(null, "date panne");
     private final ObjectProperty<TypeReparation> type = new SimpleObjectProperty<>(null, "type réparation");
+    private final IntegerProperty duree = new SimpleIntegerProperty(null, "durée");
 
     private final StringProperty loginAscensoriste = new SimpleStringProperty(null, "loginAscensoriste");
     private final StringProperty commentaire = new SimpleStringProperty(null, "commentaire");
@@ -22,11 +23,20 @@ public class Reparation implements PlanningRessource {
     private final ObjectProperty<Intervention> intervention = new SimpleObjectProperty<>(null, "intervention");
     private final ObjectProperty<TrajetAller> trajetAller = new SimpleObjectProperty<>(null, "trajet");
 
-    public Reparation(int idAscenceur, Date datePanne, TypeReparation type) {
+    public Reparation(int idAscenceur, Date datePanne, TypeReparation type, int duree) {
         this.idAscenseur.set(idAscenceur);
         this.datePanne.set(datePanne);
         this.type.set(type);
         this.avancement.set("Demande réparation envoyée");
+        this.duree.set(duree);
+    }
+
+    public int getDuree() {
+        return duree.get();
+    }
+
+    public void setDuree(int duree) {
+        this.duree.set(duree);
     }
 
     public int getIdAscenseur() {
@@ -83,7 +93,6 @@ public class Reparation implements PlanningRessource {
         return intervention;
     }
 
-
     public ObjectProperty<TrajetAller> trajetAllerProperty() {
         return trajetAller;
     }
@@ -112,71 +121,8 @@ public class Reparation implements PlanningRessource {
         return avancement;
     }
 
-    public class Intervention {
-        private final ObjectProperty<Date> dateIntervention = new SimpleObjectProperty<>();
-        private final IntegerProperty duree = new SimpleIntegerProperty();
-
-        public Intervention(Date dateIntervention, int duree) {
-            this.dateIntervention.set(dateIntervention);
-            this.duree.set(duree);
-        }
-
-        public Date getDateIntervention() {
-            return dateIntervention.get();
-        }
-
-        public void setDateIntervention(Date dateIntervention) {
-            this.dateIntervention.set(dateIntervention);
-        }
-
-        public ObjectProperty<Date> dateInterventionProperty() {
-            return dateIntervention;
-        }
-
-        public int getDuree() {
-            return duree.get();
-        }
-
-        public void setDuree(int duree) {
-            this.duree.set(duree);
-        }
-
-        public IntegerProperty dureeProperty() {
-            return duree;
-        }
+    public IntegerProperty dureeProperty() {
+        return duree;
     }
 
-    public class TrajetAller {
-        private final ObjectProperty<Date> dateTrajet = new SimpleObjectProperty<>();
-        private final IntegerProperty dureeTrajet = new SimpleIntegerProperty();
-
-        public TrajetAller(Date dateTrajet, int dureeTrajet) {
-            this.dateTrajet.set(dateTrajet);
-            this.dureeTrajet.set(dureeTrajet);
-        }
-
-        public Date getDateTrajet() {
-            return dateTrajet.get();
-        }
-
-        public void setDateTrajet(Date dateTrajet) {
-            this.dateTrajet.set(dateTrajet);
-        }
-
-        public ObjectProperty<Date> dateTrajetProperty() {
-            return dateTrajet;
-        }
-
-        public int getDureeTrajet() {
-            return dureeTrajet.get();
-        }
-
-        public void setDureeTrajet(int dureeTrajet) {
-            this.dureeTrajet.set(dureeTrajet);
-        }
-
-        public IntegerProperty dureeTrajetProperty() {
-            return dureeTrajet;
-        }
-    }
 }
