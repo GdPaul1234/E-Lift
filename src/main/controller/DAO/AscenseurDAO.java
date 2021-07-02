@@ -1,14 +1,13 @@
 package main.controller.DAO;
 
-import main.model.Ascenseur;
-import main.model.Reparation;
+import javafx.util.Pair;
+import main.model.*;
 import main.model.enums.EtatAscenseur;
 import main.model.enums.TypeReparation;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.Date;
 
 /**
  *
@@ -21,6 +20,23 @@ public class AscenseurDAO {
      */
     public AscenseurDAO() {
         instance = DataAccess.getInstance();
+    }
+
+    public Ascenseur getAscenseur(int idAscenseur) throws SQLException {
+        Ascenseur ascenseur = null;
+        try(PreparedStatement stmt = instance.getConnection()
+                .prepareStatement("select * from ascenseur where idAscenseur=?;")) {
+            stmt.setInt(1, idAscenseur);
+            try(ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()) {
+                    ascenseur = new Ascenseur(rs.getString("marque"), rs.getString("modele"),
+                            rs.getTimestamp("miseEnService"), rs.getInt("etage"),
+                            EtatAscenseur.get(rs.getString("etat")));
+                    ascenseur.setIdAscenseur(rs.getInt("idAscenseur"));
+                }
+            }
+        }
+        return ascenseur;
     }
 
     /**
@@ -45,8 +61,31 @@ public class AscenseurDAO {
                 }
             }
         }
-
         return result;
+    }
+
+    /**
+     *
+     * @param idAscenseur
+     * @return
+     */
+    public Immeuble getImmeubleAscenseur(int idAscenseur) throws SQLException {
+        Immeuble immeuble = null;
+
+        try(PreparedStatement stmt = instance.getConnection()
+                .prepareStatement("select * from ascenseur natural join immeuble natural join adresse " +
+                        "where idAscenseur=?;")) {
+            stmt.setInt(1, idAscenseur);
+            try(ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()) {
+                    immeuble = new Immeuble(rs.getString("nom"), rs.getInt("nbEtage"),
+                            new Adresse(rs.getString("rue"), rs.getString("ville"), rs.getString("CP"), rs.getFloat("latitude"), rs.getFloat("longitude")));
+                    immeuble.setIdImmeuble(rs.getInt("IdImmeuble"));
+                }
+            }
+        }
+
+        return immeuble;
     }
 
     /**
@@ -71,14 +110,20 @@ public class AscenseurDAO {
                 Ascenseur ascenseur = new Ascenseur();
                 ascenseur.setIdAscenseur(idAscenseur);
 
-                Reparation reparation = new Reparation(ascenseur, new java.util.Date(), typeReparation, typeReparation.duree);
-                new ReparationDAO().addReparation(reparation, idAscenseur);
+                ReparationDAO reparationDAO = new ReparationDAO();
+                Date now = new Date(new Date().getTime());
+
+                Reparation reparation = new Reparation(ascenseur, now, typeReparation, typeReparation.duree);
+                reparationDAO.addReparation(reparation, idAscenseur);
 
                 // TODO Envoyer message aux parties prenantes (gestionnaire de l'immeuble et société)
-                /**
+                /*
                  * Solutions envisagées : JMS, SMS
                  * Solution retenue : polling
                  */
+
+                // Envoyer ascensoriste sur le front
+                new AscensoristeDAO().moveAscensoriste(idAscenseur, reparation);
             }
         }
     }

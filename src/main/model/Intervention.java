@@ -1,9 +1,6 @@
 package main.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import main.model.interfaces.PlanningRessource;
 
 import java.util.Date;
@@ -11,10 +8,23 @@ import java.util.Date;
 public class Intervention implements PlanningRessource {
     private final ObjectProperty<Reparation> reparation = new SimpleObjectProperty<>();
     private final ObjectProperty<Date> dateIntervention = new SimpleObjectProperty<>();
+    private final IntegerProperty avancement = new SimpleIntegerProperty(null, "avancement");
 
     public Intervention(Reparation reparation, Date dateIntervention) {
         this.reparation.set(reparation);
         this.dateIntervention.set(dateIntervention);
+    }
+
+    public int getAvancement() {
+        return avancement.get();
+    }
+
+    public void setAvancement(int avancement) {
+        this.avancement.set(avancement);
+    }
+
+    public IntegerProperty avancementProperty() {
+        return avancement;
     }
 
     public Reparation getReparation() {

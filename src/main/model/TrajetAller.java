@@ -19,6 +19,8 @@ public class TrajetAller implements PlanningRessource {
         this.dureeTrajet.set(dureeTrajet);
     }
 
+    public TrajetAller() {}
+
     public Reparation getReparation() {
         return reparation.get();
     }

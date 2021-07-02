@@ -32,8 +32,8 @@ CREATE TABLE Gestionnaire(
 
 CREATE TABLE Ascensoriste(
         login        Varchar (50) NOT NULL ,
-        longitude    float NULL,
-        latitude    float NULL
+        latitude    float NULL,
+        longitude    float NULL
 	,CONSTRAINT Ascensoriste_PK PRIMARY KEY (login)
 
 	,CONSTRAINT Ascensoriste_Personne_FK FOREIGN KEY (login) REFERENCES Personne(login)
@@ -47,7 +47,8 @@ CREATE TABLE Ascensoriste(
 
 CREATE TABLE Intervention(
          IdIntervention   Int  Auto_increment  NOT NULL ,
-         dateIntervention Datetime NOT NULL
+         dateIntervention Datetime NOT NULL,
+         avancement       Int
     ,CONSTRAINT Intervention_PK PRIMARY KEY (IdIntervention)
 )ENGINE=InnoDB;
 
@@ -59,8 +60,8 @@ CREATE TABLE Adresse(
         rue   Varchar (100) NOT NULL ,
         ville Varchar (50) NOT NULL ,
         CP    Char (5) NOT NULL,
-        longitude Float NOT NULL ,
-        latitude Float NOT NULL
+        latitude  Float NOT NULL ,
+        longitude Float NOT NULL
 	,CONSTRAINT Adresse_PK PRIMARY KEY (rue,ville)
 )ENGINE=InnoDB;
 
@@ -136,8 +137,7 @@ CREATE TABLE reparation(
        datePanne      Datetime NOT NULL ,
        typeReparation Varchar (50) NOT NULL ,
        duree          Int NOT NULL COMMENT 'duree en min',
-       commentaire    Text ,
-       avancement     Varchar (50)
+       commentaire    Text
     ,CONSTRAINT reparation_PK PRIMARY KEY (idAscenseur,datePanne)
 
     ,CONSTRAINT reparation_Ascenseur_FK FOREIGN KEY (idAscenseur) REFERENCES Ascenseur(idAscenseur)
@@ -147,11 +147,13 @@ CREATE TABLE reparation(
 )ENGINE=InnoDB;
 
 CREATE ROLE 'e-lift_employe', 'e-lift_gestionnaire';
-GRANT SELECT, INSERT, UPDATE, DELETE ON `e-lift`.* TO 'e-lift_employe';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON `e-lift`.* TO 'e-lift_employe';
 
-GRANT SELECT ON `e-lift`.* TO 'e-lift_gestionnaire';
+GRANT SELECT, EXECUTE ON `e-lift`.* TO 'e-lift_gestionnaire';
 GRANT INSERT ON `e-lift`.adresse TO 'e-lift_gestionnaire';
-GRANT INSERT ON `e-lift`.reparation TO 'e-lift_gestionnaire';
+GRANT INSERT, UPDATE ON `e-lift`.reparation TO 'e-lift_gestionnaire';
+GRANT INSERT ON `e-lift`.trajetaller TO 'e-lift_gestionnaire';
+GRANT INSERT ON `e-lift`.intervention TO 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.ascenseur TO 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.contratmaintenance TO 'e-lift_gestionnaire';
 GRANT INSERT, UPDATE, DELETE ON `e-lift`.immeuble TO 'e-lift_gestionnaire';

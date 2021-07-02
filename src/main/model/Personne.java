@@ -12,8 +12,6 @@ public class Personne implements Ressource {
     private StringProperty  prenom = new SimpleStringProperty(null, "prenom");
     private StringProperty telephone = new SimpleStringProperty(null, "telephone");
 
-    private StringProperty[] columnsHeader = { login, nom, prenom, telephone };
-
     public Personne(String nom, String prenom, String telephone) {
         this.nom.set(nom);
         this.prenom.set(prenom);
@@ -25,7 +23,6 @@ public class Personne implements Ressource {
         nom = personne.nom;
         prenom = personne.prenom;
         telephone = personne.telephone;
-        columnsHeader = personne.columnsHeader;
     }
 
     public Personne() {

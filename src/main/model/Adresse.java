@@ -10,11 +10,11 @@ import javafx.beans.property.StringProperty;
  */
 public class Adresse {
 
-    private StringProperty rue = new SimpleStringProperty(null, "rue");
-    private StringProperty ville = new SimpleStringProperty(null, "ville");
-    private StringProperty codePostal = new SimpleStringProperty(null, "CP");
-    private FloatProperty longitude = new SimpleFloatProperty(null, "longitude");
-    private FloatProperty latitude = new SimpleFloatProperty(null, "latitude");
+    private final StringProperty rue = new SimpleStringProperty(null, "rue");
+    private final StringProperty ville = new SimpleStringProperty(null, "ville");
+    private final StringProperty codePostal = new SimpleStringProperty(null, "CP");
+    private final FloatProperty longitude = new SimpleFloatProperty(null, "longitude");
+    private final FloatProperty latitude = new SimpleFloatProperty(null, "latitude");
 
     public Adresse(String rue, String ville, String codePostal, float latitude, float longitude) {
         this.rue.set(rue);

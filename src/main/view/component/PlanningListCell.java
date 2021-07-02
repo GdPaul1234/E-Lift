@@ -1,13 +1,12 @@
 package main.view.component;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import main.model.Intervention;
-import main.model.Reparation;
-import main.model.TrajetAller;
+import main.model.*;
 import main.model.interfaces.PlanningRessource;
 
 import java.io.IOException;
@@ -25,6 +24,7 @@ public class PlanningListCell extends ListCell<PlanningRessource> {
 
     public PlanningListCell() throws IOException {
         root.setSpacing(10);
+        root.setPadding(new Insets(0, 0, 5, 0));
 
         VBox dateBox = new VBox();
         dateBox.setAlignment(Pos.CENTER);
@@ -59,11 +59,11 @@ public class PlanningListCell extends ListCell<PlanningRessource> {
         DateFormat dateFormatter = new SimpleDateFormat("dd/MM");
         DateFormat heureFormatter = new SimpleDateFormat("HH:mm");
 
-        if(!empty && item != null) {
+        if (!empty && item != null) {
             typeEvenementPlanningLabel.setText(item.getClass().getSimpleName());
 
             if (item instanceof Reparation) {
-                typeEvenementPlanningLabel.setText("Panne");
+                typeEvenementPlanningLabel.setText("Panne " + ((Reparation) item).getType());
                 dateLabel.setText(dateFormatter.format(((Reparation) item).getDatePanne()));
                 heureLabel.setText(heureFormatter.format(((Reparation) item).getDatePanne()));
 
@@ -71,23 +71,41 @@ public class PlanningListCell extends ListCell<PlanningRessource> {
                 adresseLabel.setText(((Reparation) item).getImmeuble().getAdresse().toString());
 
                 root.setStyle("-fx-background-color: rgba(255,0,0, 0.6);");
-            } else  if (item instanceof Intervention) {
+            } else if (item instanceof Intervention) {
                 dateLabel.setText(dateFormatter.format(((Intervention) item).getDateIntervention()));
                 heureLabel.setText(heureFormatter.format(((Intervention) item).getDateIntervention()));
 
-                adresseLabel.setText(((Intervention) item).getReparation().getImmeuble().getAdresse().toString());
+                Reparation reparation = ((Intervention) item).getReparation();
+                if (reparation != null) {
+                    if (reparation.getLoginAscensoriste() != null) {
+                        String loginAscensoriste = reparation.getLoginAscensoriste();
+                        String extractedHumanId = String.join(" ", loginAscensoriste.split("(\\.)|(@)|(\\d)", 2));
+                        typeEvenementPlanningLabel.setText("Intervention de " + extractedHumanId);
+                    }
 
-                // remove ascenseur label
-                ascenseurLabel.setManaged(false);
-                ascenseurLabel.setVisible(false);
+                    Ascenseur ascenseur = reparation.getAscenseur();
+                    ascenseurLabel.setText(String.format("%d%% de %d minutes sur %s %s",
+                            ((Intervention) item).getAvancement(), reparation.getDuree(),
+                            ascenseur.getMarque(), ascenseur.getModele()));
+                    adresseLabel.setText(reparation.getImmeuble().getAdresse().toString());
+                }
 
                 root.setStyle("-fx-background-color: rgba(228, 255, 127, 0.6);");
             } else if (item instanceof TrajetAller) {
+                typeEvenementPlanningLabel.setText(String.format("Trajet (%d minutes)",
+                        ((TrajetAller) item).getDureeTrajet()));
+
                 dateLabel.setText(dateFormatter.format(((TrajetAller) item).getDateTrajet()));
                 heureLabel.setText(heureFormatter.format(((TrajetAller) item).getDateTrajet()));
 
-                ascenseurLabel.setText(String.format("durée estimée : %d minutes", ((TrajetAller) item).getDureeTrajet()));
-                adresseLabel.setText(((TrajetAller) item).getReparation().getImmeuble().getAdresse().toString());
+                Reparation reparation = ((TrajetAller) item).getReparation();
+                if (reparation != null) {
+                    Ascenseur ascenseur = reparation.getAscenseur();
+                    ascenseurLabel.setText(String.format("Sur site pour réparer %s %s",
+                            ascenseur.getMarque(), ascenseur.getModele()));
+                    adresseLabel.setText(((TrajetAller) item).getReparation().getImmeuble().getAdresse().toString());
+
+                }
 
                 root.setStyle("-fx-background-color: rgba(255, 163, 63, 0.6)");
             }

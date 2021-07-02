@@ -18,7 +18,6 @@ public class Reparation implements PlanningRessource {
 
     private final StringProperty loginAscensoriste = new SimpleStringProperty(null, "loginAscensoriste");
     private final StringProperty commentaire = new SimpleStringProperty(null, "commentaire");
-    private final StringProperty avancement = new SimpleStringProperty(null, "avancement");
 
     private final ObjectProperty<Intervention> intervention = new SimpleObjectProperty<>(null, "intervention");
     private final ObjectProperty<TrajetAller> trajetAller = new SimpleObjectProperty<>(null, "trajet");
@@ -28,7 +27,6 @@ public class Reparation implements PlanningRessource {
         this.ascenseur.set(ascenseur);
         this.datePanne.set(datePanne);
         this.type.set(type);
-        this.avancement.set("Demande réparation envoyée");
         this.duree.set(duree);
     }
 
@@ -76,14 +74,6 @@ public class Reparation implements PlanningRessource {
         this.commentaire.set(commentaire);
     }
 
-    public String getAvancement() {
-        return avancement.get();
-    }
-
-    public void setAvancement(String avancement) {
-        this.avancement.set(avancement);
-    }
-
     public void setIntervention(Intervention intervention) {
         this.intervention.set(intervention);
     }
@@ -129,10 +119,6 @@ public class Reparation implements PlanningRessource {
 
     public StringProperty commentaireProperty() {
         return commentaire;
-    }
-
-    public StringProperty avancementProperty() {
-        return avancement;
     }
 
     public IntegerProperty dureeProperty() {
