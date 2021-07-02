@@ -182,12 +182,12 @@
                                         </StackPane.margin></Button>
                                 </StackPane>
 
-                                <Button text="Actualiser" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                <Button text="Actualiser" onAction="#updatePlanningView" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                             </AnchorPane>
                         </top>
 
                         <center>
-                            <ListView>
+                            <ListView fx:id="planningListView">
                                 <BorderPane.margin>
                                     <Insets left="2.0" right="2.0" />
                                 </BorderPane.margin>

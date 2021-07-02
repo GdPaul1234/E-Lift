@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class Reparation implements PlanningRessource {
 
-    private final IntegerProperty idAscenseur = new SimpleIntegerProperty(null, "ID");
+    private final ObjectProperty<Ascenseur> ascenseur = new SimpleObjectProperty<>(null, "ascenseur");
     private final ObjectProperty<Date> datePanne = new SimpleObjectProperty<>(null, "date panne");
     private final ObjectProperty<TypeReparation> type = new SimpleObjectProperty<>(null, "type réparation");
     private final IntegerProperty duree = new SimpleIntegerProperty(null, "durée");
@@ -22,13 +22,22 @@ public class Reparation implements PlanningRessource {
 
     private final ObjectProperty<Intervention> intervention = new SimpleObjectProperty<>(null, "intervention");
     private final ObjectProperty<TrajetAller> trajetAller = new SimpleObjectProperty<>(null, "trajet");
+    private final ObjectProperty<Immeuble> immeuble = new SimpleObjectProperty<>(null, "immeuble");
 
-    public Reparation(int idAscenceur, Date datePanne, TypeReparation type, int duree) {
-        this.idAscenseur.set(idAscenceur);
+    public Reparation(Ascenseur ascenseur, Date datePanne, TypeReparation type, int duree) {
+        this.ascenseur.set(ascenseur);
         this.datePanne.set(datePanne);
         this.type.set(type);
         this.avancement.set("Demande réparation envoyée");
         this.duree.set(duree);
+    }
+
+    public Immeuble getImmeuble() {
+        return immeuble.get();
+    }
+
+    public void setImmeuble(Immeuble immeuble) {
+        this.immeuble.set(immeuble);
     }
 
     public int getDuree() {
@@ -39,8 +48,8 @@ public class Reparation implements PlanningRessource {
         this.duree.set(duree);
     }
 
-    public int getIdAscenseur() {
-        return idAscenseur.get();
+    public Ascenseur getAscenseur() {
+        return ascenseur.get();
     }
 
     public String getLoginAscensoriste() {
@@ -89,6 +98,11 @@ public class Reparation implements PlanningRessource {
 
 
     /* property getter */
+
+    public ObjectProperty<Immeuble> immeubleProperty() {
+        return immeuble;
+    }
+
     public ObjectProperty<Intervention> interventionProperty() {
         return intervention;
     }
@@ -97,8 +111,8 @@ public class Reparation implements PlanningRessource {
         return trajetAller;
     }
 
-    public IntegerProperty idAscenseurProperty() {
-        return idAscenseur;
+    public ObjectProperty<Ascenseur> ascenseurProperty() {
+        return ascenseur;
     }
 
     public StringProperty loginAscensoristeProperty() {

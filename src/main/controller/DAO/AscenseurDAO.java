@@ -38,7 +38,7 @@ public class AscenseurDAO {
                 result = new ArrayList<>(rs.getFetchSize());
                 while (rs.next()) {
                     Ascenseur ascenseur = new Ascenseur(rs.getString("marque"), rs.getString("modele"),
-                            rs.getDate("miseEnService"), rs.getInt("etage"),
+                            rs.getTimestamp("miseEnService"), rs.getInt("etage"),
                             EtatAscenseur.get(rs.getString("etat")));
                     ascenseur.setIdAscenseur(rs.getInt("idAscenseur"));
                     result.add(ascenseur);
@@ -68,7 +68,10 @@ public class AscenseurDAO {
                 int index = new Random().nextInt(values.length);
                 TypeReparation typeReparation = values[index];
 
-                Reparation reparation = new Reparation(idAscenseur, new java.util.Date(), typeReparation, typeReparation.duree);
+                Ascenseur ascenseur = new Ascenseur();
+                ascenseur.setIdAscenseur(idAscenseur);
+
+                Reparation reparation = new Reparation(ascenseur, new java.util.Date(), typeReparation, typeReparation.duree);
                 new ReparationDAO().addReparation(reparation, idAscenseur);
 
                 // TODO Envoyer message aux parties prenantes (gestionnaire de l'immeuble et société)

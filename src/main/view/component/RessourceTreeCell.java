@@ -1,4 +1,4 @@
-package main.view.custom;
+package main.view.component;
 
 import javafx.scene.control.TreeCell;
 import main.model.Ascenseur;

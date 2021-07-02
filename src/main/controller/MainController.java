@@ -20,14 +20,17 @@ import javafx.util.Pair;
 import main.controller.DAO.*;
 import main.model.*;
 import main.model.enums.EtatAscenseur;
+import main.model.interfaces.PlanningRessource;
 import main.model.interfaces.Ressource;
 import main.view.AscensoristeOverview;
 import main.view.GestionnaireOverview;
 import main.view.ImmeubleOverview;
-import main.view.custom.RessourceTreeCell;
+import main.view.component.PlanningListCell;
+import main.view.component.RessourceTreeCell;
 import main.view.dialog.ImmeubleEditDialog;
 import main.view.dialog.PersonneEditDialog;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
@@ -45,6 +48,8 @@ public class MainController {
     private ComboBox<EtatAscenseur> filtrePanneComboBox;
     @FXML
     private TreeView<Ressource> ascenseurTreeView;
+    @FXML
+    private ListView<PlanningRessource> planningListView;
 
     public static void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -101,6 +106,18 @@ public class MainController {
             if (newValue) showUpdatedMarker();
         });
 
+        // init planing view
+        // TODO loading on demand
+        planningListView.setCellFactory(planningRessourceListView -> {
+            try {
+                return new PlanningListCell();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+        updatePlanningView();
+
         System.out.printf("Start MainPage : %d ms\n", System.currentTimeMillis() - start);
     }
 
@@ -145,7 +162,6 @@ public class MainController {
             @Override
             protected Task<Void> createTask() {
                 return new Task<>() {
-
                     @Override
                     protected Void call() throws Exception {
                         // Get Filter
@@ -243,7 +259,34 @@ public class MainController {
     /* ********************************************* *
      *                Gestion Planning               *
      * ********************************************* */
+    @FXML
+    private void updatePlanningView() {
+        final Service<Void> updateListPanne = new Service<>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        // TODO get filter
 
+                        ReparationDAO reparationDAO = new ReparationDAO();
+                        ObservableList<PlanningRessource> planningRessources = FXCollections.observableArrayList(reparationDAO.getMyPlanning());
+
+                        if (Platform.isFxApplicationThread()) {
+                            planningListView.setItems(planningRessources);
+                        } else {
+                            Platform.runLater(() -> planningListView.setItems(planningRessources));
+                        }
+
+                        return null;
+                    }
+                };
+            }
+        };
+
+        updateListPanne.start();
+        updateListPanne.setOnSucceeded((WorkerStateEvent event) -> planningListView.refresh());
+    }
 
 
     /* ********************************************* *

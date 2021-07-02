@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <VBox alignment="CENTER">
+        <Label fx:id="dateLabel" style="-fx-font-size: 1.1em" text="----/--/--" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+        <Label fx:id="heureLabel" text="--:--" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+    </VBox>
+
+    <Separator />
+
+    <VBox alignment="CENTER_LEFT">
+        <Label fx:id="typeEvenementPlanningLabel" alignment="CENTER" style="-fx-font-size: 1.1em; -fx-font-weight: bold" text="RessourcePlanning" />
+        <Label fx:id="ascenseurLabel" style="-fx-font-size: 1.1em" text="Info ascenseur, EnPanne au xe étage" />
+        <Label fx:id="adresseLabel" style="-fx-font-style: italic" text="1 rue du Centre, 12345 Ville" />
+    </VBox>
+    <padding>
+        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+    </padding>
+
+</HBox>

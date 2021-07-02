@@ -144,7 +144,7 @@ public class AscensoristeDAO {
         PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("select * from reparation as r natural join ascenseur natural join immeuble " +
                         "where r.idAscenseur=? and r.datePanne=?;");
-        stmt.setInt(1, reparation.getIdAscenseur());
+        stmt.setInt(1, reparation.getAscenseur().getIdAscenseur());
         stmt.setTimestamp(2, new Timestamp(reparation.getDatePanne().getTime()));
         ResultSet rs = stmt.executeQuery();
 
@@ -166,7 +166,7 @@ public class AscensoristeDAO {
                 // Obtenir ascensoriste disponible les plus proche
                 PreparedStatement stmt1 = instance.getConnection()
                         .prepareStatement("select *, distance(latitude,longitude,?,?) as distance from ascensoriste where not exists( " +
-                                "select login from ascensoriste natural join intervention natural join trajetaller " +
+                                "select login from ascensoriste natural join intervention natural join reparation natural join trajetaller " +
                                 "where now() between dateIntervention and date_add(dateIntervention,INTERVAL duree MINUTE) " +
                                 "or now() between dateTrajet and date_add(dateTrajet, INTERVAL  dureeTrajet MINUTE )) " +
                                 "order by distance limit 1;");
