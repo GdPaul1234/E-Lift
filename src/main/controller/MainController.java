@@ -28,13 +28,14 @@ import main.view.ImmeubleOverview;
 import main.view.component.PlanningListCell;
 import main.view.component.RessourceTreeCell;
 import main.view.dialog.ImmeubleEditDialog;
+import main.view.dialog.InterventionEditDialog;
 import main.view.dialog.PersonneEditDialog;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class MainController {
@@ -102,8 +103,42 @@ public class MainController {
             }
         });
 
+        // init planning view
+        planningListView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (newValue != null) {
+                Adresse adresse = new Adresse();
+
+                if(newValue instanceof Reparation) {
+                  adresse = ((Reparation) newValue).getImmeuble().getAdresse();
+                } else if (newValue instanceof Intervention) {
+                    adresse = ((Intervention) newValue).getReparation().getImmeuble().getAdresse();
+                } else if(newValue instanceof TrajetAller) {
+                    adresse = ((TrajetAller) newValue).getReparation().getImmeuble().getAdresse();
+                }
+
+                mapView.setZoom(16);
+                mapView.setCenter(new Coordinate(Float.valueOf(adresse.getLatitude()).doubleValue(), Float.valueOf(adresse.getLongitude()).doubleValue()));
+            }
+        });
+
         updateTreeView();
         initMapViewTask();
+
+        // Update UI every 15 s
+        // https://stackoverflow.com/a/20172853
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(mapView.getInitialized()) {
+                    Platform.runLater(() -> {
+                        updateTreeView();
+                        updatePlanningView();
+                        System.out.println("Update UI");
+                    });
+                }
+            }
+        }, 0, 15000);
 
         // attendre la fin de l'initialisation de la TreeView et de la MapView pour afficher les marqueurs
         mapView.initializedProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -114,7 +149,7 @@ public class MainController {
         // TODO loading on demand
         planningListView.setCellFactory(planningRessourceListView -> {
             try {
-                return new PlanningListCell();
+                return new PlanningListCell(this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -297,9 +332,10 @@ public class MainController {
                             planningRessourceList =  planningRessourceList.stream().filter(v -> {
                                 // Date aujourd'hui (pas de partie horaire)
                                 Calendar calendar = Calendar.getInstance();
-                                calendar.set(Calendar.HOUR,0);
+                                calendar.set(Calendar.HOUR_OF_DAY,0);
                                 calendar.set(Calendar.MINUTE,0);
                                 calendar.set(Calendar.SECOND,0);
+                                calendar.set(Calendar.MILLISECOND, 1);
                                 Date today = calendar.getTime();
 
                                 if(v instanceof Reparation)
@@ -328,7 +364,29 @@ public class MainController {
         };
 
         updateListPanne.start();
-        updateListPanne.setOnSucceeded((WorkerStateEvent event) -> planningListView.refresh());
+        updateListPanne.setOnSucceeded((WorkerStateEvent event) -> {
+            planningListView.refresh();
+            if(mapView.getInitialized())
+                updateTreeView();
+        });
+    }
+
+    public void handleUpdateStatusIntervention() {
+        Intervention intervention = (Intervention) planningListView.getSelectionModel().getSelectedItem();
+
+        InterventionEditDialog dialog = new InterventionEditDialog(null);
+        Pair<Integer, String> userInput = dialog.showInterventionDialog(intervention);
+
+        if(userInput != null) {
+            intervention.setAvancement(userInput.getKey());
+            intervention.getReparation().setCommentaire(userInput.getValue());
+
+            try {
+                new ReparationDAO().updateStatusIntervention(intervention);
+            } catch (SQLException e) {
+               showError(e);
+            }
+        }
     }
 
 

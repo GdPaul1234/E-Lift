@@ -49,7 +49,7 @@ public class ReparationDAO {
         }
 
         // get trajets
-        if(DataAccess.isGestionnaire()) {
+        if (DataAccess.isGestionnaire()) {
             try (PreparedStatement stmt2 = instance.getConnection()
                     .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
                             "join reparation using(idAscenseur) natural join trajetaller " +
@@ -80,7 +80,7 @@ public class ReparationDAO {
         }
 
         // get interventions
-        if(DataAccess.isGestionnaire()) {
+        if (DataAccess.isGestionnaire()) {
             try (PreparedStatement stmt1 = instance.getConnection()
                     .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
                             "join reparation using(idAscenseur) natural join intervention " +
@@ -91,7 +91,7 @@ public class ReparationDAO {
                     getInterventions(result, rs1);
                 }
             }
-        } else if(DataAccess.isAscensoriste()) {
+        } else if (DataAccess.isAscensoriste()) {
             try (PreparedStatement stmt1 = instance.getConnection()
                     .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
                             "join reparation using(idAscenseur) natural join intervention " +
@@ -300,12 +300,12 @@ public class ReparationDAO {
     }
 
     /**
-     *
-     * @param reparation
      * @param intervention
      * @throws SQLException
      */
-    public void updateStatusReparation(Reparation reparation, Intervention intervention) throws SQLException {
+    public void updateStatusIntervention(Intervention intervention) throws SQLException {
+        Reparation reparation = intervention.getReparation();
+
         // set commentaire
         try (PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("update Reparation set commentaire=? where idAscenseur=? and datePanne=?;")) {
@@ -330,13 +330,24 @@ public class ReparationDAO {
 
         /* Si l'intervention a commencé, forcer la position de l'ascensoriste
          * dans le lieu de l'intervention */
-        if(intervention.getAvancement() > 0) {
-            try(PreparedStatement stmt2 = instance.getConnection()
-                    .prepareStatement("update ascensoriste set latitude=?, longitude=? where login=?;")){
+        if (intervention.getAvancement() > 0) {
+            try (PreparedStatement stmt2 = instance.getConnection()
+                    .prepareStatement("update ascensoriste set latitude=?, longitude=? where login=?;")) {
                 Adresse adresse = reparation.getImmeuble().getAdresse();
+
                 stmt2.setFloat(1, adresse.getLatitude());
                 stmt2.setFloat(2, adresse.getLongitude());
                 stmt2.setString(3, reparation.getLoginAscensoriste());
+                stmt2.executeUpdate();
+
+                // Remettre en service ascenseur si à  avancé est à 100%
+                if(intervention.getAvancement() == 100) {
+                    Ascenseur ascenseur = reparation.getAscenseur();
+                    int idAscenseur = ascenseur.getIdAscenseur();
+                    ascenseur.setState(EtatAscenseur.EnService);
+
+                    new AscenseurDAO().editAscenseur(idAscenseur, ascenseur);
+                }
             }
         }
     }

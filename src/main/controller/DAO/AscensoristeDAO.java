@@ -204,6 +204,11 @@ public class AscensoristeDAO {
                                         "from personne natural join ascensoriste " +
                                         "where exists(select login from ascensoriste natural left join reparation " +
                                         "natural left join intervention natural left join trajetaller " +
+                                        "where (now() between dateTrajet and date_add(dateTrajet, INTERVAL dureeTrajet MINUTE)" +
+                                        "  or now() >= dateTrajet)" +
+                                        " or(now() between dateIntervention and date_add(dateIntervention, INTERVAL duree MINUTE)" +
+                                        "  or now() >= dateIntervention)" +
+                                        " or dateTrajet is null or dateIntervention is null " +
                                         "group by login order by count(login)) " +
                                         "order by distance limit 1;")) {
                             Adresse adresse = immeuble.getAdresse();
@@ -294,7 +299,7 @@ public class AscensoristeDAO {
         if(adresseLastIntervention == null) {
             adresseLastIntervention = new Adresse("","","",
                     ascensoriste.getLatitude(), ascensoriste.getLongitude());
-        } else {
+        } else if(debutTrajet.after(new java.util.Date())){
             debutTrajet = dateAdresseLastTask.getKey();
         }
 

@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.controller.DAO.DataAccess;
 
+import java.util.Objects;
+
 public class Main extends Application {
     private DataAccess dataAccess;
     boolean loginSucess = false;
@@ -18,7 +20,7 @@ public class Main extends Application {
         do {
 
             try {
-                DataAccess dataAccess = DataAccess.getInstance();
+                dataAccess = DataAccess.getInstance();
                 reaskLogin = false;
 
                 if (dataAccess != null) {
@@ -37,12 +39,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         if(loginSucess) {
-            Parent root = FXMLLoader.load(getClass().getResource("/main/view/fxml/MainPage.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/main/view/fxml/MainPage.fxml")));
             primaryStage.setTitle("E-Lift - Maintenance des ascenseurs");
             primaryStage.setScene(new Scene(root, 850, 480));
             primaryStage.show();
         }
-
     }
 
+    @Override
+    public void stop() throws Exception {
+        // Close DB connection
+        dataAccess.close();
+    }
 }
