@@ -7,6 +7,7 @@ import  main.model.enums.EtatAscenseur;
 
 import java.sql.*;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class AscensoristeDAO {
@@ -178,9 +179,11 @@ public class AscensoristeDAO {
         try (PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("select * from reparation as r natural join ascenseur" +
                         " join immeuble using(IdImmeuble) natural join adresse " +
-                        "where r.idAscenseur=? -- and r.datePanne=?;")) {
+                        "where r.idAscenseur=? and r.datePanne=?;")) {
+            String datePanne = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .format(reparation.getDatePanne());
             stmt.setInt(1, reparation.getAscenseur().getIdAscenseur());
-            //stmt.setTimestamp(2, new Timestamp(reparation.getDatePanne().getTime()));
+            stmt.setString(2, datePanne);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     Ascenseur ascenseur = new Ascenseur(rs.getString("marque"), rs.getString("modele"),

@@ -33,6 +33,7 @@ import main.view.dialog.PersonneEditDialog;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,9 +46,11 @@ public class MainController {
     @FXML
     private MapView mapView;
     @FXML
-    private ComboBox<EtatAscenseur> filtrePanneComboBox;
+    private ComboBox<EtatAscenseur> filtreAscenseurComboBox;
     @FXML
     private TreeView<Ressource> ascenseurTreeView;
+    @FXML
+    private ComboBox<String> filtrePlanningComboBox;
     @FXML
     private ListView<PlanningRessource> planningListView;
 
@@ -80,7 +83,8 @@ public class MainController {
 
         topbar.getChildren().removeAll(removeItems);
 
-        initComboBox();
+        initAscenseurComboBox();
+        initPlanningCombobox();
 
         // init treeview params
         ascenseurTreeView.setShowRoot(false);
@@ -121,14 +125,31 @@ public class MainController {
         System.out.printf("Start MainPage : %d ms\n", System.currentTimeMillis() - start);
     }
 
-    private void initComboBox() {
-        // Remplir la Combobox des etats d'un ascenseur
+    /**
+     * Remplir la Combobox des etats d'un ascenseur
+     */
+    private void initAscenseurComboBox() {
         ObservableList<EtatAscenseur> etats = FXCollections.observableArrayList(EtatAscenseur.getValues());
-        filtrePanneComboBox.setItems(etats);
-        filtrePanneComboBox.getSelectionModel().selectedItemProperty()
+        filtreAscenseurComboBox.setItems(etats);
+        filtreAscenseurComboBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> updateTreeView());
     }
 
+    /**
+     * Remplir la Combobox des filtres du planning
+     */
+    private void initPlanningCombobox() {
+        ObservableList<String> filtres = FXCollections.observableArrayList("Tout", "Aujourd'hui");
+        filtrePlanningComboBox.setItems(filtres);
+        filtrePlanningComboBox.getSelectionModel().selectedItemProperty()
+                .addListener((observableValue, oldValue, newValue) -> updatePlanningView());
+        // auto refresh vers interventions aujourd'hui
+        filtrePlanningComboBox.setValue("Aujourd'hui");
+    }
+
+    /**
+     * Initialiser la mapview
+     */
     private void initMapViewTask() {
         // Init MapView to center of France
         Runnable task = () -> {
@@ -140,20 +161,20 @@ public class MainController {
         task.run();
     }
 
-
     @FXML
-    private void handleUpdate() {
-        updateTreeView();
+    private void handleClearAscenseurFilter() {
+        filtreAscenseurComboBox.setValue(null);
     }
 
     @FXML
-    private void handleClearFilter() {
-        filtrePanneComboBox.setValue(null);
+    private void handleClearPlanningFilter() {
+        filtrePlanningComboBox.setValue("Tout");
     }
 
     /* ********************************************* *
      *                Gestion carte                  *
      * ********************************************* */
+    @FXML
     private void updateTreeView() {
         positionImmeubles.forEach(mapView::removeMarker);
         positionImmeubles.clear();
@@ -165,7 +186,7 @@ public class MainController {
                     @Override
                     protected Void call() throws Exception {
                         // Get Filter
-                        EtatAscenseur etatAscenseur = filtrePanneComboBox.getValue();
+                        EtatAscenseur etatAscenseur = filtreAscenseurComboBox.getValue();
 
                         ImmeubleDAO immeubleDAO = new ImmeubleDAO();
                         AscenseurDAO ascenseurDAO = new AscenseurDAO();
@@ -175,7 +196,7 @@ public class MainController {
                         rootItem.setExpanded(true);
 
                         for (Immeuble immeuble : DataAccess.isGestionnaire() ? immeubleDAO.getMyImmeubles() : immeubleDAO.getAllImmeubles()) {
-                            ImageView immeubleIcon = new ImageView(new Image(getClass().getResourceAsStream("/main/resource/imeuble 16.png")));
+                            ImageView immeubleIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/main/resource/imeuble 16.png"))));
                             TreeItem<Ressource> immeubleNode = new TreeItem<>(immeuble, immeubleIcon);
                             immeubleNode.setExpanded(true);
 
@@ -261,16 +282,38 @@ public class MainController {
      * ********************************************* */
     @FXML
     private void updatePlanningView() {
+        final String filtreDate = filtrePlanningComboBox.getSelectionModel().getSelectedItem();
+
         final Service<Void> updateListPanne = new Service<>() {
             @Override
             protected Task<Void> createTask() {
                 return new Task<>() {
                     @Override
                     protected Void call() throws Exception {
-                        // TODO get filter
-
                         ReparationDAO reparationDAO = new ReparationDAO();
-                        ObservableList<PlanningRessource> planningRessources = FXCollections.observableArrayList(reparationDAO.getMyPlanning());
+                        List<PlanningRessource> planningRessourceList = reparationDAO.getMyPlanning();
+
+                        if(filtreDate.equals("Aujourd'hui")) {
+                            planningRessourceList =  planningRessourceList.stream().filter(v -> {
+                                // Date aujourd'hui (pas de partie horaire)
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(Calendar.HOUR,0);
+                                calendar.set(Calendar.MINUTE,0);
+                                calendar.set(Calendar.SECOND,0);
+                                Date today = calendar.getTime();
+
+                                if(v instanceof Reparation)
+                                    return ((Reparation) v).getDatePanne().after(today);
+                                else if(v instanceof TrajetAller)
+                                    return  ((TrajetAller) v).getDateTrajet().after(today);
+                                else if(v instanceof Intervention)
+                                    return ((Intervention) v).getDateIntervention().after(today);
+
+                                return false;
+                            }).collect(Collectors.toList());
+                        }
+
+                        ObservableList<PlanningRessource> planningRessources = FXCollections.observableArrayList(planningRessourceList);
 
                         if (Platform.isFxApplicationThread()) {
                             planningListView.setItems(planningRessources);

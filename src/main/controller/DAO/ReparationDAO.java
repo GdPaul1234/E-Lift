@@ -20,7 +20,7 @@ public class ReparationDAO {
     }
 
     public List<PlanningRessource> getMyPlanning() throws SQLException, ParseException {
-        ArrayList<PlanningRessource> result = new ArrayList<>();
+        List<PlanningRessource> result;
 
         // get available reparations according to our role
         if (DataAccess.isAscensoriste()) {
@@ -48,42 +48,70 @@ public class ReparationDAO {
             }
         }
 
-        // get intervention
-        try (Statement stmt1 = instance.getConnection().createStatement()) {
-            try (ResultSet rs1 = stmt1
-                    .executeQuery("select * from immeuble natural join adresse natural join ascenseur join reparation using(idAscenseur) natural join intervention;")) {
-                while (rs1.next()) {
-                    int idAscenseur = rs1.getInt("idAscenseur");
-                    java.util.Date datePanne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(rs1.getString("datePanne"));
-                    Timestamp dateIntervention = rs1.getTimestamp("dateIntervention");
-                    int avancement = rs1.getInt("avancement");
-
-                    Reparation reparation = getThisReparation(result, idAscenseur, datePanne);
-
-                    Intervention intervention = new Intervention(reparation, dateIntervention);
-                    intervention.setAvancement(avancement);
-                    result.add(intervention);
+        // get trajets
+        if(DataAccess.isGestionnaire()) {
+            try (PreparedStatement stmt2 = instance.getConnection()
+                    .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
+                            "join reparation using(idAscenseur) natural join trajetaller " +
+                            "where immeuble.login=?;")) {
+                stmt2.setString(1, DataAccess.getLogin());
+                try (ResultSet rs2 = stmt2.executeQuery()) {
+                    getTrajets(result, rs2);
+                }
+            }
+        } else if (DataAccess.isAscensoriste()) {
+            try (PreparedStatement stmt2 = instance.getConnection()
+                    .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
+                            "join reparation using(idAscenseur) natural join trajetaller " +
+                            "where reparation.login=?;")) {
+                stmt2.setString(1, DataAccess.getLogin());
+                try (ResultSet rs2 = stmt2.executeQuery()) {
+                    getTrajets(result, rs2);
+                }
+            }
+        } else {
+            try (Statement stmt2 = instance.getConnection().createStatement()) {
+                try (ResultSet rs2 = stmt2
+                        .executeQuery("select * from immeuble natural join adresse natural join ascenseur " +
+                                "join reparation using(idAscenseur) natural join trajetaller;")) {
+                    getTrajets(result, rs2);
                 }
             }
         }
 
-        // get trajet
-        try (Statement stmt2 = instance.getConnection().createStatement()) {
-            try (ResultSet rs2 = stmt2
-                    .executeQuery("select * from immeuble natural join adresse natural join ascenseur join reparation using(idAscenseur) natural join trajetaller;")) {
-                while (rs2.next()) {
-                    int idAscenseur = rs2.getInt("idAscenseur");
-                    java.util.Date datePanne = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(rs2.getString("datePanne"));
-                    Timestamp dateTrajet = rs2.getTimestamp("dateTrajet");
-                    int dureeTrajet = rs2.getInt("dureeTrajet");
+        // get interventions
+        if(DataAccess.isGestionnaire()) {
+            try (PreparedStatement stmt1 = instance.getConnection()
+                    .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
+                            "join reparation using(idAscenseur) natural join intervention " +
+                            "where immeuble.login=?;")) {
+                stmt1.setString(1, DataAccess.getLogin());
 
-                    Reparation reparation = getThisReparation(result, idAscenseur, datePanne);
+                try (ResultSet rs1 = stmt1.executeQuery()) {
+                    getInterventions(result, rs1);
+                }
+            }
+        } else if(DataAccess.isAscensoriste()) {
+            try (PreparedStatement stmt1 = instance.getConnection()
+                    .prepareStatement("select * from immeuble natural join adresse natural join ascenseur " +
+                            "join reparation using(idAscenseur) natural join intervention " +
+                            "where reparation.login=?;")) {
+                stmt1.setString(1, DataAccess.getLogin());
 
-                    TrajetAller trajetAller = new TrajetAller(reparation, dateTrajet, dureeTrajet);
-                    result.add(trajetAller);
+                try (ResultSet rs1 = stmt1.executeQuery()) {
+                    getInterventions(result, rs1);
+                }
+            }
+        } else {
+            try (Statement stmt1 = instance.getConnection().createStatement()) {
+                try (ResultSet rs1 = stmt1
+                        .executeQuery("select * from immeuble natural join adresse natural join ascenseur " +
+                                "join reparation using(idAscenseur) natural join intervention;")) {
+                    getInterventions(result, rs1);
                 }
             }
         }
+
         // sort result
         result.sort(new PlanningRessourceComparator());
 
@@ -91,7 +119,7 @@ public class ReparationDAO {
     }
 
 
-    private ArrayList<PlanningRessource> getReparations(ResultSet rs) throws SQLException {
+    private List<PlanningRessource> getReparations(ResultSet rs) throws SQLException {
         ArrayList<PlanningRessource> result = new ArrayList<>();
 
         while (rs.next()) {
@@ -111,6 +139,35 @@ public class ReparationDAO {
             result.add(reparation);
         }
         return result;
+    }
+
+    private void getInterventions(List<PlanningRessource> result, ResultSet rs) throws SQLException, ParseException {
+        while (rs.next()) {
+            int idAscenseur = rs.getInt("idAscenseur");
+            java.util.Date datePanne = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(rs.getString("datePanne"));
+            Timestamp dateIntervention = rs.getTimestamp("dateIntervention");
+            int avancement = rs.getInt("avancement");
+
+            Reparation reparation = getThisReparation(result, idAscenseur, datePanne);
+
+            Intervention intervention = new Intervention(reparation, dateIntervention);
+            intervention.setAvancement(avancement);
+            result.add(intervention);
+        }
+    }
+
+    private void getTrajets(List<PlanningRessource> result, ResultSet rs) throws SQLException, ParseException {
+        while (rs.next()) {
+            int idAscenseur = rs.getInt("idAscenseur");
+            java.util.Date datePanne = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(rs.getString("datePanne"));
+            Timestamp dateTrajet = rs.getTimestamp("dateTrajet");
+            int dureeTrajet = rs.getInt("dureeTrajet");
+
+            Reparation reparation = getThisReparation(result, idAscenseur, datePanne);
+
+            TrajetAller trajetAller = new TrajetAller(reparation, dateTrajet, dureeTrajet);
+            result.add(trajetAller);
+        }
     }
 
     private Reparation getThisReparation(List<PlanningRessource> reparations, int idAscenseur, java.util.Date datePanne) {
@@ -242,22 +299,45 @@ public class ReparationDAO {
         instance.getConnection().setAutoCommit(true);
     }
 
+    /**
+     *
+     * @param reparation
+     * @param intervention
+     * @throws SQLException
+     */
     public void updateStatusReparation(Reparation reparation, Intervention intervention) throws SQLException {
+        // set commentaire
         try (PreparedStatement stmt = instance.getConnection()
-                .prepareStatement("update Reparation set login=? where idAscenseur=? and datePanne=?;")) {
-            stmt.setString(1, reparation.getLoginAscensoriste());
+                .prepareStatement("update Reparation set commentaire=? where idAscenseur=? and datePanne=?;")) {
+            stmt.setString(1, reparation.getCommentaire());
             stmt.setInt(2, reparation.getAscenseur().getIdAscenseur());
             stmt.setTimestamp(3, new Timestamp(reparation.getDatePanne().getTime()));
             stmt.executeUpdate();
         }
+
+        // set avancement
+        String datePanne = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .format(reparation.getDatePanne());
 
         try (PreparedStatement stmt1 = instance.getConnection()
                 .prepareStatement("update Intervention set avancement=? " +
                         "where IdIntervention=(select IdIntervention from Reparation where idAscenseur=? and datePanne=?);")) {
             stmt1.setInt(1, intervention.getAvancement());
             stmt1.setInt(2, reparation.getAscenseur().getIdAscenseur());
-            stmt1.setTimestamp(3, new Timestamp(reparation.getDatePanne().getTime()));
+            stmt1.setString(3, datePanne);
             stmt1.executeUpdate();
+        }
+
+        /* Si l'intervention a commencé, forcer la position de l'ascensoriste
+         * dans le lieu de l'intervention */
+        if(intervention.getAvancement() > 0) {
+            try(PreparedStatement stmt2 = instance.getConnection()
+                    .prepareStatement("update ascensoriste set latitude=?, longitude=? where login=?;")){
+                Adresse adresse = reparation.getImmeuble().getAdresse();
+                stmt2.setFloat(1, adresse.getLatitude());
+                stmt2.setFloat(2, adresse.getLongitude());
+                stmt2.setString(3, reparation.getLoginAscensoriste());
+            }
         }
     }
 

@@ -149,14 +149,14 @@
                         <top>
                             <AnchorPane>
                                 <StackPane prefWidth="156.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="5.0">
-                                    <ComboBox fx:id="filtrePanneComboBox" maxWidth="1.7976931348623157E308" promptText="Filtrer les pannes" />
-                                    <Button onAction="#handleClearFilter" styleClass="clear-button" text="❌" StackPane.alignment="CENTER_RIGHT">
+                                    <ComboBox fx:id="filtreAscenseurComboBox" maxWidth="1.7976931348623157E308" promptText="Filtrer les pannes" />
+                                    <Button onAction="#handleClearAscenseurFilter" styleClass="clear-button" text="❌" StackPane.alignment="CENTER_RIGHT">
                               <StackPane.margin>
                                  <Insets right="15.0" />
                               </StackPane.margin></Button>
                                 </StackPane>
 
-                                <Button onAction="#handleUpdate" text="Actualiser" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                <Button onAction="#updateTreeView" text="Actualiser" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                             </AnchorPane>
                         </top>
 
@@ -176,7 +176,7 @@
                             <AnchorPane>
                                 <StackPane prefWidth="156.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="77.0" AnchorPane.topAnchor="5.0">
                                     <ComboBox fx:id="filtrePlanningComboBox" maxWidth="1.7976931348623157E308" promptText="Filtrer mon planning" />
-                                    <Button styleClass="clear-button" text="❌" StackPane.alignment="CENTER_RIGHT">
+                                    <Button onAction="#handleClearPlanningFilter" styleClass="clear-button" text="❌" StackPane.alignment="CENTER_RIGHT">
                                         <StackPane.margin>
                                             <Insets right="15.0" />
                                         </StackPane.margin></Button>
