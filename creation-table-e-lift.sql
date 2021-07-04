@@ -97,7 +97,7 @@ CREATE TABLE Ascenseur(
         IdImmeuble    Int NOT NULL
 	,CONSTRAINT Ascenseur_PK PRIMARY KEY (idAscenseur)
 
-	,CONSTRAINT Ascenseur_Immeuble_FK FOREIGN KEY (IdImmeuble) REFERENCES Immeuble(IdImmeuble)
+	,CONSTRAINT Ascenseur_Immeuble_FK FOREIGN KEY (IdImmeuble) REFERENCES Immeuble(IdImmeuble) on delete cascade
 )ENGINE=InnoDB;
 
 #------------------------------------------------------------
@@ -140,8 +140,8 @@ CREATE TABLE reparation(
        commentaire    Text
     ,CONSTRAINT reparation_PK PRIMARY KEY (idAscenseur,datePanne)
 
-    ,CONSTRAINT reparation_Ascenseur_FK FOREIGN KEY (idAscenseur) REFERENCES Ascenseur(idAscenseur)
-    ,CONSTRAINT reparation_Ascensoriste0_FK FOREIGN KEY (login) REFERENCES Ascensoriste(login)
+    ,CONSTRAINT reparation_Ascenseur_FK FOREIGN KEY (idAscenseur) REFERENCES Ascenseur(idAscenseur) on delete cascade
+    ,CONSTRAINT reparation_Ascensoriste0_FK FOREIGN KEY (login) REFERENCES Ascensoriste(login) on delete cascade
     ,CONSTRAINT reparation_Intervention1_FK FOREIGN KEY (IdIntervention) REFERENCES Intervention(IdIntervention)
     ,CONSTRAINT reparation_TrajetAller2_FK FOREIGN KEY (idTrajet) REFERENCES TrajetAller(idTrajet)
 )ENGINE=InnoDB;
