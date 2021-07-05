@@ -33,7 +33,7 @@ public class ImmeubleDAOTest {
     }
 
     @Test
-    public void testGetMyImmeuble() {
+    void testGetMyImmeuble() {
         try {
             // using gestionnaire account
             DataAccess dataAccess = DataAccess.getInstance("pierre.durant941", "pwd");
@@ -52,7 +52,7 @@ public class ImmeubleDAOTest {
     }
 
     @Test
-    public void testAddImmeubleNotGestionnaire() {
+    void testAddImmeubleNotGestionnaire() {
         testAdresse.set(new Adresse("rue","ville","cp",-1,-1));
         Immeuble immeuble = new Immeuble("test", 1, testAdresse.get());
 
@@ -70,7 +70,7 @@ public class ImmeubleDAOTest {
 
     @Test
     @Order(1)
-    public void testAddImmeubleGestionnaire() {
+    void testAddImmeubleGestionnaire() {
         testAdresse.set(new Adresse("rue","ville","cp",-1,-1));
         Immeuble immeuble = new Immeuble("test", 1, testAdresse.get());
 
@@ -92,7 +92,7 @@ public class ImmeubleDAOTest {
 
     @Test
     @Order(2)
-    public void testEditImmeuble() {
+    void testEditImmeuble() {
         try {
             DataAccess dataAccess = DataAccess.getInstance("personne.test639", "pwd");
             ImmeubleDAO immeubleDAO = new ImmeubleDAO();
@@ -116,7 +116,7 @@ public class ImmeubleDAOTest {
 
     @Test
     @Order(3)
-    public void deleteImmeuble() {
+    void deleteImmeuble() {
         try {
             DataAccess dataAccess = DataAccess.getInstance("personne.test639", "pwd");
             ImmeubleDAO immeubleDAO = new ImmeubleDAO();
