@@ -1,4 +1,4 @@
--- CREATE SCHEMA `e-lift` ;
+CREATE SCHEMA `e-lift` ;
 use `e-lift`;
 
 #------------------------------------------------------------
