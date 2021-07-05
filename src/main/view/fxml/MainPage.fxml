@@ -156,7 +156,7 @@
                               </StackPane.margin></Button>
                                 </StackPane>
 
-                                <Button onAction="#updateTreeView" text="Actualiser" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                <Button onAction="#handleUpdateAscenseurList" text="Actualiser" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                             </AnchorPane>
                         </top>
 
@@ -182,7 +182,7 @@
                                         </StackPane.margin></Button>
                                 </StackPane>
 
-                                <Button text="Actualiser" onAction="#updatePlanningView" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                <Button text="Actualiser" onAction="#handleUpdatePlanningView" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                             </AnchorPane>
                         </top>
 

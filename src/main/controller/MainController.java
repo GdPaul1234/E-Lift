@@ -2,7 +2,9 @@ package main.controller;
 
 import com.sothawo.mapjfx.*;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,12 +37,12 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class MainController {
     private final List<Marker> positionImmeubles = Collections.synchronizedList(new ArrayList<>());
     private final ObjectProperty<TreeItem<Ressource>> rootItem = new SimpleObjectProperty<>(new TreeItem<>(new Personne()));
+    private final IntegerProperty centerCarte = new SimpleIntegerProperty(0);
 
     @FXML
     private HBox topbar;
@@ -134,7 +136,6 @@ public class MainController {
                     Platform.runLater(() -> {
                         updateTreeView();
                         updatePlanningView();
-                        System.out.println("Update UI");
                     });
                 }
             }
@@ -210,6 +211,14 @@ public class MainController {
      *                Gestion carte                  *
      * ********************************************* */
     @FXML
+    private void handleUpdateAscenseurList() {
+        // Afficher tous les ascenseurs sur la carte
+        centerCarte.set(0);
+        // Update les données
+        updateTreeView();
+    }
+
+
     private void updateTreeView() {
         positionImmeubles.forEach(mapView::removeMarker);
         positionImmeubles.clear();
@@ -289,6 +298,7 @@ public class MainController {
         updateListAscenseur.start();
         updateListAscenseur.setOnSucceeded((WorkerStateEvent event) -> {
             ascenseurTreeView.refresh();
+
             if (mapView.getInitialized()) {
                 showUpdatedMarker();
             }
@@ -301,13 +311,16 @@ public class MainController {
             mapView.addMarker(v);
         });
 
-        if (positionImmeubles.size() > 1) {
-            Extent extentImmeubles = Extent.forCoordinates(positionImmeubles.stream()
-                    .map(MapCoordinateElement::getPosition).collect(Collectors.toList()));
-            mapView.setExtent(extentImmeubles);
-        } else if (positionImmeubles.size() == 1) {
-            mapView.setZoom(16);
-            mapView.setCenter(positionImmeubles.get(0).getPosition());
+        if(centerCarte.lessThan(1).get()) {
+            centerCarte.set(1);
+            if (positionImmeubles.size() > 1) {
+                Extent extentImmeubles = Extent.forCoordinates(positionImmeubles.stream()
+                        .map(MapCoordinateElement::getPosition).collect(Collectors.toList()));
+                mapView.setExtent(extentImmeubles);
+            } else if (positionImmeubles.size() == 1) {
+                mapView.setZoom(16);
+                mapView.setCenter(positionImmeubles.get(0).getPosition());
+            }
         }
 
     }
@@ -316,6 +329,13 @@ public class MainController {
      *                Gestion Planning               *
      * ********************************************* */
     @FXML
+    private void handleUpdatePlanningView() {
+        // Afficher tous les ascenseurs sur la carte
+        centerCarte.set(0);
+        // Update les données
+        updatePlanningView();
+    }
+
     private void updatePlanningView() {
         final String filtreDate = filtrePlanningComboBox.getSelectionModel().getSelectedItem();
 

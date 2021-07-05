@@ -49,6 +49,8 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         // Close DB connection
-        dataAccess.close();
+        if (dataAccess != null)
+            dataAccess.close();
     }
+
 }
