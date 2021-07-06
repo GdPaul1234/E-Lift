@@ -93,7 +93,7 @@ public class AscenseurDAO {
     }
 
     /**
-     *
+     * This function do a request to create a Reparation
      * @param idAscenseur
      * @param etatAscenseur
      * @throws SQLException
