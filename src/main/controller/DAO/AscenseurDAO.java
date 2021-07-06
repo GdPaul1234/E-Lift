@@ -138,7 +138,9 @@ public class AscenseurDAO {
      * @param idImmeuble
      * @throws SQLException
      */
-    public void addAscenseur(Ascenseur ascenseur, int idImmeuble) throws SQLException {
+    public int addAscenseur(Ascenseur ascenseur, int idImmeuble) throws SQLException {
+        int idAscenseur = -1;
+
         // Verifier nbEtage avant ajouter ascenseur
         try (PreparedStatement stmt = instance.getConnection().prepareStatement("select nbEtage from immeuble where IdImmeuble=?")) {
             stmt.setInt(1, idImmeuble);
@@ -161,7 +163,7 @@ public class AscenseurDAO {
 
                             try (ResultSet rs1 = stmt1.getGeneratedKeys()) {
                                 if (rs1.next()) {
-                                    int idAscenseur = rs1.getInt(1);
+                                    idAscenseur = rs1.getInt(1);
                                     declencherReparation(idAscenseur, ascenseur.getState());
                                 }
                             }
@@ -176,7 +178,7 @@ public class AscenseurDAO {
 
             }
         }
-
+        return idAscenseur;
     }
 
     /**
@@ -220,13 +222,13 @@ public class AscenseurDAO {
 
     /**
      *
-     * @param idAscenceur
+     * @param idAscenseur
      * @throws SQLException
      */
-    public void removeAscenceur(int idAscenceur) throws SQLException {
+    public void removeAscenseur(int idAscenseur) throws SQLException {
         try (PreparedStatement stmt = instance.getConnection()
                 .prepareStatement("delete from ascenseur where idAscenseur=?;")) {
-            stmt.setInt(1, idAscenceur);
+            stmt.setInt(1, idAscenseur);
             stmt.executeUpdate();
         }
     }

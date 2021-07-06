@@ -105,4 +105,17 @@ public class Ascenseur implements Ressource {
         return marque.get() + " " + modele.get() + ", "
                 + state.get() + " au " + etage.get() + "e étage";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Ascenseur) {
+            return marque.isEqualTo(((Ascenseur) obj).marque)
+                    .and(modele.isEqualTo(((Ascenseur) obj).modele))
+                    //.and(dateMiseEnService.isEqualTo(((Ascenseur) obj).dateMiseEnService))
+                    .and(etage.isEqualTo(((Ascenseur) obj).etage))
+                    .and(state.isEqualTo(((Ascenseur) obj).state))
+                    .get();
+        }
+        return false;
+    }
 }

@@ -246,7 +246,7 @@ public class ImmeubleOverviewController {
         if (selectedItem != null) {
             int idAscenseur = selectedItem.getIdAscenseur();
             try {
-                new AscenseurDAO().removeAscenceur(idAscenseur);
+                new AscenseurDAO().removeAscenseur(idAscenseur);
                 updateAscenseursData();
             } catch (SQLException e) {
                 MainController.showError(e);

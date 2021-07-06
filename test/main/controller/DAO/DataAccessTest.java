@@ -1,16 +1,15 @@
-package controller.DAO;
+package main.controller.DAO;
 
 
 import main.controller.DAO.DataAccess;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DataAccessTest {
     private static DataAccess dataAccess;
 

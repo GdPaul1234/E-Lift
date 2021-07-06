@@ -1,21 +1,22 @@
-package controller.DAO;
+package main.controller.DAO;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import main.controller.DAO.DataAccess;
-import main.controller.DAO.ImmeubleDAO;
 import main.model.Adresse;
 import main.model.Immeuble;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ImmeubleDAOTest {
-    private static ObjectProperty<Adresse> testAdresse = new SimpleObjectProperty<>();
+    private static final ObjectProperty<Adresse> testAdresse = new SimpleObjectProperty<>();
 
 
     @Test
@@ -53,7 +54,7 @@ public class ImmeubleDAOTest {
 
     @Test
     void testAddImmeubleNotGestionnaire() {
-        testAdresse.set(new Adresse("rue","ville","cp",-1,-1));
+        testAdresse.set(new Adresse("rue", "ville", "cp", -1, -1));
         Immeuble immeuble = new Immeuble("test", 1, testAdresse.get());
 
         try {
@@ -71,7 +72,7 @@ public class ImmeubleDAOTest {
     @Test
     @Order(1)
     void testAddImmeubleGestionnaire() {
-        testAdresse.set(new Adresse("rue","ville","cp",-1,-1));
+        testAdresse.set(new Adresse("rue", "ville", "cp", -1, -1));
         Immeuble immeuble = new Immeuble("test", 1, testAdresse.get());
 
         try {
@@ -80,7 +81,7 @@ public class ImmeubleDAOTest {
 
             new ImmeubleDAO().addImmeuble(immeuble);
 
-            // Personne Test a maintenant 1 immeuble
+            // Personne Test a maintenant + d'1 immeuble
             List<Immeuble> immeubles = new ImmeubleDAO().getMyImmeubles();
             assertEquals(1, immeubles.size());
 
@@ -97,12 +98,12 @@ public class ImmeubleDAOTest {
             DataAccess dataAccess = DataAccess.getInstance("personne.test639", "pwd");
             ImmeubleDAO immeubleDAO = new ImmeubleDAO();
 
-            Immeuble oldImmeuble = immeubleDAO.findImmeubleByLocation(-1,-1);
+            Immeuble oldImmeuble = immeubleDAO.findImmeubleByLocation(-1, -1);
 
             Immeuble newImmeuble = new Immeuble("test modified", 2, testAdresse.get());
             immeubleDAO.editImmeuble(oldImmeuble.getIdImmeuble(), newImmeuble);
 
-            Immeuble modifiedImmeuble = immeubleDAO.findImmeubleByLocation(-1,-1);
+            Immeuble modifiedImmeuble = immeubleDAO.findImmeubleByLocation(-1, -1);
 
             assertNotEquals(oldImmeuble.getNom(), modifiedImmeuble.getNom());
             assertEquals(newImmeuble.getNom(), modifiedImmeuble.getNom());
@@ -121,7 +122,7 @@ public class ImmeubleDAOTest {
             DataAccess dataAccess = DataAccess.getInstance("personne.test639", "pwd");
             ImmeubleDAO immeubleDAO = new ImmeubleDAO();
 
-            Immeuble immeuble = immeubleDAO.findImmeubleByLocation(-1,-1);
+            Immeuble immeuble = immeubleDAO.findImmeubleByLocation(-1, -1);
             int oldNbImmeuble = immeubleDAO.getMyImmeubles().size();
 
             immeubleDAO.removeImmeuble(immeuble.getIdImmeuble());
