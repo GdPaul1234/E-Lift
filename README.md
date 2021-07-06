@@ -10,7 +10,6 @@ Projet MasterCamp 2021
 4. [Premier lancement](#first-use)
 5. [Exploration de l’application](#uses)
 6. [Tests](#tests)
-7. [FAQs](#faqs)
 
 <a name="general-info"></a>
 
