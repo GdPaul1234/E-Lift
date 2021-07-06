@@ -144,7 +144,3 @@ Nous avons utilisé __JUnit__ pour les tests unitaires.
 Ces tests sont situés dans le `/test`. Vous pouvez directement les lancez depuis __Intellij IDEA__.
 
 N'oubliez pas de mettre en place la base de données en amont.
-
-### FAQs
-
-FAQs
