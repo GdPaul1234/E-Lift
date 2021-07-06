@@ -1,6 +1,7 @@
 package main.view;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,7 +30,7 @@ public class Main extends Application {
 
             } catch (IllegalArgumentException e) {
                 System.out.println("reask login");
-                e.printStackTrace();
+                // e.printStackTrace();
                 reaskLogin = true;
             }
 
@@ -51,6 +52,9 @@ public class Main extends Application {
         // Close DB connection
         if (dataAccess != null)
             dataAccess.close();
+
+        Platform.exit();
+        System.exit(0);
     }
 
 }

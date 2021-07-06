@@ -63,7 +63,7 @@ public class MainController {
         alert.showAndWait();
 
         // TODO deleted this
-        e.printStackTrace();
+        // e.printStackTrace();
     }
 
     @FXML
