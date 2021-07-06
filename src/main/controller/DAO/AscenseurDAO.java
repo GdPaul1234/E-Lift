@@ -1,13 +1,17 @@
 package main.controller.DAO;
 
-import javafx.util.Pair;
-import main.model.*;
+import main.model.Adresse;
+import main.model.Ascenseur;
+import main.model.Immeuble;
+import main.model.Reparation;
 import main.model.enums.EtatAscenseur;
 import main.model.enums.TypeReparation;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -89,7 +93,7 @@ public class AscenseurDAO {
     }
 
     /**
-     *
+     * This function do a request to create a Reparation
      * @param idAscenseur
      * @param etatAscenseur
      * @throws SQLException
